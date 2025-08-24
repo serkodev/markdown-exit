@@ -28,5 +28,14 @@
     "test": "vitest",
     "typecheck": "tsc --noEmit",
     "release": "bumpp && npm publish"
+  },
+  "dependencies": {
+    "entities": "catalog:integrations",
+    "mdurl": "catalog:integrations",
+    "uc.micro": "catalog:integrations"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "catalog:",
+    "@types/mdurl": "catalog:types"
   }
 }
