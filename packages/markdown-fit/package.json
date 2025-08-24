@@ -1,0 +1,32 @@
+{
+  "name": "@markdown-fit/monorepo",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "A TypeScript rewrite of markdown-it with enhancements",
+  "license": "MIT",
+  "homepage": "https://github.com/serkodev/markdown-fit#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/serkodev/markdown-fit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/serkodev/markdown-fit/issues"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit",
+    "release": "bumpp && npm publish"
+  }
+}
