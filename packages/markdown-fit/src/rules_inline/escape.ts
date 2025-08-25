@@ -5,7 +5,9 @@ import { isSpace } from '../common/utils'
 
 const ESCAPED: number[] = []
 
-for (let i = 0; i < 256; i++) { ESCAPED.push(0) }
+for (let i = 0; i < 256; i++) {
+  ESCAPED.push(0)
+}
 
 for (const ch of '\\!"#$%&\'()*+,./:;<=>?@[]^_`{|}~-'.split(''))
   ESCAPED[ch.charCodeAt(0)] = 1

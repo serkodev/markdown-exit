@@ -10,9 +10,11 @@ function emphasis_tokenize(state: StateInline, silent: boolean) {
   const start = state.pos
   const marker = state.src.charCodeAt(start)
 
-  if (silent) { return false }
+  if (silent)
+    return false
 
-  if (marker !== 0x5F /* _ */ && marker !== 0x2A /* * */) { return false }
+  if (marker !== 0x5F /* _ */ && marker !== 0x2A /* * */)
+    return false
 
   const scanned = state.scanDelims(state.pos, marker === 0x2A)
 

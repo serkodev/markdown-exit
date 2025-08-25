@@ -52,16 +52,19 @@ export default function parseLinkTitle(str: string, start: number, max: number, 
     state.str = prev_state.str
     state.marker = prev_state.marker
   } else {
-    if (pos >= max) { return state }
+    if (pos >= max)
+      return state
 
     let marker = str.charCodeAt(pos)
-    if (marker !== 0x22 /* " */ && marker !== 0x27 /* ' */ && marker !== 0x28 /* ( */) { return state }
+    if (marker !== 0x22 /* " */ && marker !== 0x27 /* ' */ && marker !== 0x28 /* ( */)
+      return state
 
     start++
     pos++
 
     // if opening marker is "(", switch it to closing marker ")"
-    if (marker === 0x28) { marker = 0x29 }
+    if (marker === 0x28)
+      marker = 0x29
 
     state.marker = marker
   }

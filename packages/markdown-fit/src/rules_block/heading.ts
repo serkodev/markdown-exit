@@ -8,11 +8,13 @@ export default function heading(state: StateBlock, startLine: number, endLine: n
   let max = state.eMarks[startLine]
 
   // if it's indented more than 3 spaces, it should be a code block
-  if (state.sCount[startLine] - state.blkIndent >= 4) { return false }
+  if (state.sCount[startLine] - state.blkIndent >= 4)
+    return false
 
   let ch = state.src.charCodeAt(pos)
 
-  if (ch !== 0x23/* # */ || pos >= max) { return false }
+  if (ch !== 0x23/* # */ || pos >= max)
+    return false
 
   // count heading level
   let level = 1
@@ -22,9 +24,11 @@ export default function heading(state: StateBlock, startLine: number, endLine: n
     ch = state.src.charCodeAt(++pos)
   }
 
-  if (level > 6 || (pos < max && !isSpace(ch))) { return false }
+  if (level > 6 || (pos < max && !isSpace(ch)))
+    return false
 
-  if (silent) { return true }
+  if (silent)
+    return true
 
   // Let's cut tails like '    ###  ' from the end of string
 

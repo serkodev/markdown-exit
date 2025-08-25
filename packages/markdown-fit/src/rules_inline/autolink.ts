@@ -11,7 +11,8 @@ const AUTOLINK_RE = /^([a-z][a-z0-9+.-]{1,31}):([^<>\x00-\x20]*)$/i
 export default function autolink(state: StateInline, silent: boolean) {
   let pos = state.pos
 
-  if (state.src.charCodeAt(pos) !== 0x3C/* < */) { return false }
+  if (state.src.charCodeAt(pos) !== 0x3C/* < */)
+    return false
 
   const start = state.pos
   const max = state.posMax
@@ -32,7 +33,8 @@ export default function autolink(state: StateInline, silent: boolean) {
 
   if (AUTOLINK_RE.test(url)) {
     const fullUrl = state.md.normalizeLink(url)
-    if (!state.md.validateLink(fullUrl)) { return false }
+    if (!state.md.validateLink(fullUrl))
+      return false
 
     if (!silent) {
       const token_o = state.push('link_open', 'a', 1)
@@ -54,7 +56,8 @@ export default function autolink(state: StateInline, silent: boolean) {
 
   if (EMAIL_RE.test(url)) {
     const fullUrl = state.md.normalizeLink(`mailto:${url}`)
-    if (!state.md.validateLink(fullUrl)) { return false }
+    if (!state.md.validateLink(fullUrl))
+      return false
 
     if (!silent) {
       const token_o = state.push('link_open', 'a', 1)

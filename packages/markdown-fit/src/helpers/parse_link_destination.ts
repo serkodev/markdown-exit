@@ -23,8 +23,10 @@ export default function parseLinkDestination(str: string, start: number, max: nu
     pos++
     while (pos < max) {
       code = str.charCodeAt(pos)
-      if (code === 0x0A /* \n */) { return result }
-      if (code === 0x3C /* < */) { return result }
+      if (code === 0x0A /* \n */)
+        return result
+      if (code === 0x3C /* < */)
+        return result
       if (code === 0x3E /* > */) {
         result.pos = pos + 1
         result.str = unescapeAll(str.slice(start + 1, pos))
@@ -49,32 +51,39 @@ export default function parseLinkDestination(str: string, start: number, max: nu
   while (pos < max) {
     code = str.charCodeAt(pos)
 
-    if (code === 0x20) { break }
+    if (code === 0x20)
+      break
 
     // ascii control characters
-    if (code < 0x20 || code === 0x7F) { break }
+    if (code < 0x20 || code === 0x7F)
+      break
 
     if (code === 0x5C /* \ */ && pos + 1 < max) {
-      if (str.charCodeAt(pos + 1) === 0x20) { break }
+      if (str.charCodeAt(pos + 1) === 0x20)
+        break
       pos += 2
       continue
     }
 
     if (code === 0x28 /* ( */) {
       level++
-      if (level > 32) { return result }
+      if (level > 32)
+        return result
     }
 
     if (code === 0x29 /* ) */) {
-      if (level === 0) { break }
+      if (level === 0)
+        break
       level--
     }
 
     pos++
   }
 
-  if (start === pos) { return result }
-  if (level !== 0) { return result }
+  if (start === pos)
+    return result
+  if (level !== 0)
+    return result
 
   result.str = unescapeAll(str.slice(start, pos))
   result.pos = pos

@@ -124,7 +124,8 @@ export default class StateBlock {
       }
 
       if (ch === 0x0A || pos === len - 1) {
-        if (ch !== 0x0A) { pos++ }
+        if (ch !== 0x0A)
+          pos++
         this.bMarks.push(start)
         this.eMarks.push(pos)
         this.tShift.push(indent)
@@ -184,7 +185,8 @@ export default class StateBlock {
   skipSpaces(pos: number): number {
     for (let max = this.src.length; pos < max; pos++) {
       const ch = this.src.charCodeAt(pos)
-      if (!isSpace(ch)) { break }
+      if (!isSpace(ch))
+        break
     }
     return pos
   }
@@ -193,10 +195,12 @@ export default class StateBlock {
    * Skip spaces from given position in reverse.
    */
   skipSpacesBack(pos: number, min: number): number {
-    if (pos <= min) { return pos }
+    if (pos <= min)
+      return pos
 
     while (pos > min) {
-      if (!isSpace(this.src.charCodeAt(--pos))) { return pos + 1 }
+      if (!isSpace(this.src.charCodeAt(--pos)))
+        return pos + 1
     }
     return pos
   }
@@ -206,7 +210,8 @@ export default class StateBlock {
    */
   skipChars(pos: number, code: number): number {
     for (let max = this.src.length; pos < max; pos++) {
-      if (this.src.charCodeAt(pos) !== code) { break }
+      if (this.src.charCodeAt(pos) !== code)
+        break
     }
     return pos
   }
@@ -215,10 +220,12 @@ export default class StateBlock {
    * Skip char codes reverse from given position - 1
    */
   skipCharsBack(pos: number, code: number, min: number): number {
-    if (pos <= min) { return pos }
+    if (pos <= min)
+      return pos
 
     while (pos > min) {
-      if (code !== this.src.charCodeAt(--pos)) { return pos + 1 }
+      if (code !== this.src.charCodeAt(--pos))
+        return pos + 1
     }
     return pos
   }

@@ -129,7 +129,8 @@ export default class ParserInline {
         state.level--
 
         if (ok) {
-          if (pos >= state.pos) { throw new Error('inline rule didn\'t increment state.pos') }
+          if (pos >= state.pos)
+            throw new Error('inline rule didn\'t increment state.pos')
           break
         }
       }
@@ -148,7 +149,8 @@ export default class ParserInline {
       state.pos = state.posMax
     }
 
-    if (!ok) { state.pos++ }
+    if (!ok)
+      state.pos++
     cache[pos] = state.pos
   }
 
@@ -175,14 +177,16 @@ export default class ParserInline {
         for (let i = 0; i < len; i++) {
           ok = rules[i](state, false)
           if (ok) {
-            if (prevPos >= state.pos) { throw new Error('inline rule didn\'t increment state.pos') }
+            if (prevPos >= state.pos)
+              throw new Error('inline rule didn\'t increment state.pos')
             break
           }
         }
       }
 
       if (ok) {
-        if (state.pos >= end) { break }
+        if (state.pos >= end)
+          break
         continue
       }
 

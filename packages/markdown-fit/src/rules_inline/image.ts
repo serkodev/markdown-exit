@@ -11,14 +11,17 @@ export default function image(state: StateInline, silent: boolean) {
   const oldPos = state.pos
   const max = state.posMax
 
-  if (state.src.charCodeAt(state.pos) !== 0x21/* ! */) { return false }
-  if (state.src.charCodeAt(state.pos + 1) !== 0x5B/* [ */) { return false }
+  if (state.src.charCodeAt(state.pos) !== 0x21/* ! */)
+    return false
+  if (state.src.charCodeAt(state.pos + 1) !== 0x5B/* [ */)
+    return false
 
   const labelStart = state.pos + 2
   const labelEnd = state.md.helpers.parseLinkLabel(state, state.pos + 1, false)
 
   // parser failed to find ']', so it's not a valid link
-  if (labelEnd < 0) { return false }
+  if (labelEnd < 0)
+    return false
 
   pos = labelEnd + 1
   if (pos < max && state.src.charCodeAt(pos) === 0x28/* ( */) {
@@ -31,9 +34,11 @@ export default function image(state: StateInline, silent: boolean) {
     pos++
     for (; pos < max; pos++) {
       code = state.src.charCodeAt(pos)
-      if (!isSpace(code) && code !== 0x0A) { break }
+      if (!isSpace(code) && code !== 0x0A)
+        break
     }
-    if (pos >= max) { return false }
+    if (pos >= max)
+      return false
 
     // [link](  <href>  "title"  )
     //          ^^^^^^ parsing link destination
@@ -53,7 +58,8 @@ export default function image(state: StateInline, silent: boolean) {
     start = pos
     for (; pos < max; pos++) {
       code = state.src.charCodeAt(pos)
-      if (!isSpace(code) && code !== 0x0A) { break }
+      if (!isSpace(code) && code !== 0x0A)
+        break
     }
 
     // [link](  <href>  "title"  )
@@ -67,7 +73,8 @@ export default function image(state: StateInline, silent: boolean) {
       //                         ^^ skipping these spaces
       for (; pos < max; pos++) {
         code = state.src.charCodeAt(pos)
-        if (!isSpace(code) && code !== 0x0A) { break }
+        if (!isSpace(code) && code !== 0x0A)
+          break
       }
     } else {
       title = ''
@@ -82,7 +89,8 @@ export default function image(state: StateInline, silent: boolean) {
     //
     // Link reference
     //
-    if (typeof state.env.references === 'undefined') { return false }
+    if (typeof state.env.references === 'undefined')
+      return false
 
     if (pos < max && state.src.charCodeAt(pos) === 0x5B/* [ */) {
       start = pos + 1
@@ -98,7 +106,9 @@ export default function image(state: StateInline, silent: boolean) {
 
     // covers label === '' and label === undefined
     // (collapsed reference link and shortcut reference link respectively)
-    if (!label) { label = state.src.slice(labelStart, labelEnd) }
+    if (!label) {
+      label = state.src.slice(labelStart, labelEnd)
+    }
 
     ref = state.env.references[normalizeReference(label)]
     if (!ref) {

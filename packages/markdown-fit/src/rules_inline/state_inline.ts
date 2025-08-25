@@ -140,7 +140,9 @@ export default class StateInline {
     const lastChar = start > 0 ? this.src.charCodeAt(start - 1) : 0x20
 
     let pos = start
-    while (pos < max && this.src.charCodeAt(pos) === marker) { pos++ }
+    while (pos < max && this.src.charCodeAt(pos) === marker) {
+      pos++
+    }
 
     const count = pos - start
 

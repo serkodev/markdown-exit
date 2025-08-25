@@ -7,9 +7,11 @@ export default function reference(state: StateBlock, startLine: number, endLine:
   let nextLine = startLine + 1
 
   // if it's indented more than 3 spaces, it should be a code block
-  if (state.sCount[startLine] - state.blkIndent >= 4) { return false }
+  if (state.sCount[startLine] - state.blkIndent >= 4)
+    return false
 
-  if (state.src.charCodeAt(pos) !== 0x5B/* [ */) { return false }
+  if (state.src.charCodeAt(pos) !== 0x5B/* [ */)
+    return false
 
   function getNextLine(nextLine: number) {
     const endLine = state.lineMax
@@ -23,10 +25,12 @@ export default function reference(state: StateBlock, startLine: number, endLine:
 
     // this would be a code block normally, but after paragraph
     // it's considered a lazy continuation regardless of what's there
-    if (state.sCount[nextLine] - state.blkIndent > 3) { isContinuation = true }
+    if (state.sCount[nextLine] - state.blkIndent > 3)
+      isContinuation = true
 
     // quirk for blockquotes, this line should already be checked by that rule
-    if (state.sCount[nextLine] < 0) { isContinuation = true }
+    if (state.sCount[nextLine] < 0)
+      isContinuation = true
 
     if (!isContinuation) {
       const terminatorRules = state.md.block.ruler.getRules('reference')
@@ -88,7 +92,8 @@ export default function reference(state: StateBlock, startLine: number, endLine:
     }
   }
 
-  if (labelEnd < 0 || str.charCodeAt(labelEnd + 1) !== 0x3A/* : */) { return false }
+  if (labelEnd < 0 || str.charCodeAt(labelEnd + 1) !== 0x3A/* : */)
+    return false
 
   // [label]:   destination   'title'
   //         ^^^ skip optional whitespace here
@@ -111,10 +116,12 @@ export default function reference(state: StateBlock, startLine: number, endLine:
   // [label]:   destination   'title'
   //            ^^^^^^^^^^^ parse this
   const destRes = state.md.helpers.parseLinkDestination(str, pos, max)
-  if (!destRes.ok) { return false }
+  if (!destRes.ok)
+    return false
 
   const href = state.md.normalizeLink(destRes.str)
-  if (!state.md.validateLink(href)) { return false }
+  if (!state.md.validateLink(href))
+    return false
 
   pos = destRes.pos
 
@@ -168,7 +175,8 @@ export default function reference(state: StateBlock, startLine: number, endLine:
   // skip trailing spaces until the rest of the line
   while (pos < max) {
     const ch = str.charCodeAt(pos)
-    if (!isSpace(ch)) { break }
+    if (!isSpace(ch))
+      break
     pos++
   }
 
@@ -181,7 +189,8 @@ export default function reference(state: StateBlock, startLine: number, endLine:
       nextLine = destEndLineNo
       while (pos < max) {
         const ch = str.charCodeAt(pos)
-        if (!isSpace(ch)) { break }
+        if (!isSpace(ch))
+          break
         pos++
       }
     }
@@ -200,7 +209,8 @@ export default function reference(state: StateBlock, startLine: number, endLine:
 
   // Reference can not terminate anything. This check is for safety only.
   /* istanbul ignore if */
-  if (silent) { return true }
+  if (silent)
+    return true
 
   if (typeof state.env.references === 'undefined') {
     state.env.references = {}

@@ -10,9 +10,13 @@
 import { decodeHTML } from 'entities'
 import * as ucmicro from 'uc.micro'
 
-function _class<T>(obj: T): string { return Object.prototype.toString.call(obj) }
+function _class<T>(obj: T): string {
+  return Object.prototype.toString.call(obj)
+}
 
-export function isString(obj: unknown): obj is string { return _class(obj) === '[object String]' }
+export function isString(obj: unknown): obj is string {
+  return _class(obj) === '[object String]'
+}
 
 const _hasOwnProperty = Object.prototype.hasOwnProperty
 
@@ -26,6 +30,7 @@ export function arrayReplaceAt<T>(src: readonly T[], pos: number, newElements: r
   return [].concat(src.slice(0, pos), newElements, src.slice(pos + 1))
 }
 
+/* eslint-disable style/max-statements-per-line */
 export function isValidEntityCode(c: number): boolean {
   /* eslint no-bitwise:0 */
   // broken sequence
@@ -42,6 +47,7 @@ export function isValidEntityCode(c: number): boolean {
   if (c > 0x10FFFF) { return false }
   return true
 }
+/* eslint-enable style/max-statements-per-line */
 
 export function fromCodePoint(c: number): string {
   if (c > 0xFFFF) {
@@ -83,15 +89,18 @@ function replaceEntityPattern(match: string, name: string): string {
 }
 
 export function unescapeMd(str: string): string {
-  if (!str.includes('\\')) { return str }
+  if (!str.includes('\\'))
+    return str
   return str.replace(UNESCAPE_MD_RE, '$1')
 }
 
 export function unescapeAll(str: string): string {
-  if (!str.includes('\\') && !str.includes('&')) { return str }
+  if (!str.includes('\\') && !str.includes('&'))
+    return str
 
   return str.replace(UNESCAPE_ALL_RE, (match: string, escaped: string, entity: string) => {
-    if (escaped) { return escaped }
+    if (escaped)
+      return escaped
     return replaceEntityPattern(match, entity)
   })
 }
@@ -133,7 +142,8 @@ export function isSpace(code: number): boolean {
 
 // Zs (unicode class) || [\t\f\v\r\n]
 export function isWhiteSpace(code: number): boolean {
-  if (code >= 0x2000 && code <= 0x200A) { return true }
+  if (code >= 0x2000 && code <= 0x200A)
+    return true
   switch (code) {
     case 0x09: // \t
     case 0x0A: // \n

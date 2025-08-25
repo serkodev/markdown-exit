@@ -16,7 +16,8 @@ function isLinkClose(str: string) {
 export default function linkify(state: StateCore) {
   const blockTokens = state.tokens
 
-  if (!state.md.options.linkify) { return }
+  if (!state.md.options.linkify)
+    return
 
   for (let j = 0, l = blockTokens.length; j < l; j++) {
     if (blockTokens[j].type !== 'inline' ||
@@ -51,7 +52,8 @@ export default function linkify(state: StateCore) {
           htmlLinkLevel++
         }
       }
-      if (htmlLinkLevel > 0) { continue }
+      if (htmlLinkLevel > 0)
+        continue
 
       if (currentToken.type === 'text' && state.md.linkify.test(currentToken.content)) {
         const text = currentToken.content
@@ -75,7 +77,8 @@ export default function linkify(state: StateCore) {
         for (let ln = 0; ln < links.length; ln++) {
           const url = links[ln].url
           const fullUrl = state.md.normalizeLink(url)
-          if (!state.md.validateLink(fullUrl)) { continue }
+          if (!state.md.validateLink(fullUrl))
+            continue
 
           let urlText = links[ln].text
 

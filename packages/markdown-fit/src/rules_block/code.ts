@@ -3,7 +3,8 @@
 import type StateBlock from './state_block'
 
 export default function code(state: StateBlock, startLine: number, endLine: number) {
-  if (state.sCount[startLine] - state.blkIndent < 4) { return false }
+  if (state.sCount[startLine] - state.blkIndent < 4)
+    return false
 
   let nextLine = startLine + 1
   let last = nextLine

@@ -38,22 +38,26 @@ function skipOrderedListMarker(state: StateBlock, startLine: number) {
   let pos = start
 
   // List marker should have at least 2 chars (digit + dot)
-  if (pos + 1 >= max) { return -1 }
+  if (pos + 1 >= max)
+    return -1
 
   let ch = state.src.charCodeAt(pos++)
 
-  if (ch < 0x30/* 0 */ || ch > 0x39/* 9 */) { return -1 }
+  if (ch < 0x30/* 0 */ || ch > 0x39/* 9 */)
+    return -1
 
   for (;;) {
     // EOL -> fail
-    if (pos >= max) { return -1 }
+    if (pos >= max)
+      return -1
 
     ch = state.src.charCodeAt(pos++)
 
     if (ch >= 0x30/* 0 */ && ch <= 0x39/* 9 */) {
       // List marker should have no more than 9 digits
       // (prevents integer overflow in browsers)
-      if (pos - start >= 10) { return -1 }
+      if (pos - start >= 10)
+        return -1
 
       continue
     }
@@ -95,7 +99,8 @@ export default function list(state: StateBlock, startLine: number, endLine: numb
   let tight = true
 
   // if it's indented more than 3 spaces, it should be a code block
-  if (state.sCount[nextLine] - state.blkIndent >= 4) { return false }
+  if (state.sCount[nextLine] - state.blkIndent >= 4)
+    return false
 
   // Special case:
   //  - item 1
@@ -151,7 +156,8 @@ export default function list(state: StateBlock, startLine: number, endLine: numb
   }
 
   // For validation mode we can terminate immediately
-  if (silent) { return true }
+  if (silent)
+    return true
 
   // We should terminate list on style change. Remember first one to compare.
   const markerCharCode = state.src.charCodeAt(posAfterMarker - 1)
@@ -215,7 +221,8 @@ export default function list(state: StateBlock, startLine: number, endLine: numb
 
     // If we have more than 4 spaces, the indent is 1
     // (the rest is just indented code block)
-    if (indentAfterMarker > 4) { indentAfterMarker = 1 }
+    if (indentAfterMarker > 4)
+      indentAfterMarker = 1
 
     // "  -  test"
     //  ^^^^^ - calculating total length of this thing
@@ -280,15 +287,18 @@ export default function list(state: StateBlock, startLine: number, endLine: numb
     nextLine = state.line
     itemLines[1] = nextLine
 
-    if (nextLine >= endLine) { break }
+    if (nextLine >= endLine)
+      break
 
     //
     // Try to check if list is terminated or continued.
     //
-    if (state.sCount[nextLine] < state.blkIndent) { break }
+    if (state.sCount[nextLine] < state.blkIndent)
+      break
 
     // if it's indented more than 3 spaces, it should be a code block
-    if (state.sCount[nextLine] - state.blkIndent >= 4) { break }
+    if (state.sCount[nextLine] - state.blkIndent >= 4)
+      break
 
     // fail if terminating block found
     let terminate = false
@@ -298,19 +308,23 @@ export default function list(state: StateBlock, startLine: number, endLine: numb
         break
       }
     }
-    if (terminate) { break }
+    if (terminate)
+      break
 
     // fail if list has another type
     if (isOrdered) {
       posAfterMarker = skipOrderedListMarker(state, nextLine)
-      if (posAfterMarker < 0) { break }
+      if (posAfterMarker < 0)
+        break
       start = state.bMarks[nextLine] + state.tShift[nextLine]
     } else {
       posAfterMarker = skipBulletListMarker(state, nextLine)
-      if (posAfterMarker < 0) { break }
+      if (posAfterMarker < 0)
+        break
     }
 
-    if (markerCharCode !== state.src.charCodeAt(posAfterMarker - 1)) { break }
+    if (markerCharCode !== state.src.charCodeAt(posAfterMarker - 1))
+      break
   }
 
   // Finalize list

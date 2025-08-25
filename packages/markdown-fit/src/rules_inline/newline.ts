@@ -6,7 +6,8 @@ import { isSpace } from '../common/utils'
 export default function newline(state: StateInline, silent: boolean) {
   let pos = state.pos
 
-  if (state.src.charCodeAt(pos) !== 0x0A/* \n */) { return false }
+  if (state.src.charCodeAt(pos) !== 0x0A/* \n */)
+    return false
 
   const pmax = state.pending.length - 1
   const max = state.posMax
@@ -36,7 +37,9 @@ export default function newline(state: StateInline, silent: boolean) {
   pos++
 
   // skip heading spaces for next line
-  while (pos < max && isSpace(state.src.charCodeAt(pos))) { pos++ }
+  while (pos < max && isSpace(state.src.charCodeAt(pos))) {
+    pos++
+  }
 
   state.pos = pos
   return true

@@ -24,11 +24,13 @@ function process_inlines(tokens: Token[], state: StateCore) {
     const thisLevel = tokens[i].level
 
     for (j = stack.length - 1; j >= 0; j--) {
-      if (stack[j].level <= thisLevel) { break }
+      if (stack[j].level <= thisLevel)
+        break
     }
     stack.length = j + 1
 
-    if (token.type !== 'text') { continue }
+    if (token.type !== 'text')
+      continue
 
     let text = token.content
     let pos = 0
@@ -39,7 +41,8 @@ function process_inlines(tokens: Token[], state: StateCore) {
     while (pos < max) {
       QUOTE_RE.lastIndex = pos
       const t = QUOTE_RE.exec(text)
-      if (!t) { break }
+      if (!t)
+        break
 
       let canOpen = true
       let canClose = true
@@ -137,7 +140,8 @@ function process_inlines(tokens: Token[], state: StateCore) {
         // this could be a closing quote, rewind the stack to get a match
         for (j = stack.length - 1; j >= 0; j--) {
           let item = stack[j]
-          if (stack[j].level < thisLevel) { break }
+          if (stack[j].level < thisLevel)
+            break
           if (item.single === isSingle && stack[j].level === thisLevel) {
             item = stack[j]
 
@@ -162,7 +166,8 @@ function process_inlines(tokens: Token[], state: StateCore) {
             )
 
             pos += closeQuote.length - 1
-            if (item.token === i) { pos += openQuote.length - 1 }
+            if (item.token === i)
+              pos += openQuote.length - 1
 
             text = token.content
             max = text.length
@@ -189,7 +194,8 @@ function process_inlines(tokens: Token[], state: StateCore) {
 
 export default function smartquotes(state: StateCore) {
   /* eslint max-depth:0 */
-  if (!state.md.options.typographer) { return }
+  if (!state.md.options.typographer)
+    return
 
   for (let blkIdx = state.tokens.length - 1; blkIdx >= 0; blkIdx--) {
     if (state.tokens[blkIdx].type !== 'inline' ||

@@ -11,14 +11,17 @@ export default function blockquote(state: StateBlock, startLine: number, endLine
   const oldLineMax = state.lineMax
 
   // if it's indented more than 3 spaces, it should be a code block
-  if (state.sCount[startLine] - state.blkIndent >= 4) { return false }
+  if (state.sCount[startLine] - state.blkIndent >= 4)
+    return false
 
   // check the block quote marker
-  if (state.src.charCodeAt(pos) !== 0x3E/* > */) { return false }
+  if (state.src.charCodeAt(pos) !== 0x3E/* > */)
+    return false
 
   // we know that it's going to be a valid blockquote,
   // so no point trying to find the end of it in silent mode
-  if (silent) { return true }
+  if (silent)
+    return true
 
   const oldBMarks = []
   const oldBSCount = []
@@ -138,7 +141,8 @@ export default function blockquote(state: StateBlock, startLine: number, endLine
     }
 
     // Case 2: line is not inside the blockquote, and the last line was empty.
-    if (lastLineEmpty) { break }
+    if (lastLineEmpty)
+      break
 
     // Case 3: another tag found.
     let terminate = false

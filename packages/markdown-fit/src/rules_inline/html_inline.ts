@@ -17,7 +17,8 @@ function isLetter(ch: number) {
 }
 
 export default function html_inline(state: StateInline, silent: boolean) {
-  if (!state.md.options.html) { return false }
+  if (!state.md.options.html)
+    return false
 
   // Check start
   const max = state.posMax
@@ -37,7 +38,8 @@ export default function html_inline(state: StateInline, silent: boolean) {
   }
 
   const match = state.src.slice(pos).match(HTML_TAG_RE)
-  if (!match) { return false }
+  if (!match)
+    return false
 
   if (!silent) {
     const token = state.push('html_inline', '', 0)

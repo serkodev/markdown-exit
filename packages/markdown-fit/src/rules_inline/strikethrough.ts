@@ -10,15 +10,18 @@ function strikethrough_tokenize(state: StateInline, silent: boolean) {
   const start = state.pos
   const marker = state.src.charCodeAt(start)
 
-  if (silent) { return false }
+  if (silent)
+    return false
 
-  if (marker !== 0x7E/* ~ */) { return false }
+  if (marker !== 0x7E/* ~ */)
+    return false
 
   const scanned = state.scanDelims(state.pos, true)
   let len = scanned.length
   const ch = String.fromCharCode(marker)
 
-  if (len < 2) { return false }
+  if (len < 2)
+    return false
 
   let token
 

@@ -30,7 +30,9 @@ export default function fragments_join(state: StateInline) {
       // collapse two adjacent text nodes
       tokens[curr + 1].content = tokens[curr].content + tokens[curr + 1].content
     } else {
-      if (curr !== last) { tokens[last] = tokens[curr] }
+      if (curr !== last) {
+        tokens[last] = tokens[curr]
+      }
 
       last++
     }

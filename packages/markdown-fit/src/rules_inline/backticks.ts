@@ -6,14 +6,17 @@ export default function backtick(state: StateInline, silent: boolean) {
   let pos = state.pos
   const ch = state.src.charCodeAt(pos)
 
-  if (ch !== 0x60/* ` */) { return false }
+  if (ch !== 0x60/* ` */)
+    return false
 
   const start = pos
   pos++
   const max = state.posMax
 
   // scan marker length
-  while (pos < max && state.src.charCodeAt(pos) === 0x60/* ` */) { pos++ }
+  while (pos < max && state.src.charCodeAt(pos) === 0x60/* ` */) {
+    pos++
+  }
 
   const marker = state.src.slice(start, pos)
   const openerLength = marker.length
@@ -33,7 +36,9 @@ export default function backtick(state: StateInline, silent: boolean) {
     matchEnd = matchStart + 1
 
     // scan marker length
-    while (matchEnd < max && state.src.charCodeAt(matchEnd) === 0x60/* ` */) { matchEnd++ }
+    while (matchEnd < max && state.src.charCodeAt(matchEnd) === 0x60/* ` */) {
+      matchEnd++
+    }
 
     const closerLength = matchEnd - matchStart
 

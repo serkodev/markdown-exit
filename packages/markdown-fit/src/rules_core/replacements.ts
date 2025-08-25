@@ -90,10 +90,12 @@ function replace_rare(inlineTokens: Token[]) {
 export default function replace(state: StateCore) {
   let blkIdx
 
-  if (!state.md.options.typographer) { return }
+  if (!state.md.options.typographer)
+    return
 
   for (blkIdx = state.tokens.length - 1; blkIdx >= 0; blkIdx--) {
-    if (state.tokens[blkIdx].type !== 'inline') { continue }
+    if (state.tokens[blkIdx].type !== 'inline')
+      continue
 
     if (SCOPED_ABBR_TEST_RE.test(state.tokens[blkIdx].content)) {
       replace_scoped(state.tokens[blkIdx].children)

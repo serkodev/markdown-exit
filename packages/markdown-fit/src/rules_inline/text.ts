@@ -48,9 +48,12 @@ export default function text(state: StateInline, silent: boolean) {
     pos++
   }
 
-  if (pos === state.pos) { return false }
+  if (pos === state.pos)
+    return false
 
-  if (!silent) { state.pending += state.src.slice(state.pos, pos) }
+  if (!silent) {
+    state.pending += state.src.slice(state.pos, pos)
+  }
 
   state.pos = pos
 

@@ -125,7 +125,8 @@ export default class Ruler<T> {
     const index = this.__find__(name)
     const opt = options || {}
 
-    if (index === -1) { throw new Error(`Parser rule not found: ${name}`) }
+    if (index === -1)
+      throw new Error(`Parser rule not found: ${name}`)
 
     this.__rules__[index].fn = fn
     this.__rules__[index].alt = opt.alt || []
@@ -160,7 +161,8 @@ export default class Ruler<T> {
     const index = this.__find__(beforeName)
     const opt = options || {}
 
-    if (index === -1) { throw new Error(`Parser rule not found: ${beforeName}`) }
+    if (index === -1)
+      throw new Error(`Parser rule not found: ${beforeName}`)
 
     this.__rules__.splice(index, 0, {
       name: ruleName,
@@ -200,7 +202,8 @@ export default class Ruler<T> {
     const index = this.__find__(afterName)
     const opt = options || {}
 
-    if (index === -1) { throw new Error(`Parser rule not found: ${afterName}`) }
+    if (index === -1)
+      throw new Error(`Parser rule not found: ${afterName}`)
 
     this.__rules__.splice(index + 1, 0, {
       name: ruleName,
@@ -261,7 +264,8 @@ export default class Ruler<T> {
    * See also [[Ruler.disable]], [[Ruler.enableOnly]].
    */
   enable(list: string | string[], ignoreInvalid?: boolean): string[] {
-    if (!Array.isArray(list)) { list = [list] }
+    if (!Array.isArray(list))
+      list = [list]
 
     const result: string[] = []
 
@@ -293,7 +297,8 @@ export default class Ruler<T> {
    * See also [[Ruler.disable]], [[Ruler.enable]].
    */
   enableOnly(list: string | string[], ignoreInvalid?: boolean): void {
-    if (!Array.isArray(list)) { list = [list] }
+    if (!Array.isArray(list))
+      list = [list]
 
     for (const rule of this.__rules__)
       rule.enabled = false
@@ -314,7 +319,8 @@ export default class Ruler<T> {
    * See also [[Ruler.enable]], [[Ruler.enableOnly]].
    */
   disable(list: string | string[], ignoreInvalid?: boolean): string[] {
-    if (!Array.isArray(list)) { list = [list] }
+    if (!Array.isArray(list))
+      list = [list]
 
     const result: string[] = []
 

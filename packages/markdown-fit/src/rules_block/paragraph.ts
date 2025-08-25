@@ -12,10 +12,12 @@ export default function paragraph(state: StateBlock, startLine: number, endLine:
   for (; nextLine < endLine && !state.isEmpty(nextLine); nextLine++) {
     // this would be a code block normally, but after paragraph
     // it's considered a lazy continuation regardless of what's there
-    if (state.sCount[nextLine] - state.blkIndent > 3) { continue }
+    if (state.sCount[nextLine] - state.blkIndent > 3)
+      continue
 
     // quirk for blockquotes, this line should already be checked by that rule
-    if (state.sCount[nextLine] < 0) { continue }
+    if (state.sCount[nextLine] < 0)
+      continue
 
     // Some tags can terminate paragraph without empty line.
     let terminate = false
@@ -25,7 +27,8 @@ export default function paragraph(state: StateBlock, startLine: number, endLine:
         break
       }
     }
-    if (terminate) { break }
+    if (terminate)
+      break
   }
 
   const content = state.getLines(startLine, nextLine, state.blkIndent, false).trim()

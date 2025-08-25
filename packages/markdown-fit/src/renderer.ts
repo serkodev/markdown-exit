@@ -163,7 +163,8 @@ export default class Renderer {
   renderAttrs(token: Token): string {
     let i, l, result
 
-    if (!token.attrs) { return '' }
+    if (!token.attrs)
+      return ''
 
     result = ''
 

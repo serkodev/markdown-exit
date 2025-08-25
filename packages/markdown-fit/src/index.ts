@@ -164,7 +164,7 @@ function normalizeLinkText(url: string) {
     if (!parsed.protocol || RECODE_HOSTNAME_FOR.includes(parsed.protocol)) {
       try {
         parsed.hostname = punycode.toUnicode(parsed.hostname)
-      } catch (er) { /**/ }
+      } catch { /**/ }
     }
   }
 
@@ -316,7 +316,8 @@ class MarkdownIt {
 
     this.configure(presetName as PresetName)
 
-    if (options) { this.set(options) }
+    if (options)
+      this.set(options)
   }
 
   /**
@@ -357,10 +358,12 @@ class MarkdownIt {
     if (utils.isString(presets)) {
       const presetName = presets
       presets = config[presetName]
-      if (!presets) { throw new Error(`Wrong \`markdown-it\` preset "${presetName}", check name`) }
+      if (!presets)
+        throw new Error(`Wrong \`markdown-it\` preset "${presetName}", check name`)
     }
 
-    if (!presets) { throw new Error('Wrong `markdown-it` preset, can\'t be empty') }
+    if (!presets)
+      throw new Error('Wrong `markdown-it` preset, can\'t be empty')
 
     if (presets.options)
       this.set(presets.options)
@@ -400,7 +403,8 @@ class MarkdownIt {
   enable(list: string | string[], ignoreInvalid?: boolean): this {
     let result: string[] = []
 
-    if (!Array.isArray(list)) { list = [list] }
+    if (!Array.isArray(list))
+      list = [list]
 
     const chains = ['core', 'block', 'inline'] as const
     for (const chain of chains) {
@@ -409,7 +413,7 @@ class MarkdownIt {
 
     result = result.concat(this.inline.ruler2.enable(list, true))
 
-    const missed = list.filter((name) => { return !result.includes(name) })
+    const missed = list.filter(name => !result.includes(name))
 
     if (missed.length && !ignoreInvalid) {
       throw new Error(`MarkdownIt. Failed to enable unknown rule(s): ${missed}`)
@@ -429,7 +433,8 @@ class MarkdownIt {
   disable(list: string | string[], ignoreInvalid?: boolean): this {
     let result: string[] = []
 
-    if (!Array.isArray(list)) { list = [list] }
+    if (!Array.isArray(list))
+      list = [list]
 
     const chains = ['core', 'block', 'inline'] as const
     for (const chain of chains) {
@@ -438,7 +443,7 @@ class MarkdownIt {
 
     result = result.concat(this.inline.ruler2.disable(list, true))
 
-    const missed = list.filter((name) => { return !result.includes(name) })
+    const missed = list.filter(name => !result.includes(name))
 
     if (missed.length && !ignoreInvalid) {
       throw new Error(`MarkdownIt. Failed to disable unknown rule(s): ${missed}`)

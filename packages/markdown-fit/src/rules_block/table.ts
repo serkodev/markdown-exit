@@ -56,26 +56,32 @@ function escapedSplit(str: string) {
 
 export default function table(state: StateBlock, startLine: number, endLine: number, silent: boolean) {
   // should have at least two lines
-  if (startLine + 2 > endLine) { return false }
+  if (startLine + 2 > endLine)
+    return false
 
   let nextLine = startLine + 1
 
-  if (state.sCount[nextLine] < state.blkIndent) { return false }
+  if (state.sCount[nextLine] < state.blkIndent)
+    return false
 
   // if it's indented more than 3 spaces, it should be a code block
-  if (state.sCount[nextLine] - state.blkIndent >= 4) { return false }
+  if (state.sCount[nextLine] - state.blkIndent >= 4)
+    return false
 
   // first character of the second line should be '|', '-', ':',
   // and no other characters are allowed but spaces;
   // basically, this is the equivalent of /^[-:|][-:|\s]*$/ regexp
 
   let pos = state.bMarks[nextLine] + state.tShift[nextLine]
-  if (pos >= state.eMarks[nextLine]) { return false }
+  if (pos >= state.eMarks[nextLine])
+    return false
 
   const firstCh = state.src.charCodeAt(pos++)
-  if (firstCh !== 0x7C/* | */ && firstCh !== 0x2D/* - */ && firstCh !== 0x3A/* : */) { return false }
+  if (firstCh !== 0x7C/* | */ && firstCh !== 0x2D/* - */ && firstCh !== 0x3A/* : */)
+    return false
 
-  if (pos >= state.eMarks[nextLine]) { return false }
+  if (pos >= state.eMarks[nextLine])
+    return false
 
   const secondCh = state.src.charCodeAt(pos++)
   if (secondCh !== 0x7C/* | */ && secondCh !== 0x2D/* - */ && secondCh !== 0x3A/* : */ && !isSpace(secondCh)) {
@@ -84,12 +90,14 @@ export default function table(state: StateBlock, startLine: number, endLine: num
 
   // if first character is '-', then second character must not be a space
   // (due to parsing ambiguity with list)
-  if (firstCh === 0x2D/* - */ && isSpace(secondCh)) { return false }
+  if (firstCh === 0x2D/* - */ && isSpace(secondCh))
+    return false
 
   while (pos < state.eMarks[nextLine]) {
     const ch = state.src.charCodeAt(pos)
 
-    if (ch !== 0x7C/* | */ && ch !== 0x2D/* - */ && ch !== 0x3A/* : */ && !isSpace(ch)) { return false }
+    if (ch !== 0x7C/* | */ && ch !== 0x2D/* - */ && ch !== 0x3A/* : */ && !isSpace(ch))
+      return false
 
     pos++
   }
@@ -109,7 +117,8 @@ export default function table(state: StateBlock, startLine: number, endLine: num
       }
     }
 
-    if (!/^:?-+:?$/.test(t)) { return false }
+    if (!/^:?-+:?$/.test(t))
+      return false
     if (t.charCodeAt(t.length - 1) === 0x3A/* : */) {
       aligns.push(t.charCodeAt(0) === 0x3A/* : */ ? 'center' : 'right')
     } else if (t.charCodeAt(0) === 0x3A/* : */) {
@@ -120,8 +129,10 @@ export default function table(state: StateBlock, startLine: number, endLine: num
   }
 
   lineText = getLine(state, startLine).trim()
-  if (!lineText.includes('|')) { return false }
-  if (state.sCount[startLine] - state.blkIndent >= 4) { return false }
+  if (!lineText.includes('|'))
+    return false
+  if (state.sCount[startLine] - state.blkIndent >= 4)
+    return false
   columns = escapedSplit(lineText)
   if (columns.length && columns[0] === '')
     columns.shift()
@@ -131,9 +142,11 @@ export default function table(state: StateBlock, startLine: number, endLine: num
   // header row will define an amount of columns in the entire table,
   // and align row should be exactly the same (the rest of the rows can differ)
   const columnCount = columns.length
-  if (columnCount === 0 || columnCount !== aligns.length) { return false }
+  if (columnCount === 0 || columnCount !== aligns.length)
+    return false
 
-  if (silent) { return true }
+  if (silent)
+    return true
 
   const oldParentType = state.parentType
   state.parentType = 'table'
@@ -172,7 +185,8 @@ export default function table(state: StateBlock, startLine: number, endLine: num
   let autocompletedCells = 0
 
   for (nextLine = startLine + 2; nextLine < endLine; nextLine++) {
-    if (state.sCount[nextLine] < state.blkIndent) { break }
+    if (state.sCount[nextLine] < state.blkIndent)
+      break
 
     let terminate = false
     for (let i = 0, l = terminatorRules.length; i < l; i++) {
@@ -182,10 +196,13 @@ export default function table(state: StateBlock, startLine: number, endLine: num
       }
     }
 
-    if (terminate) { break }
+    if (terminate)
+      break
     lineText = getLine(state, nextLine).trim()
-    if (!lineText) { break }
-    if (state.sCount[nextLine] - state.blkIndent >= 4) { break }
+    if (!lineText)
+      break
+    if (state.sCount[nextLine] - state.blkIndent >= 4)
+      break
     columns = escapedSplit(lineText)
     if (columns.length && columns[0] === '')
       columns.shift()
@@ -195,7 +212,8 @@ export default function table(state: StateBlock, startLine: number, endLine: num
     // note: autocomplete count can be negative if user specifies more columns than header,
     // but that does not affect intended use (which is limiting expansion)
     autocompletedCells += columnCount - columns.length
-    if (autocompletedCells > MAX_AUTOCOMPLETED_CELLS) { break }
+    if (autocompletedCells > MAX_AUTOCOMPLETED_CELLS)
+      break
 
     if (nextLine === startLine + 2) {
       const token_tbo = state.push('tbody_open', 'tbody', 1)

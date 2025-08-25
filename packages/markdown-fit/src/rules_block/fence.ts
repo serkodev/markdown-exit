@@ -7,9 +7,11 @@ export default function fence(state: StateBlock, startLine: number, endLine: num
   let max = state.eMarks[startLine]
 
   // if it's indented more than 3 spaces, it should be a code block
-  if (state.sCount[startLine] - state.blkIndent >= 4) { return false }
+  if (state.sCount[startLine] - state.blkIndent >= 4)
+    return false
 
-  if (pos + 3 > max) { return false }
+  if (pos + 3 > max)
+    return false
 
   const marker = state.src.charCodeAt(pos)
 
@@ -23,7 +25,8 @@ export default function fence(state: StateBlock, startLine: number, endLine: num
 
   let len = pos - mem
 
-  if (len < 3) { return false }
+  if (len < 3)
+    return false
 
   const markup = state.src.slice(mem, pos)
   const params = state.src.slice(pos, max)
@@ -35,7 +38,8 @@ export default function fence(state: StateBlock, startLine: number, endLine: num
   }
 
   // Since start is found, we can report success here in validation mode
-  if (silent) { return true }
+  if (silent)
+    return true
 
   // search end of block
   let nextLine = startLine
@@ -59,7 +63,8 @@ export default function fence(state: StateBlock, startLine: number, endLine: num
       break
     }
 
-    if (state.src.charCodeAt(pos) !== marker) { continue }
+    if (state.src.charCodeAt(pos) !== marker)
+      continue
 
     if (state.sCount[nextLine] - state.blkIndent >= 4) {
       // closing fence should be indented less than 4 spaces
@@ -69,12 +74,14 @@ export default function fence(state: StateBlock, startLine: number, endLine: num
     pos = state.skipChars(pos, marker)
 
     // closing code fence must be at least as long as the opening one
-    if (pos - mem < len) { continue }
+    if (pos - mem < len)
+      continue
 
     // make sure tail has spaces only
     pos = state.skipSpaces(pos)
 
-    if (pos < max) { continue }
+    if (pos < max)
+      continue
 
     haveEndMarker = true
     // found!

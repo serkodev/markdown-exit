@@ -95,12 +95,14 @@ export default class Token {
    * Search attribute index by name.
    */
   attrIndex(name: string): number {
-    if (!this.attrs) { return -1 }
+    if (!this.attrs)
+      return -1
 
     const attrs = this.attrs
 
     for (let i = 0, len = attrs.length; i < len; i++) {
-      if (attrs[i][0] === name) { return i }
+      if (attrs[i][0] === name)
+        return i
     }
     return -1
   }

@@ -6,7 +6,8 @@ export default function lheading(state: StateBlock, startLine: number, endLine: 
   const terminatorRules = state.md.block.ruler.getRules('paragraph')
 
   // if it's indented more than 3 spaces, it should be a code block
-  if (state.sCount[startLine] - state.blkIndent >= 4) { return false }
+  if (state.sCount[startLine] - state.blkIndent >= 4)
+    return false
 
   const oldParentType = state.parentType
   state.parentType = 'paragraph' // use paragraph to match terminatorRules
@@ -19,7 +20,8 @@ export default function lheading(state: StateBlock, startLine: number, endLine: 
   for (; nextLine < endLine && !state.isEmpty(nextLine); nextLine++) {
     // this would be a code block normally, but after paragraph
     // it's considered a lazy continuation regardless of what's there
-    if (state.sCount[nextLine] - state.blkIndent > 3) { continue }
+    if (state.sCount[nextLine] - state.blkIndent > 3)
+      continue
 
     //
     // Check for underline in setext header
@@ -44,7 +46,8 @@ export default function lheading(state: StateBlock, startLine: number, endLine: 
     }
 
     // quirk for blockquotes, this line should already be checked by that rule
-    if (state.sCount[nextLine] < 0) { continue }
+    if (state.sCount[nextLine] < 0)
+      continue
 
     // Some tags can terminate paragraph without empty line.
     let terminate = false
@@ -54,7 +57,8 @@ export default function lheading(state: StateBlock, startLine: number, endLine: 
         break
       }
     }
-    if (terminate) { break }
+    if (terminate)
+      break
   }
 
   if (!level) {

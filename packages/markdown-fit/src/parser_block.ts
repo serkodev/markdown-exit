@@ -68,11 +68,13 @@ export default class ParserBlock {
 
     while (line < endLine) {
       state.line = line = state.skipEmptyLines(line)
-      if (line >= endLine) { break }
+      if (line >= endLine)
+        break
 
       // Termination condition for nested calls.
       // Nested calls currently used for blockquotes & lists
-      if (state.sCount[line] < state.blkIndent) { break }
+      if (state.sCount[line] < state.blkIndent)
+        break
 
       // If nesting level exceeded - skip tail to the end. That's not ordinary
       // situation and we should not care about content.
@@ -127,7 +129,8 @@ export default class ParserBlock {
    * Process input string and push block tokens into `outTokens`
    */
   parse(src: string, md: MarkdownIt, env: any, outTokens: Token[]) {
-    if (!src) { return }
+    if (!src)
+      return
 
     const state = new this.State(src, md, env, outTokens)
 
