@@ -8,7 +8,7 @@
 
 import type { Options } from '.'
 import type Token from './token'
-import { assign, escapeHtml, unescapeAll } from './common/utils'
+import { escapeHtml, unescapeAll } from './common/utils'
 
 export type RenderRule = (tokens: Token[], idx: number, options: Options, env: any, self: Renderer) => string
 
@@ -149,13 +149,12 @@ export default class Renderer {
    *
    * @see https://github.com/markdown-it/markdown-it/blob/master/lib/renderer.mjs
    */
-  rules: RenderRuleRecord
+  rules: RenderRuleRecord = Object.assign({}, default_rules)
 
   /**
    * Creates new {@link Renderer} instance and fill {@link Renderer#rules} with defaults.
    */
   constructor() {
-    this.rules = assign({}, default_rules)
   }
 
   /**

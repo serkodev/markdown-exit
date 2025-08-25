@@ -1,6 +1,7 @@
 /**
  * markdown-fit notes:
  * - drop re-export mdurl and ucmicro
+ * - drop `assign` with `Object.assign`
  */
 
 // Utilities
@@ -17,24 +18,6 @@ const _hasOwnProperty = Object.prototype.hasOwnProperty
 
 export function has(object: object, key: string | number | symbol): boolean {
   return _hasOwnProperty.call(object, key)
-}
-
-// Merge objects
-//
-export function assign<T extends object, U extends object[]>(obj: T, ...sources: U): T & U[number] {
-  sources.forEach((source) => {
-    if (!source) { return }
-
-    if (typeof source !== 'object') {
-      throw new TypeError(`${source}must be object`)
-    }
-
-    Object.keys(source).forEach((key) => {
-      obj[key] = source[key]
-    })
-  })
-
-  return obj as T & U[number]
 }
 
 // Remove element from array and put another array at those position.

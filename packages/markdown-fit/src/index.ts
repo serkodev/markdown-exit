@@ -298,7 +298,7 @@ class MarkdownIt {
    * Link components parser functions, useful to write plugins. See details
    * [here](https://github.com/markdown-it/markdown-it/blob/master/lib/helpers).
    */
-  helpers: typeof helpers = utils.assign({}, helpers)
+  helpers: typeof helpers = Object.assign({}, helpers)
 
   options: Options = {}
 
@@ -339,7 +339,7 @@ class MarkdownIt {
    * config.
    */
   set(options: Options): this {
-    utils.assign(this.options, options)
+    Object.assign(this.options, options)
     return this
   }
 
