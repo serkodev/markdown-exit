@@ -7,9 +7,8 @@ const ESCAPED: number[] = []
 
 for (let i = 0; i < 256; i++) { ESCAPED.push(0) }
 
-'\\!"#$%&\'()*+,./:;<=>?@[]^_`{|}~-'
-  .split('')
-  .forEach((ch) => { ESCAPED[ch.charCodeAt(0)] = 1 })
+for (const ch of '\\!"#$%&\'()*+,./:;<=>?@[]^_`{|}~-'.split(''))
+  ESCAPED[ch.charCodeAt(0)] = 1
 
 export default function escape(state: StateInline, silent: boolean) {
   let pos = state.pos

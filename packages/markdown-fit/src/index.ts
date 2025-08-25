@@ -367,14 +367,14 @@ class MarkdownIt {
     if (presets.options) { self.set(presets.options) }
 
     if (presets.components) {
-      Object.keys(presets.components).forEach((name) => {
+      for (const name of Object.keys(presets.components)) {
         if (presets.components[name].rules) {
           self[name].ruler.enableOnly(presets.components[name].rules)
         }
         if (presets.components[name].rules2) {
           self[name].ruler2.enableOnly(presets.components[name].rules2)
         }
-      })
+      }
     }
     return this
   }
@@ -402,9 +402,10 @@ class MarkdownIt {
 
     if (!Array.isArray(list)) { list = [list] }
 
-    ['core', 'block', 'inline'].forEach(function (chain) {
+    const chains = ['core', 'block', 'inline'] as const
+    for (const chain of chains) {
       result = result.concat(this[chain].ruler.enable(list, true))
-    }, this)
+    }
 
     result = result.concat(this.inline.ruler2.enable(list, true))
 
@@ -430,9 +431,10 @@ class MarkdownIt {
 
     if (!Array.isArray(list)) { list = [list] }
 
-    ['core', 'block', 'inline'].forEach(function (chain) {
+    const chains = ['core', 'block', 'inline'] as const
+    for (const chain of chains) {
       result = result.concat(this[chain].ruler.disable(list, true))
-    }, this)
+    }
 
     result = result.concat(this.inline.ruler2.disable(list, true))
 

@@ -66,32 +66,34 @@ export default class Ruler<T> {
   // Build rules lookup cache
   //
   private __compile__(): void {
-    const self = this
     const chains = ['']
 
     // collect unique names
-    self.__rules__.forEach((rule) => {
-      if (!rule.enabled) { return }
+    for (const rule of this.__rules__) {
+      if (!rule.enabled)
+        continue
 
-      rule.alt.forEach((altName) => {
+      for (const altName of rule.alt) {
         if (!chains.includes(altName)) {
           chains.push(altName)
         }
-      })
-    })
+      }
+    }
 
-    self.__cache__ = {}
+    this.__cache__ = {}
 
-    chains.forEach((chain) => {
-      self.__cache__[chain] = []
-      self.__rules__.forEach((rule) => {
-        if (!rule.enabled) { return }
+    for (const chain of chains) {
+      this.__cache__[chain] = []
+      for (const rule of this.__rules__) {
+        if (!rule.enabled)
+          continue
 
-        if (chain && !rule.alt.includes(chain)) { return }
+        if (chain && !rule.alt.includes(chain))
+          continue
 
-        self.__cache__[chain].push(rule.fn)
-      })
-    })
+        this.__cache__[chain].push(rule.fn)
+      }
+    }
   }
 
   /**
@@ -264,16 +266,17 @@ export default class Ruler<T> {
     const result: string[] = []
 
     // Search by name and enable
-    list.forEach(function (name) {
+    for (const name of list) {
       const idx = this.__find__(name)
 
       if (idx < 0) {
-        if (ignoreInvalid) { return }
+        if (ignoreInvalid)
+          continue
         throw new Error(`Rules manager: invalid rule name ${name}`)
       }
       this.__rules__[idx].enabled = true
       result.push(name)
-    }, this)
+    }
 
     this.__cache__ = null
     return result
@@ -292,7 +295,8 @@ export default class Ruler<T> {
   enableOnly(list: string | string[], ignoreInvalid?: boolean): void {
     if (!Array.isArray(list)) { list = [list] }
 
-    this.__rules__.forEach((rule) => { rule.enabled = false })
+    for (const rule of this.__rules__)
+      rule.enabled = false
 
     this.enable(list, ignoreInvalid)
   }
@@ -315,16 +319,17 @@ export default class Ruler<T> {
     const result: string[] = []
 
     // Search by name and disable
-    list.forEach(function (name) {
+    for (const name of list) {
       const idx = this.__find__(name)
 
       if (idx < 0) {
-        if (ignoreInvalid) { return }
+        if (ignoreInvalid)
+          continue
         throw new Error(`Rules manager: invalid rule name ${name}`)
       }
       this.__rules__[idx].enabled = false
       result.push(name)
-    }, this)
+    }
 
     this.__cache__ = null
     return result
