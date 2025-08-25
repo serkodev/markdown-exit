@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:",
-    "@types/node": "catalog:",
+    "@types/node": "catalog:types",
     "bumpp": "catalog:",
     "eslint": "catalog:",
     "tsdown": "catalog:",

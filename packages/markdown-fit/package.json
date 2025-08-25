@@ -31,11 +31,14 @@
   },
   "dependencies": {
     "entities": "catalog:integrations",
+    "linkify-it": "catalog:integrations",
     "mdurl": "catalog:integrations",
+    "punycode.js": "catalog:integrations",
     "uc.micro": "catalog:integrations"
   },
   "devDependencies": {
-    "@types/markdown-it": "catalog:",
+    "@types/linkify-it": "catalog:types",
+    "@types/markdown-it": "catalog:types",
     "@types/mdurl": "catalog:types"
   }
 }
