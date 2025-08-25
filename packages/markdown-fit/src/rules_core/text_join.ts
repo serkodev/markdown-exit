@@ -6,7 +6,9 @@
 // For example, `\:)` shouldn't be replaced with an emoji.
 //
 
-export default function text_join(state) {
+import type StateCore from './state_core'
+
+export default function text_join(state: StateCore) {
   let curr, last
   const blockTokens = state.tokens
   const l = blockTokens.length

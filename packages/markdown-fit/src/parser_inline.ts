@@ -5,9 +5,10 @@
  * Tokenizes paragraph content.
  */
 
+import type MarkdownIt from '.'
+import type Token from './token'
 import Ruler from './ruler'
 import r_autolink from './rules_inline/autolink'
-
 import r_backticks from './rules_inline/backticks'
 import r_balance_pairs from './rules_inline/balance_pairs'
 import r_emphasis from './rules_inline/emphasis'
@@ -39,7 +40,9 @@ const _rules = [
   ['autolink', r_autolink],
   ['html_inline', r_html_inline],
   ['entity', r_entity],
-]
+] as const
+
+export type InlineRule = typeof _rules[number][0]
 
 // `rule2` ruleset was created specifically for emphasis/strikethrough
 // post-processing and may be changed in the future.
@@ -53,69 +56,84 @@ const _rules2 = [
   // rules for pairs separate '**' into its own text tokens, which may be left unused,
   // rule below merges unused segments back with the rest of the text
   ['fragments_join', r_fragments_join],
-]
+] as const
 
-/**
- * new ParserInline()
- */
-function ParserInline() {
+export type InlineRule2 = typeof _rules2[number][0]
+
+export type RuleInline = (state: StateInline, silent: boolean) => boolean
+export type RuleInline2 = (state: StateInline) => boolean
+
+export default class ParserInline {
   /**
-   * ParserInline#ruler -> Ruler
-   *
-   * [[Ruler]] instance. Keep configuration of inline rules.
+   * {@link Ruler} instance. Keep configuration of inline rules.
    */
-  this.ruler = new Ruler()
-
-  for (let i = 0; i < _rules.length; i++) {
-    this.ruler.push(_rules[i][0], _rules[i][1])
-  }
+  ruler: Ruler<RuleInline>
 
   /**
-   * ParserInline#ruler2 -> Ruler
-   *
-   * [[Ruler]] instance. Second ruler used for post-processing
+   * {@link Ruler} instance. Second ruler used for post-processing
    * (e.g. in emphasis-like rules).
    */
-  this.ruler2 = new Ruler()
+  ruler2: Ruler<RuleInline2>
 
-  for (let i = 0; i < _rules2.length; i++) {
-    this.ruler2.push(_rules2[i][0], _rules2[i][1])
+  constructor() {
+    /**
+     * ParserInline#ruler -> Ruler
+     *
+     * [[Ruler]] instance. Keep configuration of inline rules.
+     */
+    this.ruler = new Ruler()
+
+    for (let i = 0; i < _rules.length; i++) {
+      this.ruler.push(_rules[i][0], _rules[i][1])
+    }
+
+    /**
+     * ParserInline#ruler2 -> Ruler
+     *
+     * [[Ruler]] instance. Second ruler used for post-processing
+     * (e.g. in emphasis-like rules).
+     */
+    this.ruler2 = new Ruler()
+
+    for (let i = 0; i < _rules2.length; i++) {
+      this.ruler2.push(_rules2[i][0], _rules2[i][1])
+    }
   }
-}
 
-// Skip single token by running all rules in validation mode;
-// returns `true` if any rule reported success
-//
-ParserInline.prototype.skipToken = function (state) {
-  const pos = state.pos
-  const rules = this.ruler.getRules('')
-  const len = rules.length
-  const maxNesting = state.md.options.maxNesting
-  const cache = state.cache
+  /**
+   * Skip single token by running all rules in validation mode;
+   * returns `true` if any rule reported success
+   */
+  skipToken(state: StateInline) {
+    const pos = state.pos
+    const rules = this.ruler.getRules('')
+    const len = rules.length
+    const maxNesting = state.md.options.maxNesting
+    const cache = state.cache
 
-  if (typeof cache[pos] !== 'undefined') {
-    state.pos = cache[pos]
-    return
-  }
+    if (typeof cache[pos] !== 'undefined') {
+      state.pos = cache[pos]
+      return
+    }
 
-  let ok = false
+    let ok = false
 
-  if (state.level < maxNesting) {
-    for (let i = 0; i < len; i++) {
+    if (state.level < maxNesting) {
+      for (let i = 0; i < len; i++) {
       // Increment state.level and decrement it later to limit recursion.
       // It's harmless to do here, because no tokens are created. But ideally,
       // we'd need a separate private state variable for this purpose.
       //
-      state.level++
-      ok = rules[i](state, true)
-      state.level--
+        state.level++
+        ok = rules[i](state, true)
+        state.level--
 
-      if (ok) {
-        if (pos >= state.pos) { throw new Error('inline rule didn\'t increment state.pos') }
-        break
+        if (ok) {
+          if (pos >= state.pos) { throw new Error('inline rule didn\'t increment state.pos') }
+          break
+        }
       }
-    }
-  } else {
+    } else {
     // Too much nesting, just skip until the end of the paragraph.
     //
     // NOTE: this will cause links to behave incorrectly in the following case,
@@ -127,72 +145,70 @@ ParserInline.prototype.skipToken = function (state) {
     //       (we can replace it by preventing links from being parsed in
     //       validation mode)
     //
-    state.pos = state.posMax
+      state.pos = state.posMax
+    }
+
+    if (!ok) { state.pos++ }
+    cache[pos] = state.pos
   }
 
-  if (!ok) { state.pos++ }
-  cache[pos] = state.pos
-}
+  /**
+   * Generate tokens for input range
+   */
+  tokenize(state: StateInline) {
+    const rules = this.ruler.getRules('')
+    const len = rules.length
+    const end = state.posMax
+    const maxNesting = state.md.options.maxNesting
 
-// Generate tokens for input range
-//
-ParserInline.prototype.tokenize = function (state) {
-  const rules = this.ruler.getRules('')
-  const len = rules.length
-  const end = state.posMax
-  const maxNesting = state.md.options.maxNesting
-
-  while (state.pos < end) {
+    while (state.pos < end) {
     // Try all possible rules.
     // On success, rule should:
     //
     // - update `state.pos`
     // - update `state.tokens`
     // - return true
-    const prevPos = state.pos
-    let ok = false
+      const prevPos = state.pos
+      let ok = false
 
-    if (state.level < maxNesting) {
-      for (let i = 0; i < len; i++) {
-        ok = rules[i](state, false)
-        if (ok) {
-          if (prevPos >= state.pos) { throw new Error('inline rule didn\'t increment state.pos') }
-          break
+      if (state.level < maxNesting) {
+        for (let i = 0; i < len; i++) {
+          ok = rules[i](state, false)
+          if (ok) {
+            if (prevPos >= state.pos) { throw new Error('inline rule didn\'t increment state.pos') }
+            break
+          }
         }
       }
+
+      if (ok) {
+        if (state.pos >= end) { break }
+        continue
+      }
+
+      state.pending += state.src[state.pos++]
     }
 
-    if (ok) {
-      if (state.pos >= end) { break }
-      continue
+    if (state.pending) {
+      state.pushPending()
     }
-
-    state.pending += state.src[state.pos++]
   }
 
-  if (state.pending) {
-    state.pushPending()
+  /**
+   * Process input string and push inline tokens into `outTokens`
+   */
+  parse(str: string, md: MarkdownIt, env: any, outTokens: Token[]) {
+    const state = new this.State(str, md, env, outTokens)
+
+    this.tokenize(state)
+
+    const rules = this.ruler2.getRules('')
+    const len = rules.length
+
+    for (let i = 0; i < len; i++) {
+      rules[i](state)
+    }
   }
+
+  State = StateInline
 }
-
-/**
- * ParserInline.parse(str, md, env, outTokens)
- *
- * Process input string and push inline tokens into `outTokens`
- */
-ParserInline.prototype.parse = function (str, md, env, outTokens) {
-  const state = new this.State(str, md, env, outTokens)
-
-  this.tokenize(state)
-
-  const rules = this.ruler2.getRules('')
-  const len = rules.length
-
-  for (let i = 0; i < len; i++) {
-    rules[i](state)
-  }
-}
-
-ParserInline.prototype.State = StateInline
-
-export default ParserInline

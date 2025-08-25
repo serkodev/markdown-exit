@@ -1,8 +1,10 @@
 // Process [link](<to> "stuff")
 
+import type { HTMLAttribute } from '../token'
+import type StateInline from './state_inline'
 import { isSpace, normalizeReference } from '../common/utils'
 
-export default function link(state, silent) {
+export default function link(state: StateInline, silent: boolean) {
   let code, label, res, ref
   let href = ''
   let title = ''
@@ -120,7 +122,7 @@ export default function link(state, silent) {
     state.posMax = labelEnd
 
     const token_o = state.push('link_open', 'a', 1)
-    const attrs = [['href', href]]
+    const attrs: HTMLAttribute[] = [['href', href]]
     token_o.attrs = attrs
     if (title) {
       attrs.push(['title', title])

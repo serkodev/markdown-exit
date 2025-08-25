@@ -1,5 +1,7 @@
 // GFM table, https://github.github.com/gfm/#tables-extension-
 
+import type { SourceMapLineRange } from '../token'
+import type StateBlock from './state_block'
 import { isSpace } from '../common/utils'
 
 // Limit the amount of empty autocompleted cells in a table,
@@ -10,15 +12,15 @@ import { isSpace } from '../common/utils'
 // (256x256 square is 1.8kB expanded into 650kB).
 const MAX_AUTOCOMPLETED_CELLS = 0x10000
 
-function getLine(state, line) {
+function getLine(state: StateBlock, line: number) {
   const pos = state.bMarks[line] + state.tShift[line]
   const max = state.eMarks[line]
 
   return state.src.slice(pos, max)
 }
 
-function escapedSplit(str) {
-  const result = []
+function escapedSplit(str: string) {
+  const result: string[] = []
   const max = str.length
 
   let pos = 0
@@ -52,7 +54,7 @@ function escapedSplit(str) {
   return result
 }
 
-export default function table(state, startLine, endLine, silent) {
+export default function table(state: StateBlock, startLine: number, endLine: number, silent: boolean) {
   // should have at least two lines
   if (startLine + 2 > endLine) { return false }
 
@@ -141,7 +143,7 @@ export default function table(state, startLine, endLine, silent) {
   const terminatorRules = state.md.block.ruler.getRules('blockquote')
 
   const token_to = state.push('table_open', 'table', 1)
-  const tableLines = [startLine, 0]
+  const tableLines: SourceMapLineRange = [startLine, 0]
   token_to.map = tableLines
 
   const token_tho = state.push('thead_open', 'thead', 1)
@@ -166,7 +168,7 @@ export default function table(state, startLine, endLine, silent) {
   state.push('tr_close', 'tr', -1)
   state.push('thead_close', 'thead', -1)
 
-  let tbodyLines
+  let tbodyLines: SourceMapLineRange | undefined
   let autocompletedCells = 0
 
   for (nextLine = startLine + 2; nextLine < endLine; nextLine++) {

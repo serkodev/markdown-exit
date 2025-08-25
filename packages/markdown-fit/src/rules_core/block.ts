@@ -1,4 +1,6 @@
-export default function block(state) {
+import type StateCore from './state_core'
+
+export default function block(state: StateCore) {
   let token
 
   if (state.inlineMode) {

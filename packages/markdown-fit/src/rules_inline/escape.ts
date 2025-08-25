@@ -1,8 +1,9 @@
 // Process escaped chars and hardbreaks
 
+import type StateInline from './state_inline'
 import { isSpace } from '../common/utils'
 
-const ESCAPED = []
+const ESCAPED: number[] = []
 
 for (let i = 0; i < 256; i++) { ESCAPED.push(0) }
 
@@ -10,7 +11,7 @@ for (let i = 0; i < 256; i++) { ESCAPED.push(0) }
   .split('')
   .forEach((ch) => { ESCAPED[ch.charCodeAt(0)] = 1 })
 
-export default function escape(state, silent) {
+export default function escape(state: StateInline, silent: boolean) {
   let pos = state.pos
   const max = state.posMax
 

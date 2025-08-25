@@ -1,6 +1,8 @@
 // "Zero" preset, with nothing enabled. Useful for manual configuring of simple
 // modes. For example, to parse bold/italic only.
 
+import type { Preset } from '../types/preset'
+
 export default {
   options: {
     // Enable HTML tags in source
@@ -67,4 +69,4 @@ export default {
       ],
     },
   },
-}
+} satisfies Preset as Preset

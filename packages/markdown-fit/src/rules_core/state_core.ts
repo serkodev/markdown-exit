@@ -1,17 +1,26 @@
 // Core state object
 //
 
+import type MarkdownIt from '..'
 import Token from '../token'
 
-function StateCore(src, md, env) {
-  this.src = src
-  this.env = env
-  this.tokens = []
-  this.inlineMode = false
-  this.md = md // link to parser instance
+export default class StateCore {
+  src: string
+  env: any
+  tokens: Token[] = []
+  inlineMode: boolean = false
+
+  /**
+   * link to parser instance
+   */
+  md: MarkdownIt
+
+  constructor(src: string, md: MarkdownIt, env: any) {
+    this.src = src
+    this.env = env
+    this.md = md
+  }
+
+  // re-export Token class to use in core rules
+  Token = Token
 }
-
-// re-export Token class to use in core rules
-StateCore.prototype.Token = Token
-
-export default StateCore

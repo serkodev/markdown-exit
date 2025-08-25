@@ -1,4 +1,6 @@
-export default function inline(state) {
+import type StateCore from './state_core'
+
+export default function inline(state: StateCore) {
   const tokens = state.tokens
 
   // Parse inlines

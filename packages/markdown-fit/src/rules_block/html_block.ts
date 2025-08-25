@@ -1,12 +1,13 @@
 // HTML block
 
+import type StateBlock from './state_block'
 import block_names from '../common/html_blocks'
 import { HTML_OPEN_CLOSE_TAG_RE } from '../common/html_re'
 
 // An array of opening and corresponding closing sequences for html tags,
 // last argument defines whether it can terminate a paragraph or not
 //
-const HTML_SEQUENCES = [
+const HTML_SEQUENCES: [RegExp, RegExp, boolean][] = [
   [/^<(script|pre|style|textarea)(?=(\s|>|$))/i, /<\/(script|pre|style|textarea)>/i, true],
   [/^<!--/, /-->/, true],
   [/^<\?/, /\?>/, true],
@@ -16,7 +17,7 @@ const HTML_SEQUENCES = [
   [new RegExp(`${HTML_OPEN_CLOSE_TAG_RE.source}\\s*$`), /^$/, false],
 ]
 
-export default function html_block(state, startLine, endLine, silent) {
+export default function html_block(state: StateBlock, startLine: number, endLine: number, silent: boolean) {
   let pos = state.bMarks[startLine] + state.tShift[startLine]
   let max = state.eMarks[startLine]
 

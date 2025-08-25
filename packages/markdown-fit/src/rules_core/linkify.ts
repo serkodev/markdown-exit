@@ -3,16 +3,17 @@
 // Currently restricted by `md.validateLink()` to http/https/ftp
 //
 
+import type StateCore from './state_core'
 import { arrayReplaceAt } from '../common/utils'
 
-function isLinkOpen(str) {
+function isLinkOpen(str: string) {
   return /^<a[>\s]/i.test(str)
 }
-function isLinkClose(str) {
+function isLinkClose(str: string) {
   return /^<\/a\s*>/i.test(str)
 }
 
-export default function linkify(state) {
+export default function linkify(state: StateCore) {
   const blockTokens = state.tokens
 
   if (!state.md.options.linkify) { return }

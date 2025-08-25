@@ -1,6 +1,7 @@
+import type StateBlock from './state_block'
 import { isSpace, normalizeReference } from '../common/utils'
 
-export default function reference(state, startLine, _endLine, silent) {
+export default function reference(state: StateBlock, startLine: number, endLine: number, silent: boolean) {
   let pos = state.bMarks[startLine] + state.tShift[startLine]
   let max = state.eMarks[startLine]
   let nextLine = startLine + 1
@@ -10,7 +11,7 @@ export default function reference(state, startLine, _endLine, silent) {
 
   if (state.src.charCodeAt(pos) !== 0x5B/* [ */) { return false }
 
-  function getNextLine(nextLine) {
+  function getNextLine(nextLine: number) {
     const endLine = state.lineMax
 
     if (nextLine >= endLine || state.isEmpty(nextLine)) {
@@ -134,7 +135,7 @@ export default function reference(state, startLine, _endLine, silent) {
         nextLine++
       }
     } else if (isSpace(ch)) {
-      /* eslint no-empty:0 */
+      // ignore
     } else {
       break
     }

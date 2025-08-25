@@ -1,8 +1,9 @@
 // heading (#, ##, ...)
 
+import type StateBlock from './state_block'
 import { isSpace } from '../common/utils'
 
-export default function heading(state, startLine, endLine, silent) {
+export default function heading(state: StateBlock, startLine: number, endLine: number, silent: boolean) {
   let pos = state.bMarks[startLine] + state.tShift[startLine]
   let max = state.eMarks[startLine]
 

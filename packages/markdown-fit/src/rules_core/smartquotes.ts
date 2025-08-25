@@ -1,17 +1,19 @@
 // Convert straight quotation marks to typographic ones
 //
 
+import type Token from '../token'
+import type StateCore from './state_core'
 import { isMdAsciiPunct, isPunctChar, isWhiteSpace } from '../common/utils'
 
 const QUOTE_TEST_RE = /['"]/
 const QUOTE_RE = /['"]/g
 const APOSTROPHE = '\u2019' /* ’ */
 
-function replaceAt(str, index, ch) {
+function replaceAt(str: string, index: number, ch: string) {
   return str.slice(0, index) + ch + str.slice(index + 1)
 }
 
-function process_inlines(tokens, state) {
+function process_inlines(tokens: Token[], state: StateCore) {
   let j
 
   const stack = []
@@ -185,7 +187,7 @@ function process_inlines(tokens, state) {
   }
 }
 
-export default function smartquotes(state) {
+export default function smartquotes(state: StateCore) {
   /* eslint max-depth:0 */
   if (!state.md.options.typographer) { return }
 

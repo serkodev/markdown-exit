@@ -1,25 +1,27 @@
+/**
+ * markdown-fit notes:
+ * - drop re-export mdurl and ucmicro
+ */
+
 // Utilities
 //
 
 import { decodeHTML } from 'entities'
-import * as mdurl from 'mdurl'
 import * as ucmicro from 'uc.micro'
 
-function _class(obj) { return Object.prototype.toString.call(obj) }
+function _class<T>(obj: T): string { return Object.prototype.toString.call(obj) }
 
-function isString(obj) { return _class(obj) === '[object String]' }
+export function isString(obj: unknown): obj is string { return _class(obj) === '[object String]' }
 
 const _hasOwnProperty = Object.prototype.hasOwnProperty
 
-function has(object, key) {
+export function has(object: object, key: string | number | symbol): boolean {
   return _hasOwnProperty.call(object, key)
 }
 
 // Merge objects
 //
-function assign(obj /* from1, from2, from3, ... */) {
-  const sources = Array.prototype.slice.call(arguments, 1)
-
+export function assign<T extends object, U extends object[]>(obj: T, ...sources: U): T & U[number] {
   sources.forEach((source) => {
     if (!source) { return }
 
@@ -32,16 +34,16 @@ function assign(obj /* from1, from2, from3, ... */) {
     })
   })
 
-  return obj
+  return obj as T & U[number]
 }
 
 // Remove element from array and put another array at those position.
 // Useful for some operations with tokens
-function arrayReplaceAt(src, pos, newElements) {
+export function arrayReplaceAt<T>(src: readonly T[], pos: number, newElements: readonly T[]): T[] {
   return [].concat(src.slice(0, pos), newElements, src.slice(pos + 1))
 }
 
-function isValidEntityCode(c) {
+export function isValidEntityCode(c: number): boolean {
   /* eslint no-bitwise:0 */
   // broken sequence
   if (c >= 0xD800 && c <= 0xDFFF) { return false }
@@ -58,8 +60,7 @@ function isValidEntityCode(c) {
   return true
 }
 
-function fromCodePoint(c) {
-  /* eslint no-bitwise:0 */
+export function fromCodePoint(c: number): string {
   if (c > 0xFFFF) {
     c -= 0x10000
     const surrogate1 = 0xD800 + (c >> 10)
@@ -74,9 +75,10 @@ const UNESCAPE_MD_RE = /\\([!"#$%&'()*+,\-./:;<=>?@[\\\]^_`{|}~])/g
 const ENTITY_RE = /&([a-z#][a-z0-9]{1,31});/gi
 const UNESCAPE_ALL_RE = new RegExp(`${UNESCAPE_MD_RE.source}|${ENTITY_RE.source}`, 'gi')
 
+// eslint-disable-next-line regexp/no-unused-capturing-group
 const DIGITAL_ENTITY_TEST_RE = /^#(x[a-f0-9]{1,8}|\d{1,8})$/i
 
-function replaceEntityPattern(match, name) {
+function replaceEntityPattern(match: string, name: string): string {
   if (name.charCodeAt(0) === 0x23/* # */ && DIGITAL_ENTITY_TEST_RE.test(name)) {
     const code = name[1].toLowerCase() === 'x'
       ? Number.parseInt(name.slice(2), 16)
@@ -97,21 +99,15 @@ function replaceEntityPattern(match, name) {
   return match
 }
 
-/* function replaceEntities(str) {
-  if (str.indexOf('&') < 0) { return str; }
-
-  return str.replace(ENTITY_RE, replaceEntityPattern);
-} */
-
-function unescapeMd(str) {
+export function unescapeMd(str: string): string {
   if (!str.includes('\\')) { return str }
   return str.replace(UNESCAPE_MD_RE, '$1')
 }
 
-function unescapeAll(str) {
+export function unescapeAll(str: string): string {
   if (!str.includes('\\') && !str.includes('&')) { return str }
 
-  return str.replace(UNESCAPE_ALL_RE, (match, escaped, entity) => {
+  return str.replace(UNESCAPE_ALL_RE, (match: string, escaped: string, entity: string) => {
     if (escaped) { return escaped }
     return replaceEntityPattern(match, entity)
   })
@@ -119,18 +115,18 @@ function unescapeAll(str) {
 
 const HTML_ESCAPE_TEST_RE = /[&<>"]/
 const HTML_ESCAPE_REPLACE_RE = /[&<>"]/g
-const HTML_REPLACEMENTS = {
+const HTML_REPLACEMENTS: Record<string, string> = {
   '&': '&amp;',
   '<': '&lt;',
   '>': '&gt;',
   '"': '&quot;',
 }
 
-function replaceUnsafeChar(ch) {
+function replaceUnsafeChar(ch: string): string {
   return HTML_REPLACEMENTS[ch]
 }
 
-function escapeHtml(str) {
+export function escapeHtml(str: string): string {
   if (HTML_ESCAPE_TEST_RE.test(str)) {
     return str.replace(HTML_ESCAPE_REPLACE_RE, replaceUnsafeChar)
   }
@@ -139,11 +135,11 @@ function escapeHtml(str) {
 
 const REGEXP_ESCAPE_RE = /[.?*+^$[\]\\(){}|-]/g
 
-function escapeRE(str) {
+export function escapeRE(str: string): string {
   return str.replace(REGEXP_ESCAPE_RE, '\\$&')
 }
 
-function isSpace(code) {
+export function isSpace(code: number): boolean {
   switch (code) {
     case 0x09:
     case 0x20:
@@ -153,7 +149,7 @@ function isSpace(code) {
 }
 
 // Zs (unicode class) || [\t\f\v\r\n]
-function isWhiteSpace(code) {
+export function isWhiteSpace(code: number): boolean {
   if (code >= 0x2000 && code <= 0x200A) { return true }
   switch (code) {
     case 0x09: // \t
@@ -173,7 +169,7 @@ function isWhiteSpace(code) {
 }
 
 // Currently without astral characters support.
-function isPunctChar(ch) {
+export function isPunctChar(ch: string): boolean {
   return ucmicro.P.test(ch) || ucmicro.S.test(ch)
 }
 
@@ -184,7 +180,7 @@ function isPunctChar(ch) {
 //
 // Don't confuse with unicode punctuation !!! It lacks some chars in ascii range.
 //
-function isMdAsciiPunct(ch) {
+export function isMdAsciiPunct(ch: number): boolean {
   switch (ch) {
     case 0x21/* ! */:
     case 0x22/* " */:
@@ -226,7 +222,7 @@ function isMdAsciiPunct(ch) {
 
 // Hepler to unify [reference labels].
 //
-function normalizeReference(str) {
+export function normalizeReference(str: string): string {
   // Trim and collapse whitespace
   //
   str = str.trim().replace(/\s+/g, ' ')
@@ -274,29 +270,4 @@ function normalizeReference(str) {
   // most notably, `__proto__`)
   //
   return str.toLowerCase().toUpperCase()
-}
-
-// Re-export libraries commonly used in both markdown-it and its plugins,
-// so plugins won't have to depend on them explicitly, which reduces their
-// bundled size (e.g. a browser build).
-//
-const lib = { mdurl, ucmicro }
-
-export {
-  arrayReplaceAt,
-  assign,
-  escapeHtml,
-  escapeRE,
-  fromCodePoint,
-  has,
-  isMdAsciiPunct,
-  isPunctChar,
-  isSpace,
-  isString,
-  isValidEntityCode,
-  isWhiteSpace,
-  lib,
-  normalizeReference,
-  unescapeAll,
-  unescapeMd,
 }

@@ -18,7 +18,10 @@ const processing = '<\\?[\\s\\S]*?\\?>'
 const declaration = '<![A-Za-z][^>]*>'
 const cdata = '<!\\[CDATA\\[[\\s\\S]*?\\]\\]>'
 
+// eslint-disable-next-line regexp/no-super-linear-backtracking, regexp/prefer-w
 const HTML_TAG_RE = new RegExp(`^(?:${open_tag}|${close_tag}|${comment}|${processing}|${declaration}|${cdata})`)
+
+// eslint-disable-next-line regexp/use-ignore-case, regexp/no-super-linear-backtracking, regexp/prefer-w
 const HTML_OPEN_CLOSE_TAG_RE = new RegExp(`^(?:${open_tag}|${close_tag})`)
 
 export { HTML_OPEN_CLOSE_TAG_RE, HTML_TAG_RE }

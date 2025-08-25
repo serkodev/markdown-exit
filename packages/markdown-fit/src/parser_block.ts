@@ -5,9 +5,11 @@
  * Block-level tokenizer.
  */
 
+import type MarkdownIt from '.'
+import type Token from './token'
+
 import Ruler from './ruler'
 import r_blockquote from './rules_block/blockquote'
-
 import r_code from './rules_block/code'
 import r_fence from './rules_block/fence'
 import r_heading from './rules_block/heading'
@@ -34,103 +36,103 @@ const _rules = [
   ['heading', r_heading, ['paragraph', 'reference', 'blockquote']],
   ['lheading', r_lheading],
   ['paragraph', r_paragraph],
-]
+] as const
 
-/**
- * new ParserBlock()
- */
-function ParserBlock() {
+export type BlockRule = typeof _rules[number][0]
+
+export type RuleBlock = (state: StateBlock, startLine: number, endLine: number, silent: boolean) => boolean
+
+export default class ParserBlock {
   /**
-   * ParserBlock#ruler -> Ruler
-   *
-   * [[Ruler]] instance. Keep configuration of block rules.
+   * {@link Ruler} instance. Keep configuration of block rules.
    */
-  this.ruler = new Ruler()
+  ruler: Ruler<RuleBlock>
 
-  for (let i = 0; i < _rules.length; i++) {
-    this.ruler.push(_rules[i][0], _rules[i][1], { alt: (_rules[i][2] || []).slice() })
-  }
-}
+  constructor() {
+    this.ruler = new Ruler()
 
-// Generate tokens for input range
-//
-ParserBlock.prototype.tokenize = function (state, startLine, endLine) {
-  const rules = this.ruler.getRules('')
-  const len = rules.length
-  const maxNesting = state.md.options.maxNesting
-  let line = startLine
-  let hasEmptyLines = false
-
-  while (line < endLine) {
-    state.line = line = state.skipEmptyLines(line)
-    if (line >= endLine) { break }
-
-    // Termination condition for nested calls.
-    // Nested calls currently used for blockquotes & lists
-    if (state.sCount[line] < state.blkIndent) { break }
-
-    // If nesting level exceeded - skip tail to the end. That's not ordinary
-    // situation and we should not care about content.
-    if (state.level >= maxNesting) {
-      state.line = endLine
-      break
+    for (let i = 0; i < _rules.length; i++) {
+      this.ruler.push(_rules[i][0], _rules[i][1], { alt: (_rules[i][2] || []).slice() })
     }
+  }
 
-    // Try all possible rules.
-    // On success, rule should:
-    //
-    // - update `state.line`
-    // - update `state.tokens`
-    // - return true
-    const prevLine = state.line
-    let ok = false
+  /**
+   * Generate tokens for input range
+   */
+  tokenize(state: StateBlock, startLine: number, endLine: number) {
+    const rules = this.ruler.getRules('')
+    const len = rules.length
+    const maxNesting = state.md.options.maxNesting
+    let line = startLine
+    let hasEmptyLines = false
 
-    for (let i = 0; i < len; i++) {
-      ok = rules[i](state, line, endLine, false)
-      if (ok) {
-        if (prevLine >= state.line) {
-          throw new Error('block rule didn\'t increment state.line')
-        }
+    while (line < endLine) {
+      state.line = line = state.skipEmptyLines(line)
+      if (line >= endLine) { break }
+
+      // Termination condition for nested calls.
+      // Nested calls currently used for blockquotes & lists
+      if (state.sCount[line] < state.blkIndent) { break }
+
+      // If nesting level exceeded - skip tail to the end. That's not ordinary
+      // situation and we should not care about content.
+      if (state.level >= maxNesting) {
+        state.line = endLine
         break
       }
-    }
 
-    // this can only happen if user disables paragraph rule
-    if (!ok)
-      throw new Error('none of the block rules matched')
+      // Try all possible rules.
+      // On success, rule should:
+      //
+      // - update `state.line`
+      // - update `state.tokens`
+      // - return true
+      const prevLine = state.line
+      let ok = false
 
-    // set state.tight if we had an empty line before current tag
-    // i.e. latest empty line should not count
-    state.tight = !hasEmptyLines
+      for (let i = 0; i < len; i++) {
+        ok = rules[i](state, line, endLine, false)
+        if (ok) {
+          if (prevLine >= state.line) {
+            throw new Error('block rule didn\'t increment state.line')
+          }
+          break
+        }
+      }
 
-    // paragraph might "eat" one newline after it in nested lists
-    if (state.isEmpty(state.line - 1)) {
-      hasEmptyLines = true
-    }
+      // this can only happen if user disables paragraph rule
+      if (!ok)
+        throw new Error('none of the block rules matched')
 
-    line = state.line
+      // set state.tight if we had an empty line before current tag
+      // i.e. latest empty line should not count
+      state.tight = !hasEmptyLines
 
-    if (line < endLine && state.isEmpty(line)) {
-      hasEmptyLines = true
-      line++
-      state.line = line
+      // paragraph might "eat" one newline after it in nested lists
+      if (state.isEmpty(state.line - 1)) {
+        hasEmptyLines = true
+      }
+
+      line = state.line
+
+      if (line < endLine && state.isEmpty(line)) {
+        hasEmptyLines = true
+        line++
+        state.line = line
+      }
     }
   }
+
+  /**
+   * Process input string and push block tokens into `outTokens`
+   */
+  parse(src: string, md: MarkdownIt, env: any, outTokens: Token[]) {
+    if (!src) { return }
+
+    const state = new this.State(src, md, env, outTokens)
+
+    this.tokenize(state, state.line, state.lineMax)
+  }
+
+  State = StateBlock
 }
-
-/**
- * ParserBlock.parse(str, md, env, outTokens)
- *
- * Process input string and push block tokens into `outTokens`
- */
-ParserBlock.prototype.parse = function (src, md, env, outTokens) {
-  if (!src) { return }
-
-  const state = new this.State(src, md, env, outTokens)
-
-  this.tokenize(state, state.line, state.lineMax)
-}
-
-ParserBlock.prototype.State = StateBlock
-
-export default ParserBlock

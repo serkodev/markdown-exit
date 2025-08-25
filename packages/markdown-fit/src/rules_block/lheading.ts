@@ -1,6 +1,8 @@
 // lheading (---, ===)
 
-export default function lheading(state, startLine, endLine/* , silent */) {
+import type StateBlock from './state_block'
+
+export default function lheading(state: StateBlock, startLine: number, endLine: number) {
   const terminatorRules = state.md.block.ruler.getRules('paragraph')
 
   // if it's indented more than 3 spaces, it should be a code block

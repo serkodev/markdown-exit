@@ -1,8 +1,11 @@
 // Process ![image](<src> "title")
 
+import type Token from '../token'
+import type { HTMLAttribute } from '../token'
+import type StateInline from './state_inline'
 import { isSpace, normalizeReference } from '../common/utils'
 
-export default function image(state, silent) {
+export default function image(state: StateInline, silent: boolean) {
   let code, content, label, pos, ref, res, title, start
   let href = ''
   const oldPos = state.pos
@@ -113,7 +116,7 @@ export default function image(state, silent) {
   if (!silent) {
     content = state.src.slice(labelStart, labelEnd)
 
-    const tokens = []
+    const tokens: Token[] = []
     state.md.inline.parse(
       content,
       state.md,
@@ -122,7 +125,7 @@ export default function image(state, silent) {
     )
 
     const token = state.push('image', 'img', 0)
-    const attrs = [['src', href], ['alt', '']]
+    const attrs: HTMLAttribute[] = [['src', href], ['alt', '']]
     token.attrs = attrs
     token.children = tokens
     token.content = content

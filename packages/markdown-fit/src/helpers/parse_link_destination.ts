@@ -3,11 +3,17 @@
 
 import { unescapeAll } from '../common/utils'
 
-export default function parseLinkDestination(str, start, max) {
+export interface ParseLinkDestinationResult {
+  ok: boolean
+  pos: number
+  str: string
+}
+
+export default function parseLinkDestination(str: string, start: number, max: number): ParseLinkDestinationResult {
   let code
   let pos = start
 
-  const result = {
+  const result: ParseLinkDestinationResult = {
     ok: false,
     pos: 0,
     str: '',

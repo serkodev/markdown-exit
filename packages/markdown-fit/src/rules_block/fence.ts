@@ -1,6 +1,8 @@
 // fences (``` lang, ~~~ lang)
 
-export default function fence(state, startLine, endLine, silent) {
+import type StateBlock from './state_block'
+
+export default function fence(state: StateBlock, startLine: number, endLine: number, silent: boolean) {
   let pos = state.bMarks[startLine] + state.tShift[startLine]
   let max = state.eMarks[startLine]
 

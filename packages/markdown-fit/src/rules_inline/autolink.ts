@@ -1,11 +1,14 @@
 // Process autolinks '<protocol:...>'
 
-/* eslint max-len:0 */
+import type StateInline from './state_inline'
+
+// eslint-disable-next-line regexp/no-unused-capturing-group
 const EMAIL_RE = /^([\w.!#$%&'*+/=?^`{|}~-]+@[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?(?:\.[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?)*)$/i
-/* eslint-disable-next-line no-control-regex */
+
+// eslint-disable-next-line no-control-regex, regexp/no-unused-capturing-group
 const AUTOLINK_RE = /^([a-z][a-z0-9+.-]{1,31}):([^<>\x00-\x20]*)$/i
 
-export default function autolink(state, silent) {
+export default function autolink(state: StateInline, silent: boolean) {
   let pos = state.pos
 
   if (state.src.charCodeAt(pos) !== 0x3C/* < */) { return false }

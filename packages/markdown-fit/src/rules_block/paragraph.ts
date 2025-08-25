@@ -1,6 +1,8 @@
 // Paragraph
 
-export default function paragraph(state, startLine, endLine) {
+import type StateBlock from './state_block'
+
+export default function paragraph(state: StateBlock, startLine: number, endLine: number) {
   const terminatorRules = state.md.block.ruler.getRules('paragraph')
   const oldParentType = state.parentType
   let nextLine = startLine + 1

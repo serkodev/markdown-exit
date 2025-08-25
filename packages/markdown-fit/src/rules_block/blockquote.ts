@@ -1,8 +1,10 @@
 // Block quotes
 
+import type { SourceMapLineRange } from '../token'
+import type StateBlock from './state_block'
 import { isSpace } from '../common/utils'
 
-export default function blockquote(state, startLine, endLine, silent) {
+export default function blockquote(state: StateBlock, startLine: number, endLine: number, silent: boolean) {
   let pos = state.bMarks[startLine] + state.tShift[startLine]
   let max = state.eMarks[startLine]
 
@@ -183,7 +185,7 @@ export default function blockquote(state, startLine, endLine, silent) {
 
   const token_o = state.push('blockquote_open', 'blockquote', 1)
   token_o.markup = '>'
-  const lines = [startLine, 0]
+  const lines: SourceMapLineRange = [startLine, 0]
   token_o.map = lines
 
   state.md.block.tokenize(state, startLine, nextLine)

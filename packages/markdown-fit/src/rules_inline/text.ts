@@ -1,6 +1,8 @@
 // Skip text characters for text token, place those to pending buffer
 // and increment current pos
 
+import type StateInline from './state_inline'
+
 // Rule to skip pure text
 // '{}$%@~+=:' reserved for extentions
 
@@ -8,7 +10,7 @@
 
 // !!!! Don't confuse with "Markdown ASCII Punctuation" chars
 // http://spec.commonmark.org/0.15/#ascii-punctuation-character
-function isTerminatorChar(ch) {
+function isTerminatorChar(ch: number) {
   switch (ch) {
     case 0x0A/* \n */:
     case 0x21/* ! */:
@@ -39,7 +41,7 @@ function isTerminatorChar(ch) {
   }
 }
 
-export default function text(state, silent) {
+export default function text(state: StateInline, silent: boolean) {
   let pos = state.pos
 
   while (pos < state.posMax && !isTerminatorChar(state.src.charCodeAt(pos))) {

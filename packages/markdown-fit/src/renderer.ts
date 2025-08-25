@@ -6,9 +6,26 @@
  * rules if you create plugin and adds new token types.
  */
 
+import type { Options } from '.'
+import type Token from './token'
 import { assign, escapeHtml, unescapeAll } from './common/utils'
 
-const default_rules = {}
+export type RenderRule = (tokens: Token[], idx: number, options: Options, env: any, self: Renderer) => string
+
+export interface RenderRuleRecord {
+  [type: string]: RenderRule | undefined
+  code_inline?: RenderRule | undefined
+  code_block?: RenderRule | undefined
+  fence?: RenderRule | undefined
+  image?: RenderRule | undefined
+  hardbreak?: RenderRule | undefined
+  softbreak?: RenderRule | undefined
+  text?: RenderRule | undefined
+  html_block?: RenderRule | undefined
+  html_inline?: RenderRule | undefined
+}
+
+const default_rules: Record<string, RenderRule> = {}
 
 default_rules.code_inline = function (tokens, idx, options, env, slf) {
   const token = tokens[idx]
@@ -106,15 +123,8 @@ default_rules.html_inline = function (tokens, idx /* , options, env */) {
   return tokens[idx].content
 }
 
-/**
- * new Renderer()
- *
- * Creates new [[Renderer]] instance and fill [[Renderer#rules]] with defaults.
- */
-function Renderer() {
+export default class Renderer {
   /**
-   * Renderer#rules -> Object
-   *
    * Contains render rules for tokens. Can be updated and extended.
    *
    * ##### Example
@@ -137,187 +147,184 @@ function Renderer() {
    * }
    * ```
    *
-   * See [source code](https://github.com/markdown-it/markdown-it/blob/master/lib/renderer.mjs)
-   * for more details and examples.
+   * @see https://github.com/markdown-it/markdown-it/blob/master/lib/renderer.mjs
    */
-  this.rules = assign({}, default_rules)
-}
+  rules: RenderRuleRecord
 
-/**
- * Renderer.renderAttrs(token) -> String
- *
- * Render token attributes to string.
- */
-Renderer.prototype.renderAttrs = function renderAttrs(token) {
-  let i, l, result
-
-  if (!token.attrs) { return '' }
-
-  result = ''
-
-  for (i = 0, l = token.attrs.length; i < l; i++) {
-    result += ` ${escapeHtml(token.attrs[i][0])}="${escapeHtml(token.attrs[i][1])}"`
+  /**
+   * Creates new {@link Renderer} instance and fill {@link Renderer#rules} with defaults.
+   */
+  constructor() {
+    this.rules = assign({}, default_rules)
   }
 
-  return result
-}
+  /**
+   * Render token attributes to string.
+   */
+  renderAttrs(token: Token): string {
+    let i, l, result
 
-/**
- * Renderer.renderToken(tokens, idx, options) -> String
- * - tokens (Array): list of tokens
- * - idx (Numbed): token index to render
- * - options (Object): params of parser instance
- *
- * Default token renderer. Can be overriden by custom function
- * in [[Renderer#rules]].
- */
-Renderer.prototype.renderToken = function renderToken(tokens, idx, options) {
-  const token = tokens[idx]
-  let result = ''
+    if (!token.attrs) { return '' }
 
-  // Tight list paragraphs
-  if (token.hidden) {
-    return ''
+    result = ''
+
+    for (i = 0, l = token.attrs.length; i < l; i++) {
+      result += ` ${escapeHtml(token.attrs[i][0])}="${escapeHtml(token.attrs[i][1])}"`
+    }
+
+    return result
   }
 
-  // Insert a newline between hidden paragraph and subsequent opening
-  // block-level tag.
-  //
-  // For example, here we should insert a newline before blockquote:
-  //  - a
-  //    >
-  //
-  if (token.block && token.nesting !== -1 && idx && tokens[idx - 1].hidden) {
-    result += '\n'
-  }
+  /**
+   * Default token renderer. Can be overriden by custom function
+   * in {@link Renderer#rules}.
+   *
+   * @param tokens list of tokens
+   * @param idx token index to render
+   * @param options params of parser instance
+   */
+  renderToken(tokens: Token[], idx: number, options: Options): string {
+    const token = tokens[idx]
+    let result = ''
 
-  // Add token name, e.g. `<img`
-  result += (token.nesting === -1 ? '</' : '<') + token.tag
+    // Tight list paragraphs
+    if (token.hidden) {
+      return ''
+    }
 
-  // Encode attributes, e.g. `<img src="foo"`
-  result += this.renderAttrs(token)
+    // Insert a newline between hidden paragraph and subsequent opening
+    // block-level tag.
+    //
+    // For example, here we should insert a newline before blockquote:
+    //  - a
+    //    >
+    //
+    if (token.block && token.nesting !== -1 && idx && tokens[idx - 1].hidden) {
+      result += '\n'
+    }
 
-  // Add a slash for self-closing tags, e.g. `<img src="foo" /`
-  if (token.nesting === 0 && options.xhtmlOut) {
-    result += ' /'
-  }
+    // Add token name, e.g. `<img`
+    result += (token.nesting === -1 ? '</' : '<') + token.tag
 
-  // Check if we need to add a newline after this tag
-  let needLf = false
-  if (token.block) {
-    needLf = true
+    // Encode attributes, e.g. `<img src="foo"`
+    result += this.renderAttrs(token)
 
-    if (token.nesting === 1) {
-      if (idx + 1 < tokens.length) {
-        const nextToken = tokens[idx + 1]
+    // Add a slash for self-closing tags, e.g. `<img src="foo" /`
+    if (token.nesting === 0 && options.xhtmlOut) {
+      result += ' /'
+    }
 
-        if (nextToken.type === 'inline' || nextToken.hidden) {
+    // Check if we need to add a newline after this tag
+    let needLf = false
+    if (token.block) {
+      needLf = true
+
+      if (token.nesting === 1) {
+        if (idx + 1 < tokens.length) {
+          const nextToken = tokens[idx + 1]
+
+          if (nextToken.type === 'inline' || nextToken.hidden) {
           // Block-level tag containing an inline tag.
           //
-          needLf = false
-        } else if (nextToken.nesting === -1 && nextToken.tag === token.tag) {
+            needLf = false
+          } else if (nextToken.nesting === -1 && nextToken.tag === token.tag) {
           // Opening tag + closing tag of the same type. E.g. `<li></li>`.
           //
-          needLf = false
+            needLf = false
+          }
         }
       }
     }
+
+    result += needLf ? '>\n' : '>'
+
+    return result
   }
 
-  result += needLf ? '>\n' : '>'
+  /**
+   * The same as {@link Renderer.render}, but for single token of `inline` type.
+   *
+   * @param tokens list of block tokens to render
+   * @param options params of parser instance
+   * @param env additional data from parsed input (references, for example)
+   */
+  renderInline(tokens: Token[], options: Options, env: any): string {
+    let result = ''
+    const rules = this.rules
 
-  return result
-}
+    for (let i = 0, len = tokens.length; i < len; i++) {
+      const type = tokens[i].type
 
-/**
- * Renderer.renderInline(tokens, options, env) -> String
- * - tokens (Array): list on block tokens to render
- * - options (Object): params of parser instance
- * - env (Object): additional data from parsed input (references, for example)
- *
- * The same as [[Renderer.render]], but for single token of `inline` type.
- */
-Renderer.prototype.renderInline = function (tokens, options, env) {
-  let result = ''
-  const rules = this.rules
-
-  for (let i = 0, len = tokens.length; i < len; i++) {
-    const type = tokens[i].type
-
-    if (typeof rules[type] !== 'undefined') {
-      result += rules[type](tokens, i, options, env, this)
-    } else {
-      result += this.renderToken(tokens, i, options)
+      if (typeof rules[type] !== 'undefined') {
+        result += rules[type](tokens, i, options, env, this)
+      } else {
+        result += this.renderToken(tokens, i, options)
+      }
     }
+
+    return result
   }
 
-  return result
-}
+  /**
+   * Special kludge for image `alt` attributes to conform CommonMark spec.
+   * Don't try to use it! Spec requires to show `alt` content with stripped markup,
+   * instead of simple escaping.
+   *
+   * @param tokens list of block tokens to render
+   * @param options params of parser instance
+   * @param env additional data from parsed input (references, for example)
+   */
+  renderInlineAsText(tokens: Token[], options: Options, env: any): string {
+    let result = ''
 
-/**
- * internal
- * Renderer.renderInlineAsText(tokens, options, env) -> String
- * - tokens (Array): list on block tokens to render
- * - options (Object): params of parser instance
- * - env (Object): additional data from parsed input (references, for example)
- *
- * Special kludge for image `alt` attributes to conform CommonMark spec.
- * Don't try to use it! Spec requires to show `alt` content with stripped markup,
- * instead of simple escaping.
- */
-Renderer.prototype.renderInlineAsText = function (tokens, options, env) {
-  let result = ''
-
-  for (let i = 0, len = tokens.length; i < len; i++) {
-    switch (tokens[i].type) {
-      case 'text':
-        result += tokens[i].content
-        break
-      case 'image':
-        result += this.renderInlineAsText(tokens[i].children, options, env)
-        break
-      case 'html_inline':
-      case 'html_block':
-        result += tokens[i].content
-        break
-      case 'softbreak':
-      case 'hardbreak':
-        result += '\n'
-        break
-      default:
+    for (let i = 0, len = tokens.length; i < len; i++) {
+      switch (tokens[i].type) {
+        case 'text':
+          result += tokens[i].content
+          break
+        case 'image':
+          result += this.renderInlineAsText(tokens[i].children, options, env)
+          break
+        case 'html_inline':
+        case 'html_block':
+          result += tokens[i].content
+          break
+        case 'softbreak':
+        case 'hardbreak':
+          result += '\n'
+          break
+        default:
         // all other tokens are skipped
+      }
     }
+
+    return result
   }
 
-  return result
-}
+  /**
+   * Takes token stream and generates HTML. Probably, you will never need to call
+   * this method directly.
+   *
+   * @param tokens list of block tokens to render
+   * @param options params of parser instance
+   * @param env additional data from parsed input (references, for example)
+   */
+  render(tokens: Token[], options: Options, env: any): string {
+    let result = ''
+    const rules = this.rules
 
-/**
- * Renderer.render(tokens, options, env) -> String
- * - tokens (Array): list on block tokens to render
- * - options (Object): params of parser instance
- * - env (Object): additional data from parsed input (references, for example)
- *
- * Takes token stream and generates HTML. Probably, you will never need to call
- * this method directly.
- */
-Renderer.prototype.render = function (tokens, options, env) {
-  let result = ''
-  const rules = this.rules
+    for (let i = 0, len = tokens.length; i < len; i++) {
+      const type = tokens[i].type
 
-  for (let i = 0, len = tokens.length; i < len; i++) {
-    const type = tokens[i].type
-
-    if (type === 'inline') {
-      result += this.renderInline(tokens[i].children, options, env)
-    } else if (typeof rules[type] !== 'undefined') {
-      result += rules[type](tokens, i, options, env, this)
-    } else {
-      result += this.renderToken(tokens, i, options, env)
+      if (type === 'inline') {
+        result += this.renderInline(tokens[i].children, options, env)
+      } else if (typeof rules[type] !== 'undefined') {
+        result += rules[type](tokens, i, options, env, this)
+      } else {
+        result += this.renderToken(tokens, i, options, env)
+      }
     }
+
+    return result
   }
-
-  return result
 }
-
-export default Renderer

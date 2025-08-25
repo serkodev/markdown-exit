@@ -27,37 +27,38 @@ const _rules = [
   // `text_join` finds `text_special` tokens (for escape sequences)
   // and joins them with the rest of the text
   ['text_join', r_text_join],
-]
+] as const
 
-/**
- * new Core()
- */
-function Core() {
+export type CoreRule = typeof _rules[number][0]
+
+export type RuleCore = (state: StateCore) => void
+
+export default class Core {
   /**
-   * Core#ruler -> Ruler
-   *
-   * [[Ruler]] instance. Keep configuration of core rules.
+   * {@link Ruler} instance. Keep configuration of core rules.
    */
-  this.ruler = new Ruler()
+  ruler: Ruler<RuleCore>
 
-  for (let i = 0; i < _rules.length; i++) {
-    this.ruler.push(_rules[i][0], _rules[i][1])
+  constructor() {
+    this.ruler = new Ruler()
+
+    for (let i = 0; i < _rules.length; i++) {
+      this.ruler.push(_rules[i][0], _rules[i][1])
+    }
   }
-}
 
-/**
- * Core.process(state)
- *
- * Executes core chain rules.
- */
-Core.prototype.process = function (state) {
-  const rules = this.ruler.getRules('')
+  /**
+   * Executes core chain rules.
+   */
+  process(state: StateCore) {
+    const rules = this.ruler.getRules('')
 
-  for (let i = 0, l = rules.length; i < l; i++) {
-    rules[i](state)
+    for (let i = 0, l = rules.length; i < l; i++) {
+      rules[i](state)
+    }
   }
+
+  State = StateCore
 }
 
 Core.prototype.State = StateCore
-
-export default Core

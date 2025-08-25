@@ -4,8 +4,13 @@
 // returns the end of the label
 //
 
-export default function parseLinkLabel (state, start, disableNested) {
-  let level, found, marker, prevPos
+import type StateInline from '../rules_inline/state_inline' // Adjust import path as needed
+
+export default function parseLinkLabel(state: StateInline, start: number, disableNested: boolean): number {
+  let level: number
+  let found = false
+  let marker: number
+  let prevPos: number
 
   const max = state.posMax
   const oldPos = state.pos

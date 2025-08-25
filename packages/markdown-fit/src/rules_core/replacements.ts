@@ -9,6 +9,9 @@
 // -- → &ndash;, --- → &mdash;
 //
 
+import type Token from '../token'
+import type StateCore from './state_core'
+
 // TODO:
 // - fractionals 1/2, 1/4, 3/4 -> ½, ¼, ¾
 // - multiplications 2 x 4 -> 2 × 4
@@ -17,20 +20,20 @@ const RARE_RE = /\+-|\.\.|\?\?\?\?|!!!!|,,|--/
 
 // Workaround for phantomjs - need regex without /g flag,
 // or root check will fail every second time
-const SCOPED_ABBR_TEST_RE = /\((c|tm|r)\)/i
+const SCOPED_ABBR_TEST_RE = /\((?:c|tm|r)\)/i
 
 const SCOPED_ABBR_RE = /\((c|tm|r)\)/gi
-const SCOPED_ABBR = {
+const SCOPED_ABBR: Record<string, string> = {
   c: '©',
   r: '®',
   tm: '™',
 }
 
-function replaceFn(match, name) {
+function replaceFn(match: string, name: string) {
   return SCOPED_ABBR[name.toLowerCase()]
 }
 
-function replace_scoped(inlineTokens) {
+function replace_scoped(inlineTokens: Token[]) {
   let inside_autolink = 0
 
   for (let i = inlineTokens.length - 1; i >= 0; i--) {
@@ -50,7 +53,7 @@ function replace_scoped(inlineTokens) {
   }
 }
 
-function replace_rare(inlineTokens) {
+function replace_rare(inlineTokens: Token[]) {
   let inside_autolink = 0
 
   for (let i = inlineTokens.length - 1; i >= 0; i--) {
@@ -84,7 +87,7 @@ function replace_rare(inlineTokens) {
   }
 }
 
-export default function replace(state) {
+export default function replace(state: StateCore) {
   let blkIdx
 
   if (!state.md.options.typographer) { return }

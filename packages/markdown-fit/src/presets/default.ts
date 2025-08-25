@@ -1,5 +1,7 @@
 // markdown-it default options
 
+import type { Preset } from '../types/preset'
+
 export default {
   options: {
     // Enable HTML tags in source
@@ -44,4 +46,4 @@ export default {
     block: {},
     inline: {},
   },
-}
+} satisfies Preset as Preset

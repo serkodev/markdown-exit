@@ -1,5 +1,7 @@
 // Commonmark default options
 
+import type { Preset } from '../types/preset'
+
 export default {
   options: {
     // Enable HTML tags in source
@@ -85,4 +87,4 @@ export default {
       ],
     },
   },
-}
+} satisfies Preset as Preset
