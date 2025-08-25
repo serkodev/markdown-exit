@@ -1,6 +1,8 @@
 import { expect, it } from 'vitest'
-import { myFunction } from '../src'
+import MarkdownIt from '../src'
 
-it('myFunction', () => {
-  expect(myFunction()).toBe('Hello, world!')
+it('basic', () => {
+  const md = new MarkdownIt()
+  const result = md.render('# markdown-it')
+  expect(result).toEqual('<h1>markdown-it</h1>\n')
 })
