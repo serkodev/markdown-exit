@@ -32,7 +32,11 @@ export default function backtick(state: StateInline, silent: boolean) {
   let matchStart
 
   // Nothing found in the cache, scan until the end of the line (or until marker is found)
-  while ((matchStart = state.src.indexOf('`', matchEnd)) !== -1) {
+  while (true) {
+    matchStart = state.src.indexOf('`', matchEnd)
+    if (matchStart === -1)
+      break
+
     matchEnd = matchStart + 1
 
     // scan marker length

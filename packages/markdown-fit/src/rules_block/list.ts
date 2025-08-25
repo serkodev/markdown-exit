@@ -132,8 +132,8 @@ export default function list(state: StateBlock, startLine: number, endLine: numb
   // Detect list type and position after marker
   let isOrdered
   let markerValue
-  let posAfterMarker
-  if ((posAfterMarker = skipOrderedListMarker(state, nextLine)) >= 0) {
+  let posAfterMarker = skipOrderedListMarker(state, nextLine)
+  if (posAfterMarker >= 0) {
     isOrdered = true
     start = state.bMarks[nextLine] + state.tShift[nextLine]
     markerValue = Number(state.src.slice(start, posAfterMarker - 1))
@@ -142,10 +142,13 @@ export default function list(state: StateBlock, startLine: number, endLine: numb
     // a paragraph, it should start with 1.
     if (isTerminatingParagraph && markerValue !== 1)
       return false
-  } else if ((posAfterMarker = skipBulletListMarker(state, nextLine)) >= 0) {
-    isOrdered = false
   } else {
-    return false
+    posAfterMarker = skipBulletListMarker(state, nextLine)
+    if (posAfterMarker >= 0) {
+      isOrdered = false
+    } else {
+      return false
+    }
   }
 
   // If we're starting a new unordered list right after
