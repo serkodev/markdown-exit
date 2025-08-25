@@ -238,7 +238,7 @@ export default class StateBlock {
       return ''
     }
 
-    const queue = new Array(end - begin)
+    const queue = Array.from({ length: end - begin })
 
     for (let i = 0, line = begin; line < end; line++, i++) {
       let lineIndent = 0
@@ -275,7 +275,7 @@ export default class StateBlock {
       if (lineIndent > indent) {
         // partially expanding tabs in code blocks, e.g '\t\tfoobar'
         // with indent=2 becomes '  \tfoobar'
-        queue[i] = new Array(lineIndent - indent + 1).join(' ') + this.src.slice(first, last)
+        queue[i] = Array.from({ length: lineIndent - indent + 1 }).join(' ') + this.src.slice(first, last)
       } else {
         queue[i] = this.src.slice(first, last)
       }
