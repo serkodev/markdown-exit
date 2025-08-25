@@ -38,7 +38,6 @@
   },
   "devDependencies": {
     "@types/linkify-it": "catalog:types",
-    "@types/markdown-it": "catalog:types",
     "@types/mdurl": "catalog:types"
   }
 }

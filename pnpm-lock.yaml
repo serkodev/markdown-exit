@@ -44,9 +44,6 @@ catalogs:
     '@types/linkify-it':
       specifier: ^5.0.0
       version: 5.0.0
-    '@types/markdown-it':
-      specifier: ^14.1.2
-      version: 14.1.2
     '@types/mdurl':
       specifier: ^2.0.0
       version: 2.0.0
@@ -101,9 +98,6 @@ importers:
       '@types/linkify-it':
         specifier: catalog:types
         version: 5.0.0
-      '@types/markdown-it':
-        specifier: catalog:types
-        version: 14.1.2
       '@types/mdurl':
         specifier: catalog:types
         version: 2.0.0
@@ -686,9 +680,6 @@ packages:
 
   '@types/linkify-it@5.0.0':
     resolution: {integrity: sha512-sVDA58zAw4eWAffKOaQH5/5j3XeayukzDk+ewSsnv3p4yJEZHCCzMDiZM8e0OUrRvmpGZ85jf4yDHkHsgBNr9Q==}
-
-  '@types/markdown-it@14.1.2':
-    resolution: {integrity: sha512-promo4eFwuiW+TfGxhi+0x3czqTYJkG8qB17ZUJiVF10Xm7NLVRSLUsfRTU/6h1e24VvRnXCx+hG7li58lkzog==}
 
   '@types/mdast@4.0.4':
     resolution: {integrity: sha512-kGaNbPh1k7AFzgpud/gMdvIm5xuECykRR+JnWKQno9TAXVa6WIVCGTPvYGekIDL4uwCZQSYbUxNBSb1aUo79oA==}
@@ -2594,11 +2585,6 @@ snapshots:
   '@types/json-schema@7.0.15': {}
 
   '@types/linkify-it@5.0.0': {}
-
-  '@types/markdown-it@14.1.2':
-    dependencies:
-      '@types/linkify-it': 5.0.0
-      '@types/mdurl': 2.0.0
 
   '@types/mdast@4.0.4':
     dependencies:

@@ -16,6 +16,5 @@ catalogs:
     uc.micro: ^2.1.0
   types:
     '@types/linkify-it': ^5.0.0
-    '@types/markdown-it': ^14.1.2
     '@types/mdurl': ^2.0.0
     '@types/node': ^22.17.2
