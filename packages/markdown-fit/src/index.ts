@@ -354,8 +354,6 @@ class MarkdownIt {
    * will give better compatibility with next versions.
    */
   configure(presets: PresetName | Preset): this {
-    const self = this
-
     if (utils.isString(presets)) {
       const presetName = presets
       presets = config[presetName]
@@ -364,15 +362,17 @@ class MarkdownIt {
 
     if (!presets) { throw new Error('Wrong `markdown-it` preset, can\'t be empty') }
 
-    if (presets.options) { self.set(presets.options) }
+    if (presets.options)
+      this.set(presets.options)
 
     if (presets.components) {
-      for (const name of Object.keys(presets.components)) {
-        if (presets.components[name].rules) {
-          self[name].ruler.enableOnly(presets.components[name].rules)
+      for (const name of Object.keys(presets.components) as (keyof typeof presets.components)[]) {
+        const component = presets.components[name]
+        if (component.rules) {
+          this[name].ruler.enableOnly(component.rules)
         }
-        if (presets.components[name].rules2) {
-          self[name].ruler2.enableOnly(presets.components[name].rules2)
+        if ((component as any).rules2) {
+          (this[name] as any).ruler2?.enableOnly((component as any).rules2)
         }
       }
     }
@@ -464,9 +464,8 @@ class MarkdownIt {
    */
   use(plugin: PluginSimple): this
   use<T = any>(plugin: PluginWithOptions<T>, options?: T): this
-  use(plugin: PluginWithParams): this {
-    const args = [this].concat(Array.prototype.slice.call(arguments, 1))
-    plugin.apply(plugin, args)
+  use(plugin: PluginWithParams, ...params: any[]): this {
+    plugin.apply(plugin, [this, ...params])
     return this
   }
 
