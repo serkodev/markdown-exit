@@ -10,7 +10,7 @@ import type { Nesting } from '../token'
 import { isSpace } from '../common/utils'
 import Token from '../token'
 
-export type ParentType = 'blockquote' | 'list' | 'root' | 'paragraph' | 'reference' | 'table'
+export type ParentType = 'root' | BlockRule
 
 export default class StateBlock {
   src: string
