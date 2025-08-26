@@ -22,6 +22,8 @@ import r_reference from './rules_block/reference'
 import StateBlock from './rules_block/state_block'
 import r_table from './rules_block/table'
 
+export type RuleBlock = (state: StateBlock, startLine: number, endLine: number, silent: boolean) => boolean
+
 const _rules = [
   // First 2 params - rule name & source. Secondary array - list of rules,
   // which can be terminated by this one.
@@ -36,11 +38,9 @@ const _rules = [
   ['heading', r_heading, ['paragraph', 'reference', 'blockquote']],
   ['lheading', r_lheading],
   ['paragraph', r_paragraph],
-] as const
+] as const satisfies [string, RuleBlock, string[]?][]
 
 export type BlockRule = typeof _rules[number][0]
-
-export type RuleBlock = (state: StateBlock, startLine: number, endLine: number, silent: boolean) => boolean
 
 export default class ParserBlock {
   /**

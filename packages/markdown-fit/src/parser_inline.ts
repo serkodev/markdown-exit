@@ -27,6 +27,10 @@ import r_text from './rules_inline/text'
 
 // Parser rules
 
+export type RuleInline = (state: StateInline, silent: boolean) => boolean
+
+export type RuleInline2 = (state: StateInline) => void
+
 const _rules = [
   ['text', r_text],
   ['linkify', r_linkify],
@@ -40,7 +44,7 @@ const _rules = [
   ['autolink', r_autolink],
   ['html_inline', r_html_inline],
   ['entity', r_entity],
-] as const
+] as const satisfies [string, RuleInline][]
 
 export type InlineRule = typeof _rules[number][0]
 
@@ -56,13 +60,9 @@ const _rules2 = [
   // rules for pairs separate '**' into its own text tokens, which may be left unused,
   // rule below merges unused segments back with the rest of the text
   ['fragments_join', r_fragments_join],
-] as const
+] as const satisfies [string, RuleInline2][]
 
 export type InlineRule2 = typeof _rules2[number][0]
-
-export type RuleInline = (state: StateInline, silent: boolean) => boolean
-
-export type RuleInline2 = (state: StateInline) => void
 
 export default class ParserInline {
   /**
