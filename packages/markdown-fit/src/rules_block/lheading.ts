@@ -14,7 +14,7 @@ export default function lheading(state: StateBlock, startLine: number, endLine: 
 
   // jump line-by-line until empty one or EOF
   let level = 0
-  let marker
+  let marker: number | undefined
   let nextLine = startLine + 1
 
   for (; nextLine < endLine && !state.isEmpty(nextLine); nextLine++) {
@@ -61,7 +61,7 @@ export default function lheading(state: StateBlock, startLine: number, endLine: 
       break
   }
 
-  if (!level) {
+  if (!level || marker === undefined) {
     // Didn't find valid underline
     return false
   }

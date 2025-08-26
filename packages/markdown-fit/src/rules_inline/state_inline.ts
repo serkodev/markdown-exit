@@ -106,7 +106,7 @@ export default class StateInline {
     if (nesting < 0) {
       // closing tag
       this.level--
-      this.delimiters = this._prev_delimiters.pop()
+      this.delimiters = this._prev_delimiters.pop() ?? []
     }
 
     token.level = this.level

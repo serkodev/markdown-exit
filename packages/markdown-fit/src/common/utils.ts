@@ -19,7 +19,7 @@ export function has(object: object, key: string | number | symbol): boolean {
 // Remove element from array and put another array at those position.
 // Useful for some operations with tokens
 export function arrayReplaceAt<T>(src: readonly T[], pos: number, newElements: readonly T[]): T[] {
-  return [].concat(src.slice(0, pos), newElements, src.slice(pos + 1))
+  return src.slice(0, pos).concat(newElements, src.slice(pos + 1))
 }
 
 /* eslint-disable style/max-statements-per-line */

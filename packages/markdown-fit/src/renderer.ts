@@ -8,6 +8,7 @@
 
 import type { Options } from '.'
 import type Token from './token'
+import type { HTMLAttribute } from './token'
 import { escapeHtml, unescapeAll } from './common/utils'
 
 export type RenderRule = (tokens: Token[], idx: number, options: Options, env: any, self: Renderer) => string
@@ -71,12 +72,12 @@ default_rules.fence = function (tokens, idx, options, env, slf) {
   // now we prefer to keep things local.
   if (info) {
     const i = token.attrIndex('class')
-    const tmpAttrs = token.attrs ? token.attrs.slice() : []
+    const tmpAttrs: HTMLAttribute[] = token.attrs ? token.attrs.slice() : []
 
     if (i < 0) {
       tmpAttrs.push(['class', options.langPrefix + langName])
     } else {
-      tmpAttrs[i] = tmpAttrs[i].slice()
+      tmpAttrs[i] = tmpAttrs[i].slice() as HTMLAttribute
       tmpAttrs[i][1] += ` ${options.langPrefix}${langName}`
     }
 
@@ -160,7 +161,7 @@ export default class Renderer {
   /**
    * Render token attributes to string.
    */
-  renderAttrs(token: Token): string {
+  renderAttrs(token: Pick<Token, 'attrs'>): string {
     let i, l, result
 
     if (!token.attrs)

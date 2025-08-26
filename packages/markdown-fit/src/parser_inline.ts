@@ -61,7 +61,8 @@ const _rules2 = [
 export type InlineRule2 = typeof _rules2[number][0]
 
 export type RuleInline = (state: StateInline, silent: boolean) => boolean
-export type RuleInline2 = (state: StateInline) => boolean
+
+export type RuleInline2 = (state: StateInline) => void
 
 export default class ParserInline {
   /**
