@@ -182,8 +182,10 @@ export default class Renderer {
    * @param tokens list of tokens
    * @param idx token index to render
    * @param options params of parser instance
+   * @param env additional data from parsed input (references, for example)
    */
-  renderToken(tokens: Token[], idx: number, options: Options): string {
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  renderToken(tokens: Token[], idx: number, options: Options, env?: any): string {
     const token = tokens[idx]
     let result = ''
 

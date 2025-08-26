@@ -59,7 +59,8 @@ export default class ParserBlock {
   /**
    * Generate tokens for input range
    */
-  tokenize(state: StateBlock, startLine: number, endLine: number) {
+  // eslint-disable-next-line unused-imports/no-unused-vars
+  tokenize(state: StateBlock, startLine: number, endLine: number, silent?: boolean) {
     const rules = this.ruler.getRules('')
     const len = rules.length
     const maxNesting = state.md.options.maxNesting

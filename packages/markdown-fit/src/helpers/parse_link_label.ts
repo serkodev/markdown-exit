@@ -6,7 +6,7 @@
 
 import type StateInline from '../rules_inline/state_inline' // Adjust import path as needed
 
-export default function parseLinkLabel(state: StateInline, start: number, disableNested: boolean): number {
+export default function parseLinkLabel(state: StateInline, start: number, disableNested: boolean = false): number {
   let level: number
   let found = false
   let marker: number
