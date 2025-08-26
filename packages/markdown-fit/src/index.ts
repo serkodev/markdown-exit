@@ -1,8 +1,3 @@
-/**
- * markdown-fit notes:
- * - TODO: call markdown-it without new
- */
-
 // Main parser class
 
 import type { Preset } from './types/preset'
@@ -206,7 +201,7 @@ export type PluginWithParams = (md: MarkdownIt, ...params: any[]) => void
  * var result = md.renderInline('__markdown-it__ rulezz!');
  * ```
  */
-class MarkdownIt {
+export class MarkdownIt {
   /**
    * Instance of {@link ParserInline}. You may need it to add new rules when
    * writing plugins. For simple rules control use {@link MarkdownIt.disable} and
@@ -303,8 +298,7 @@ class MarkdownIt {
   options: Required<Options> = config.default.options
 
   // Overloads for constructor
-  constructor()
-  constructor(options: Options)
+  constructor(options?: Options)
   constructor(presetName: PresetName, options?: Options)
   constructor(presetNameOrOptions?: PresetName | Options, options?: Options) {
     // normalize arguments
@@ -549,4 +543,28 @@ class MarkdownIt {
   }
 }
 
-export default MarkdownIt
+export function createMarkdownIt(options?: Options): MarkdownIt
+export function createMarkdownIt(presetName: PresetName, options?: Options): MarkdownIt
+export function createMarkdownIt(presetNameOrOptions?: any, options?: any): MarkdownIt {
+  return new MarkdownIt(presetNameOrOptions, options)
+}
+
+// hybrid types callable construct signatures hack
+type MarkdownItConstructor = {
+  new(options?: Options): MarkdownIt
+  new(presetName: PresetName, options?: Options): MarkdownIt
+  (options?: Options): MarkdownIt
+  (presetName: PresetName, options?: Options): MarkdownIt
+} & typeof MarkdownIt
+
+function _MarkdownIt(presetName?: PresetName | Options, options?: Options): MarkdownIt {
+  return new MarkdownIt(presetName as any, options)
+}
+
+// bridge statics
+Object.setPrototypeOf(_MarkdownIt, MarkdownIt)
+// share the same instance prototype
+;(_MarkdownIt as any).prototype = MarkdownIt.prototype
+;(_MarkdownIt as any).prototype.constructor = _MarkdownIt
+
+export default _MarkdownIt as MarkdownItConstructor

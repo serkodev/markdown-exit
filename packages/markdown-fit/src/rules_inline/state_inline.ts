@@ -5,7 +5,7 @@
 
 // Inline parser state
 
-import type MarkdownIt from '..'
+import type { MarkdownIt } from '..'
 import type { Nesting } from '../token'
 import { isMdAsciiPunct, isPunctChar, isWhiteSpace } from '../common/utils'
 import Token from '../token'

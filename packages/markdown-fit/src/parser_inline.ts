@@ -5,7 +5,7 @@
  * Tokenizes paragraph content.
  */
 
-import type MarkdownIt from '.'
+import type { MarkdownIt } from '.'
 import type Token from './token'
 import Ruler from './ruler'
 import r_autolink from './rules_inline/autolink'

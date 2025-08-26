@@ -1,7 +1,7 @@
 // Core state object
 //
 
-import type MarkdownIt from '..'
+import type { MarkdownIt } from '..'
 import Token from '../token'
 
 export default class StateCore {

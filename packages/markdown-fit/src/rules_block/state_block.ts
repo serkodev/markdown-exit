@@ -5,7 +5,7 @@
 
 // Parser state class
 
-import type MarkdownIt from '..'
+import type { MarkdownIt } from '..'
 import type { Nesting } from '../token'
 import { isSpace } from '../common/utils'
 import Token from '../token'

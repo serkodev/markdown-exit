@@ -5,7 +5,7 @@
  * Block-level tokenizer.
  */
 
-import type MarkdownIt from '.'
+import type { MarkdownIt } from '.'
 import type Token from './token'
 
 import Ruler from './ruler'
