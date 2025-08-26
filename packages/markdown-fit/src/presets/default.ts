@@ -2,7 +2,7 @@
 
 import type { Preset } from '../types/preset'
 
-export default {
+const defaultPreset: Preset = {
   options: {
     // Enable HTML tags in source
     html: false,
@@ -46,4 +46,6 @@ export default {
     block: {},
     inline: {},
   },
-} satisfies Preset as Preset
+}
+
+export default defaultPreset

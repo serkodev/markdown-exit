@@ -2,7 +2,7 @@
 
 import type { Preset } from '../types/preset'
 
-export default {
+const commonmarkPreset: Preset = {
   options: {
     // Enable HTML tags in source
     html: true,
@@ -87,4 +87,6 @@ export default {
       ],
     },
   },
-} satisfies Preset as Preset
+}
+
+export default commonmarkPreset

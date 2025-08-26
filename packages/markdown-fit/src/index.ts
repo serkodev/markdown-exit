@@ -300,8 +300,7 @@ class MarkdownIt {
    */
   helpers: typeof helpers = Object.assign({}, helpers)
 
-  // Initialized in configure()
-  options!: Required<Options>
+  options: Required<Options> = config.default.options
 
   // Overloads for constructor
   constructor()
