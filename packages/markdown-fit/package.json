@@ -1,5 +1,5 @@
 {
-  "name": "@markdown-fit/monorepo",
+  "name": "markdown-fit",
   "type": "module",
   "version": "0.0.0",
   "description": "A TypeScript rewrite of markdown-it with enhancements",
