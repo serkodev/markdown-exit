@@ -260,7 +260,7 @@ export class MarkdownFit {
    */
   helpers: typeof helpers = Object.assign({}, helpers)
 
-  options: Required<Options> = config.default.options
+  options: Required<Options> = { ...config.default.options }
 
   // Overloads for constructor
   constructor(options?: Options)
