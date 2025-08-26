@@ -42,7 +42,7 @@ export interface Options {
    * It's better to extend features via plugins, instead of enabling HTML.
    * @default false
    */
-  html?: boolean | undefined
+  html?: boolean
 
   /**
    * Set `true` to add '/' when closing single tags
@@ -50,33 +50,33 @@ export interface Options {
    * world you will need HTML output.
    * @default false
    */
-  xhtmlOut?: boolean | undefined
+  xhtmlOut?: boolean
 
   /**
    * Set `true` to convert `\n` in paragraphs into `<br>`.
    * @default false
    */
-  breaks?: boolean | undefined
+  breaks?: boolean
 
   /**
    * CSS language class prefix for fenced blocks.
    * Can be useful for external highlighters.
    * @default 'language-'
    */
-  langPrefix?: string | undefined
+  langPrefix?: string
 
   /**
    * Set `true` to autoconvert URL-like text to links.
    * @default false
    */
-  linkify?: boolean | undefined
+  linkify?: boolean
 
   /**
    * Set `true` to enable [some language-neutral replacement](https://github.com/markdown-it/markdown-it/blob/master/lib/rules_core/replacements.js) +
    * quotes beautification (smartquotes).
    * @default false
    */
-  typographer?: boolean | undefined
+  typographer?: boolean
 
   /**
    * Double + single quotes replacement
@@ -94,7 +94,7 @@ export interface Options {
    * externally. If result starts with <pre... internal wrapper is skipped.
    * @default null
    */
-  highlight?: ((str: string, lang: string, attrs: string) => string) | null | undefined
+  highlight?: ((str: string, lang: string, attrs: string) => string) | null
 
   /**
    * Internal protection, recursion limit
@@ -300,24 +300,23 @@ class MarkdownIt {
    */
   helpers: typeof helpers = Object.assign({}, helpers)
 
-  options: Options = {}
+  // Initialized in configure()
+  options!: Required<Options>
 
   // Overloads for constructor
   constructor()
   constructor(options: Options)
   constructor(presetName: PresetName, options?: Options)
-  constructor(presetName?: PresetName | Options, options?: Options) {
-    if (!options) {
-      if (typeof presetName !== 'string') {
-        options = (presetName as Options) || {}
-        presetName = 'default' as PresetName
-      }
-    }
+  constructor(presetNameOrOptions?: PresetName | Options, options?: Options) {
+    // normalize arguments
+    const [presetName, opts]: [PresetName, Options?] = typeof presetNameOrOptions === 'string'
+      ? [presetNameOrOptions, options]
+      : ['default', presetNameOrOptions]
 
-    this.configure(presetName as PresetName)
+    this.configure(presetName)
 
-    if (options)
-      this.set(options)
+    if (opts)
+      this.set(opts)
   }
 
   /**
