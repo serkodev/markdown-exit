@@ -131,24 +131,13 @@ export default class Renderer {
    * ##### Example
    *
    * ```javascript
-   * var md = require('markdown-it')();
-   *
-   * md.renderer.rules.strong_open  = function () { return '<b>'; };
-   * md.renderer.rules.strong_close = function () { return '</b>'; };
+   * md.renderer.rules.strong_open = () => '<b>';
+   * md.renderer.rules.strong_close = () => '</b>';
    *
    * var result = md.renderInline(...);
    * ```
    *
-   * Each rule is called as independent static function with fixed signature:
-   *
-   * ```javascript
-   * function my_token_render(tokens, idx, options, env, renderer) {
-   *   // ...
-   *   return renderedHTML;
-   * }
-   * ```
-   *
-   * @see https://github.com/markdown-it/markdown-it/blob/master/lib/renderer.mjs
+   * @see https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/renderer.ts
    */
   rules: RenderRuleRecord = Object.assign({}, default_rules)
 

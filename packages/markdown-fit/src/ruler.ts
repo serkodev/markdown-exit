@@ -114,8 +114,6 @@ export default class Ruler<T> {
    * Replace existing typographer replacement rule with new one:
    *
    * ```javascript
-   * var md = require('markdown-it')();
-   *
    * md.core.ruler.at('replacements', function replace(state) {
    *   //...
    * });
@@ -150,8 +148,6 @@ export default class Ruler<T> {
    * ##### Example
    *
    * ```javascript
-   * var md = require('markdown-it')();
-   *
    * md.block.ruler.before('paragraph', 'my_rule', function replace(state) {
    *   //...
    * });
@@ -191,8 +187,6 @@ export default class Ruler<T> {
    * ##### Example
    *
    * ```javascript
-   * var md = require('markdown-it')();
-   *
    * md.inline.ruler.after('text', 'my_rule', function replace(state) {
    *   //...
    * });
@@ -231,8 +225,6 @@ export default class Ruler<T> {
    * ##### Example
    *
    * ```javascript
-   * var md = require('markdown-it')();
-   *
    * md.core.ruler.push('my_rule', function replace(state) {
    *   //...
    * });

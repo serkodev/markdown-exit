@@ -19,12 +19,12 @@ import Renderer from './renderer'
  * MarkdownIt provides named presets as a convenience to quickly
  * enable/disable active syntax rules and options for common use cases.
  *
- * - ["commonmark"](https://github.com/markdown-it/markdown-it/blob/master/lib/presets/commonmark.js) -
+ * - ["commonmark"](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/presets/commonmark.ts) -
  *   configures parser to strict [CommonMark](http://commonmark.org/) mode.
- * - [default](https://github.com/markdown-it/markdown-it/blob/master/lib/presets/default.js) -
+ * - [default](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/presets/default.ts) -
  *   similar to GFM, used when no preset name given. Enables all available rules,
  *   but still without html, typographer & autolinker.
- * - ["zero"](https://github.com/markdown-it/markdown-it/blob/master/lib/presets/zero.js) -
+ * - ["zero"](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/presets/zero.ts) -
  *   all rules disabled. Useful to quickly setup your config via `.enable()`.
  *   For example, when you need only `bold` and `italic` markup and nothing else.
  */
@@ -67,7 +67,7 @@ export interface Options {
   linkify?: boolean
 
   /**
-   * Set `true` to enable [some language-neutral replacement](https://github.com/markdown-it/markdown-it/blob/master/lib/rules_core/replacements.js) +
+   * Set `true` to enable [some language-neutral replacement](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/rules_core/replacements.ts) +
    * quotes beautification (smartquotes).
    * @default false
    */
@@ -171,36 +171,7 @@ export type PluginSimple = (md: MarkdownIt) => void
 export type PluginWithOptions<T = any> = (md: MarkdownIt, options?: T) => void
 export type PluginWithParams = (md: MarkdownIt, ...params: any[]) => void
 
-/**
- * class MarkdownIt
- *
- * Main parser/renderer class.
- *
- * ##### Usage
- *
- * ```javascript
- * // node.js, "classic" way:
- * var MarkdownIt = require('markdown-it'),
- *     md = new MarkdownIt();
- * var result = md.render('# markdown-it rulezz!');
- *
- * // node.js, the same, but with sugar:
- * var md = require('markdown-it')();
- * var result = md.render('# markdown-it rulezz!');
- *
- * // browser without AMD, added to "window" on script load
- * // Note, there are no dash.
- * var md = window.markdownit();
- * var result = md.render('# markdown-it rulezz!');
- * ```
- *
- * Single line rendering, without paragraph wrap:
- *
- * ```javascript
- * var md = require('markdown-it')();
- * var result = md.renderInline('__markdown-it__ rulezz!');
- * ```
- */
+// TODO: add JSDoc usage and examples
 export class MarkdownIt {
   /**
    * Instance of {@link ParserInline}. You may need it to add new rules when
@@ -230,8 +201,6 @@ export class MarkdownIt {
    * ##### Example
    *
    * ```javascript
-   * var md = require('markdown-it')();
-   *
    * function myToken(tokens, idx, options, env, self) {
    *   //...
    *   return result;
@@ -240,13 +209,13 @@ export class MarkdownIt {
    * md.renderer.rules['my_token'] = myToken
    * ```
    *
-   * See {@link Renderer} docs and [source code](https://github.com/markdown-it/markdown-it/blob/master/lib/renderer.js).
+   * See {@link Renderer} docs and [source code](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/renderer.ts).
    */
   renderer: Renderer = new Renderer()
 
   /**
    * [linkify-it](https://github.com/markdown-it/linkify-it) instance.
-   * Used by [linkify](https://github.com/markdown-it/markdown-it/blob/master/lib/rules_core/linkify.js)
+   * Used by [linkify](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/rules_core/linkify.ts)
    * rule.
    */
   linkify: LinkifyIt = new LinkifyIt()
@@ -259,9 +228,8 @@ export class MarkdownIt {
    * You can change this behaviour:
    *
    * ```javascript
-   * var md = require('markdown-it')();
    * // enable everything
-   * md.validateLink = function () { return true; }
+   * md.validateLink = () => true
    * ```
    */
   validateLink: (url: string) => boolean = validateLink
@@ -283,7 +251,7 @@ export class MarkdownIt {
    * MarkdownIt#utils -> utils
    *
    * Assorted utility functions, useful to write plugins. See details
-   * [here](https://github.com/markdown-it/markdown-it/blob/master/lib/common/utils.mjs).
+   * [here](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/common/utils.ts).
    */
   utils: typeof utils = utils
 
@@ -291,7 +259,7 @@ export class MarkdownIt {
    * MarkdownIt#helpers -> helpers
    *
    * Link components parser functions, useful to write plugins. See details
-   * [here](https://github.com/markdown-it/markdown-it/blob/master/lib/helpers).
+   * [here](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/helpers).
    */
   helpers: typeof helpers = Object.assign({}, helpers)
 
@@ -321,13 +289,12 @@ export class MarkdownIt {
    * ##### Example
    *
    * ```javascript
-   * var md = require('markdown-it')()
-   *             .set({ html: true, breaks: true })
-   *             .set({ typographer: true });
+   * md.set({ html: true, breaks: true })
+   *   .set({ typographer: true });
    * ```
    *
    * __Note:__ To achieve the best possible performance, don't modify a
-   * `markdown-it` instance options on the fly. If you need multiple configurations
+   * `markdown-fit` instance options on the fly. If you need multiple configurations
    * it's best to create multiple instances and initialize each with separate
    * config.
    */
@@ -341,7 +308,7 @@ export class MarkdownIt {
    *
    * Batch load of all options and compenent settings. This is internal method,
    * and you probably will not need it. But if you with - see available presets
-   * and data structure [here](https://github.com/markdown-it/markdown-it/tree/master/lib/presets)
+   * and data structure [here](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/presets)
    *
    * We strongly recommend to use presets instead of direct config loads. That
    * will give better compatibility with next versions.
@@ -384,9 +351,8 @@ export class MarkdownIt {
    * ##### Example
    *
    * ```javascript
-   * var md = require('markdown-it')()
-   *             .enable(['sub', 'sup'])
-   *             .disable('smartquotes');
+   * md.enable(['sub', 'sup'])
+   *   .disable('smartquotes');
    * ```
    *
    * @param list rule name or list of rule names to enable
@@ -453,10 +419,9 @@ export class MarkdownIt {
    *
    * ```javascript
    * var iterator = require('markdown-it-for-inline');
-   * var md = require('markdown-it')()
-   *             .use(iterator, 'foo_replace', 'text', function (tokens, idx) {
-   *               tokens[idx].content = tokens[idx].content.replace(/foo/g, 'bar');
-   *             });
+   * md.use(iterator, 'foo_replace', 'text', function (tokens, idx) {
+   *   tokens[idx].content = tokens[idx].content.replace(/foo/g, 'bar');
+   * });
    * ```
    */
   use(plugin: PluginSimple): this
