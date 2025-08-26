@@ -10,14 +10,6 @@
 import { decodeHTML } from 'entities'
 import * as ucmicro from 'uc.micro'
 
-function _class<T>(obj: T): string {
-  return Object.prototype.toString.call(obj)
-}
-
-export function isString(obj: unknown): obj is string {
-  return _class(obj) === '[object String]'
-}
-
 const _hasOwnProperty = Object.prototype.hasOwnProperty
 
 export function has(object: object, key: string | number | symbol): boolean {

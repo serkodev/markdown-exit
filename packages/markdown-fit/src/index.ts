@@ -308,7 +308,7 @@ class MarkdownIt {
   constructor(presetName: PresetName, options?: Options)
   constructor(presetName?: PresetName | Options, options?: Options) {
     if (!options) {
-      if (!utils.isString(presetName as any)) {
+      if (typeof presetName !== 'string') {
         options = (presetName as Options) || {}
         presetName = 'default' as PresetName
       }
@@ -355,7 +355,7 @@ class MarkdownIt {
    * will give better compatibility with next versions.
    */
   configure(presets: PresetName | Preset): this {
-    if (utils.isString(presets)) {
+    if (typeof presets === 'string') {
       const presetName = presets
       presets = config[presetName]
       if (!presets)
