@@ -139,7 +139,7 @@ export default class Token {
     const idx = this.attrIndex(name)
     let value: string | null = null
     if (idx >= 0) {
-      value = this.attrs[idx][1]
+      value = this.attrs![idx][1]
     }
     return value
   }
@@ -154,7 +154,7 @@ export default class Token {
     if (idx < 0) {
       this.attrPush([name, value])
     } else {
-      this.attrs[idx][1] = `${this.attrs[idx][1]} ${value}`
+      this.attrs![idx][1] = `${this.attrs![idx][1]} ${value}`
     }
   }
 }

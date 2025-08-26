@@ -171,7 +171,8 @@ export default function list(state: StateBlock, startLine: number, endLine: numb
   if (isOrdered) {
     token = state.push('ordered_list_open', 'ol', 1)
     if (markerValue !== 1) {
-      token.attrs = [['start', markerValue]]
+      // markdown-fit notes: convert markerValue to string
+      token.attrs = [['start', markerValue!.toString()]]
     }
   } else {
     token = state.push('bullet_list_open', 'ul', 1)

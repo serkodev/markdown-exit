@@ -25,7 +25,7 @@ export default function linkify(state: StateCore) {
       continue
     }
 
-    let tokens = blockTokens[j].children
+    let tokens = blockTokens[j].children!
 
     let htmlLinkLevel = 0
 

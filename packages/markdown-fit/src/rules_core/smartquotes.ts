@@ -203,6 +203,6 @@ export default function smartquotes(state: StateCore) {
       continue
     }
 
-    process_inlines(state.tokens[blkIdx].children, state)
+    process_inlines(state.tokens[blkIdx].children!, state)
   }
 }

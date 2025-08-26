@@ -98,11 +98,11 @@ export default function replace(state: StateCore) {
       continue
 
     if (SCOPED_ABBR_TEST_RE.test(state.tokens[blkIdx].content)) {
-      replace_scoped(state.tokens[blkIdx].children)
+      replace_scoped(state.tokens[blkIdx].children!)
     }
 
     if (RARE_RE.test(state.tokens[blkIdx].content)) {
-      replace_rare(state.tokens[blkIdx].children)
+      replace_rare(state.tokens[blkIdx].children!)
     }
   }
 }
