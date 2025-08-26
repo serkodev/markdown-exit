@@ -1,5 +1,6 @@
 // Main parser class
 
+import type Token from './token'
 import type { Preset } from './types/preset'
 import LinkifyIt from 'linkify-it'
 import * as mdurl from 'mdurl'
@@ -443,7 +444,7 @@ export class MarkdownFit {
    * @param src source string
    * @param env environment sandbox
    */
-  parse(src: string, env?: any): any[] {
+  parse(src: string, env?: any): Token[] {
     if (typeof src !== 'string') {
       throw new TypeError('Input data should be a String')
     }
@@ -481,7 +482,7 @@ export class MarkdownFit {
    * @param src source string
    * @param env environment sandbox
    */
-  parseInline(src: string, env?: any): any[] {
+  parseInline(src: string, env?: any): Token[] {
     const state = new this.core.State(src, this, env)
 
     state.inlineMode = true
