@@ -240,7 +240,7 @@ export default class Renderer {
    * @param options params of parser instance
    * @param env additional data from parsed input (references, for example)
    */
-  renderInline(tokens: Token[], options: Options, env: any): string {
+  renderInline(tokens: Token[], options: Options, env?: any): string {
     let result = ''
     const rules = this.rules
 
@@ -266,7 +266,7 @@ export default class Renderer {
    * @param options params of parser instance
    * @param env additional data from parsed input (references, for example)
    */
-  renderInlineAsText(tokens: Token[], options: Options, env: any): string {
+  renderInlineAsText(tokens: Token[], options: Options, env?: any): string {
     let result = ''
 
     for (let i = 0, len = tokens.length; i < len; i++) {
@@ -301,7 +301,7 @@ export default class Renderer {
    * @param options params of parser instance
    * @param env additional data from parsed input (references, for example)
    */
-  render(tokens: Token[], options: Options, env: any): string {
+  render(tokens: Token[], options: Options, env?: any): string {
     let result = ''
     const rules = this.rules
 
