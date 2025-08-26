@@ -5,7 +5,7 @@
  * Block-level tokenizer.
  */
 
-import type { MarkdownIt } from '.'
+import type { MarkdownFit } from '.'
 import type Token from './token'
 
 import Ruler from './ruler'
@@ -129,7 +129,7 @@ export default class ParserBlock {
   /**
    * Process input string and push block tokens into `outTokens`
    */
-  parse(src: string, md: MarkdownIt, env: any, outTokens: Token[]) {
+  parse(src: string, md: MarkdownFit, env: any, outTokens: Token[]) {
     if (!src)
       return
 

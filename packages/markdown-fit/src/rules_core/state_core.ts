@@ -1,7 +1,7 @@
 // Core state object
 //
 
-import type { MarkdownIt } from '..'
+import type { MarkdownFit } from '..'
 import Token from '../token'
 
 export default class StateCore {
@@ -13,9 +13,9 @@ export default class StateCore {
   /**
    * link to parser instance
    */
-  md: MarkdownIt
+  md: MarkdownFit
 
-  constructor(src: string, md: MarkdownIt, env: any) {
+  constructor(src: string, md: MarkdownFit, env: any) {
     this.src = src
     this.env = env
     this.md = md

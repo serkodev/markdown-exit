@@ -1,57 +1,57 @@
 import { describe, expect, it } from 'vitest'
-import MarkdownIt from '../src'
+import MarkdownFit from '../src'
 
 describe('callable and constructable', () => {
   it('is constructable', () => {
-    const md = new MarkdownIt()
-    const result = md.render('# markdown-it')
-    expect(result).toEqual('<h1>markdown-it</h1>\n')
+    const md = new MarkdownFit()
+    const result = md.render('# markdown-fit')
+    expect(result).toEqual('<h1>markdown-fit</h1>\n')
   })
 
   it('is callable', () => {
-    const md = MarkdownIt()
-    const result = md.render('# markdown-it')
-    expect(result).toEqual('<h1>markdown-it</h1>\n')
+    const md = MarkdownFit()
+    const result = md.render('# markdown-fit')
+    expect(result).toEqual('<h1>markdown-fit</h1>\n')
   })
 
-  it('works with both `new MarkdownIt()` and `MarkdownIt()`', () => {
-    const a = new MarkdownIt()
-    const b = MarkdownIt()
+  it('works with both `new MarkdownFit()` and `MarkdownFit()`', () => {
+    const a = new MarkdownFit()
+    const b = MarkdownFit()
 
-    expect(a).toBeInstanceOf(MarkdownIt)
-    expect(b).toBeInstanceOf(MarkdownIt)
+    expect(a).toBeInstanceOf(MarkdownFit)
+    expect(b).toBeInstanceOf(MarkdownFit)
     expect(Object.getPrototypeOf(a)).toBe(Object.getPrototypeOf(b))
     expect(a).not.toBe(b)
   })
 
   it('shares the same instance prototype', () => {
-    ;(MarkdownIt as any).prototype.__testMethod = function () {
+    ;(MarkdownFit as any).prototype.__testMethod = function () {
       return 'ok'
     }
 
-    const viaCall = MarkdownIt()
-    const viaNew = new MarkdownIt()
+    const viaCall = MarkdownFit()
+    const viaNew = new MarkdownFit()
 
     expect((viaCall as any).__testMethod()).toBe('ok')
     expect((viaNew as any).__testMethod()).toBe('ok')
   })
 
-  it('inherits statics from the underlying class (_MarkdownIt)', () => {
-    const Parent = Object.getPrototypeOf(MarkdownIt)
+  it('inherits statics from the underlying class (_MarkdownFit)', () => {
+    const Parent = Object.getPrototypeOf(MarkdownFit)
     expect(typeof Parent).toBe('function')
 
     Parent.__testStatic = () => 'static-ok'
-    expect((MarkdownIt as any).__testStatic()).toBe('static-ok')
+    expect((MarkdownFit as any).__testStatic()).toBe('static-ok')
   })
 
   it('instanceof also matches the underlying class', () => {
-    const Parent = Object.getPrototypeOf(MarkdownIt)
-    const inst = MarkdownIt()
+    const Parent = Object.getPrototypeOf(MarkdownFit)
+    const inst = MarkdownFit()
     expect(inst instanceof Parent).toBe(true)
   })
 
-  it('instance.constructor points back to MarkdownIt', () => {
-    const inst = MarkdownIt()
-    expect(inst.constructor).toBe(MarkdownIt)
+  it('instance.constructor points back to MarkdownFit', () => {
+    const inst = MarkdownFit()
+    expect(inst.constructor).toBe(MarkdownFit)
   })
 })

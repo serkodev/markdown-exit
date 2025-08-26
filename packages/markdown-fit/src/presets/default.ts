@@ -1,4 +1,4 @@
-// markdown-it default options
+// markdown-fit default options
 
 import type { Preset } from '../types/preset'
 

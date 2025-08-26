@@ -5,7 +5,7 @@
  * Tokenizes paragraph content.
  */
 
-import type { MarkdownIt } from '.'
+import type { MarkdownFit } from '.'
 import type Token from './token'
 import Ruler from './ruler'
 import r_autolink from './rules_inline/autolink'
@@ -202,7 +202,7 @@ export default class ParserInline {
   /**
    * Process input string and push inline tokens into `outTokens`
    */
-  parse(str: string, md: MarkdownIt, env: any, outTokens: Token[]) {
+  parse(str: string, md: MarkdownFit, env: any, outTokens: Token[]) {
     const state = new this.State(str, md, env, outTokens)
 
     this.tokenize(state)

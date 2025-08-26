@@ -16,7 +16,7 @@ import cfg_zero from './presets/zero'
 import Renderer from './renderer'
 
 /**
- * MarkdownIt provides named presets as a convenience to quickly
+ * MarkdownFit provides named presets as a convenience to quickly
  * enable/disable active syntax rules and options for common use cases.
  *
  * - ["commonmark"](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/presets/commonmark.ts) -
@@ -167,30 +167,30 @@ function normalizeLinkText(url: string) {
   return mdurl.decode(mdurl.format(parsed), `${mdurl.decode.defaultChars}%`)
 }
 
-export type PluginSimple = (md: MarkdownIt) => void
-export type PluginWithOptions<T = any> = (md: MarkdownIt, options?: T) => void
-export type PluginWithParams = (md: MarkdownIt, ...params: any[]) => void
+export type PluginSimple = (md: MarkdownFit) => void
+export type PluginWithOptions<T = any> = (md: MarkdownFit, options?: T) => void
+export type PluginWithParams = (md: MarkdownFit, ...params: any[]) => void
 
 // TODO: add JSDoc usage and examples
-export class MarkdownIt {
+export class MarkdownFit {
   /**
    * Instance of {@link ParserInline}. You may need it to add new rules when
-   * writing plugins. For simple rules control use {@link MarkdownIt.disable} and
-   * {@link MarkdownIt.enable}.
+   * writing plugins. For simple rules control use {@link MarkdownFit.disable} and
+   * {@link MarkdownFit.enable}.
    */
   inline: ParserInline = new ParserInline()
 
   /**
    * Instance of {@link ParserBlock}. You may need it to add new rules when
-   * writing plugins. For simple rules control use {@link MarkdownIt.disable} and
-   * {@link MarkdownIt.enable}.
+   * writing plugins. For simple rules control use {@link MarkdownFit.disable} and
+   * {@link MarkdownFit.enable}.
    */
   block: ParserBlock = new ParserBlock()
 
   /**
    * Instance of {@link Core} chain executor. You may need it to add new rules when
-   * writing plugins. For simple rules control use {@link MarkdownIt.disable} and
-   * {@link MarkdownIt.enable}.
+   * writing plugins. For simple rules control use {@link MarkdownFit.disable} and
+   * {@link MarkdownFit.enable}.
    */
   core: ParserCore = new ParserCore()
 
@@ -248,16 +248,12 @@ export class MarkdownIt {
   // Expose utils & helpers for easy acces from plugins
 
   /**
-   * MarkdownIt#utils -> utils
-   *
    * Assorted utility functions, useful to write plugins. See details
    * [here](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/common/utils.ts).
    */
   utils: typeof utils = utils
 
   /**
-   * MarkdownIt#helpers -> helpers
-   *
    * Link components parser functions, useful to write plugins. See details
    * [here](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/helpers).
    */
@@ -318,11 +314,11 @@ export class MarkdownIt {
       const presetName = presets
       presets = config[presetName]
       if (!presets)
-        throw new Error(`Wrong \`markdown-it\` preset "${presetName}", check name`)
+        throw new Error(`Wrong \`markdown-fit\` preset "${presetName}", check name`)
     }
 
     if (!presets)
-      throw new Error('Wrong `markdown-it` preset, can\'t be empty')
+      throw new Error('Wrong `markdown-fit` preset, can\'t be empty')
 
     if (presets.options)
       this.set(presets.options)
@@ -374,7 +370,7 @@ export class MarkdownIt {
     const missed = list.filter(name => !result.includes(name))
 
     if (missed.length && !ignoreInvalid) {
-      throw new Error(`MarkdownIt. Failed to enable unknown rule(s): ${missed}`)
+      throw new Error(`MarkdownFit. Failed to enable unknown rule(s): ${missed}`)
     }
 
     return this
@@ -383,7 +379,7 @@ export class MarkdownIt {
   /**
    * chainable*
    *
-   * The same as {@link MarkdownIt.enable}, but turn specified rules off.
+   * The same as {@link MarkdownFit.enable}, but turn specified rules off.
    *
    * @param list rule name or list of rule names to disable.
    * @param ignoreInvalid set `true` to ignore errors when rule not found.
@@ -404,7 +400,7 @@ export class MarkdownIt {
     const missed = list.filter(name => !result.includes(name))
 
     if (missed.length && !ignoreInvalid) {
-      throw new Error(`MarkdownIt. Failed to disable unknown rule(s): ${missed}`)
+      throw new Error(`MarkdownFit. Failed to disable unknown rule(s): ${missed}`)
     }
     return this
   }
@@ -464,7 +460,7 @@ export class MarkdownIt {
    *
    * `env` can be used to inject additional metadata (`{}` by default).
    * But you will not need it with high probability. See also comment
-   * in {@link MarkdownIt.parse}.
+   * in {@link MarkdownFit.parse}.
    *
    * @param src source string
    * @param env environment sandbox
@@ -478,7 +474,7 @@ export class MarkdownIt {
   /**
    * internal*
    *
-   * The same as {@link MarkdownIt.parse} but skip all block rules. It returns the
+   * The same as {@link MarkdownFit.parse} but skip all block rules. It returns the
    * block tokens list with the single `inline` element, containing parsed inline
    * tokens in `children` property. Also updates `env` object.
    *
@@ -495,7 +491,7 @@ export class MarkdownIt {
   }
 
   /**
-   * Similar to {@link MarkdownIt.render} but for single paragraph content. Result
+   * Similar to {@link MarkdownFit.render} but for single paragraph content. Result
    * will NOT be wrapped into `<p>` tags.
    *
    * @param src source string
@@ -508,28 +504,28 @@ export class MarkdownIt {
   }
 }
 
-export function createMarkdownIt(options?: Options): MarkdownIt
-export function createMarkdownIt(presetName: PresetName, options?: Options): MarkdownIt
-export function createMarkdownIt(presetNameOrOptions?: any, options?: any): MarkdownIt {
-  return new MarkdownIt(presetNameOrOptions, options)
+export function createMarkdownFit(options?: Options): MarkdownFit
+export function createMarkdownFit(presetName: PresetName, options?: Options): MarkdownFit
+export function createMarkdownFit(presetNameOrOptions?: any, options?: any): MarkdownFit {
+  return new MarkdownFit(presetNameOrOptions, options)
 }
 
 // hybrid types callable construct signatures hack
-type MarkdownItConstructor = {
-  new(options?: Options): MarkdownIt
-  new(presetName: PresetName, options?: Options): MarkdownIt
-  (options?: Options): MarkdownIt
-  (presetName: PresetName, options?: Options): MarkdownIt
-} & typeof MarkdownIt
+type MarkdownFitConstructor = {
+  new(options?: Options): MarkdownFit
+  new(presetName: PresetName, options?: Options): MarkdownFit
+  (options?: Options): MarkdownFit
+  (presetName: PresetName, options?: Options): MarkdownFit
+} & typeof MarkdownFit
 
-function _MarkdownIt(presetName?: PresetName | Options, options?: Options): MarkdownIt {
-  return new MarkdownIt(presetName as any, options)
+function _MarkdownFit(presetName?: PresetName | Options, options?: Options): MarkdownFit {
+  return new MarkdownFit(presetName as any, options)
 }
 
 // bridge statics
-Object.setPrototypeOf(_MarkdownIt, MarkdownIt)
+Object.setPrototypeOf(_MarkdownFit, MarkdownFit)
 // share the same instance prototype
-;(_MarkdownIt as any).prototype = MarkdownIt.prototype
-;(_MarkdownIt as any).prototype.constructor = _MarkdownIt
+;(_MarkdownFit as any).prototype = MarkdownFit.prototype
+;(_MarkdownFit as any).prototype.constructor = _MarkdownFit
 
-export default _MarkdownIt as MarkdownItConstructor
+export default _MarkdownFit as MarkdownFitConstructor

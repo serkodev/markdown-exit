@@ -5,7 +5,8 @@
 
 // Parser state class
 
-import type { MarkdownIt } from '..'
+import type { MarkdownFit } from '..'
+import type { BlockRule } from '../parser_block'
 import type { Nesting } from '../token'
 import { isSpace } from '../common/utils'
 import Token from '../token'
@@ -18,7 +19,7 @@ export default class StateBlock {
   /**
    * link to parser instance
    */
-  md: MarkdownIt
+  md: MarkdownFit
 
   env: any
 
@@ -95,7 +96,7 @@ export default class StateBlock {
 
   static Token: typeof Token = Token
 
-  constructor(src: string, md: MarkdownIt, env: any, tokens: Token[]) {
+  constructor(src: string, md: MarkdownFit, env: any, tokens: Token[]) {
     this.src = src
     this.md = md
     this.env = env
