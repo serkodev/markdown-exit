@@ -20,7 +20,7 @@ export interface RuleOptions {
  * rules control use {@link MarkdownFit.disable}, {@link MarkdownFit.enable} and
  * {@link MarkdownFit.use}.
  */
-export default class Ruler<T> {
+export default class Ruler<T extends (...args: any[]) => any> {
   private __rules__: Array<{
     name: string
     enabled: boolean
