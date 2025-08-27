@@ -19,6 +19,6 @@
     "eslint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
-    "vitest": "catalog:"
+    "vitest": "catalog:tests"
   }
 }

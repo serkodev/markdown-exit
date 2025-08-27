@@ -1,0 +1,14 @@
+{
+  "name": "@markdown-fit/testgen",
+  "type": "module",
+  "private": true,
+  "license": "MIT",
+  "main": "./src/index.ts",
+  "dependencies": {
+    "js-yaml": "catalog:tests",
+    "tinyglobby": "catalog:tests"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "catalog:types"
+  }
+}

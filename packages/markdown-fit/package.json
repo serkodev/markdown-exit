@@ -37,6 +37,7 @@
     "uc.micro": "catalog:integrations"
   },
   "devDependencies": {
+    "@markdown-fit/testgen": "workspace:*",
     "@types/linkify-it": "catalog:types",
     "@types/mdurl": "catalog:types"
   }

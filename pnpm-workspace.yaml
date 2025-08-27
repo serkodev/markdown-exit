@@ -6,7 +6,6 @@ catalog:
   eslint: ^9.34.0
   tsdown: ^0.14.1
   typescript: ^5.9.2
-  vitest: ^3.2.4
 catalogs:
   integrations:
     entities: ^6.0.1
@@ -14,7 +13,12 @@ catalogs:
     mdurl: ^2.0.0
     punycode.js: ^2.3.1
     uc.micro: ^2.1.0
+  tests:
+    js-yaml: ^4.1.0
+    tinyglobby: ^0.2.14
+    vitest: ^3.2.4
   types:
+    '@types/js-yaml': ^4.0.9
     '@types/linkify-it': ^5.0.0
     '@types/mdurl': ^2.0.0
     '@types/node': ^22.17.2
