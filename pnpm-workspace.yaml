@@ -4,7 +4,7 @@ catalog:
   '@antfu/eslint-config': ^5.2.1
   bumpp: ^10.2.3
   eslint: ^9.34.0
-  tsdown: ^0.14.1
+  tsdown: ^0.14.2
   typescript: ^5.9.2
 catalogs:
   integrations:
@@ -21,4 +21,4 @@ catalogs:
     '@types/js-yaml': ^4.0.9
     '@types/linkify-it': ^5.0.0
     '@types/mdurl': ^2.0.0
-    '@types/node': ^22.17.2
+    '@types/node': ^22.18.0
