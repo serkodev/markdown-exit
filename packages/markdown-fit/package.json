@@ -12,6 +12,14 @@
   "bugs": {
     "url": "https://github.com/serkodev/markdown-fit/issues"
   },
+  "keywords": [
+    "markdown",
+    "parser",
+    "commonmark",
+    "markdown-it",
+    "markdown-it-plugin",
+    "markdown-fit"
+  ],
   "exports": {
     ".": "./dist/index.js",
     "./package.json": "./package.json"
