@@ -9,7 +9,8 @@
     "build": "pnpm -r run build",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
-    "release": "bumpp -r && pnpm -r publish",
+    "prepublishOnly": "pnpm lint && pnpm test && pnpm build && bumpp -r",
+    "release": "pnpm -r publish",
     "lint": "eslint ."
   },
   "devDependencies": {
