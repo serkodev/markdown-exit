@@ -15,13 +15,21 @@ A TypeScript rewrite of [markdown-it](https://github.com/markdown-it/markdown-it
 
 ## Quickstart
 
+### Install
+
+`v1+` (latest): All new features and may include breaking changes.
+
 ```bash
-npm install markdown-fit
+npm i markdown-fit
+```
+
+`v0.x` (legacy): Full compatibility with markdown-it usage while adding TypeScript support, bug fixes and performance improvements. ([v0](https://github.com/serkodev/markdown-fit/tree/v0) branch)
+
+```bash
+npm i markdown-fit@legacy
 ```
 
 ### Usage
-
-Visit markdown-it [API Documentation](https://markdown-it.github.io/markdown-it/) for more info and examples.
 
 #### Named import (recommended)
 
@@ -63,6 +71,10 @@ const md = new MarkdownFit()
 md.render('# markdown-fit')
 ```
 </details>
+
+#### Documentation
+
+Visit markdown-it [API Documentation](https://markdown-it.github.io/markdown-it/) for more info and examples.
 
 ## References / Thanks
 
