@@ -9,7 +9,7 @@
     "build": "pnpm -r run build",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
-    "release": "bumpp && pnpm -r publish",
+    "release": "bumpp -r && pnpm -r publish",
     "lint": "eslint ."
   },
   "devDependencies": {
