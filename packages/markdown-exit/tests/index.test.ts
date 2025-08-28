@@ -1,0 +1,57 @@
+import { describe, expect, it } from 'vitest'
+import MarkdownExit from '../src'
+
+describe('callable and constructable', () => {
+  it('is constructable', () => {
+    const md = new MarkdownExit()
+    const result = md.render('# markdown-exit')
+    expect(result).toEqual('<h1>markdown-exit</h1>\n')
+  })
+
+  it('is callable', () => {
+    const md = MarkdownExit()
+    const result = md.render('# markdown-exit')
+    expect(result).toEqual('<h1>markdown-exit</h1>\n')
+  })
+
+  it('works with both `new MarkdownExit()` and `MarkdownExit()`', () => {
+    const a = new MarkdownExit()
+    const b = MarkdownExit()
+
+    expect(a).toBeInstanceOf(MarkdownExit)
+    expect(b).toBeInstanceOf(MarkdownExit)
+    expect(Object.getPrototypeOf(a)).toBe(Object.getPrototypeOf(b))
+    expect(a).not.toBe(b)
+  })
+
+  it('shares the same instance prototype', () => {
+    ;(MarkdownExit as any).prototype.__testMethod = function () {
+      return 'ok'
+    }
+
+    const viaCall = MarkdownExit()
+    const viaNew = new MarkdownExit()
+
+    expect((viaCall as any).__testMethod()).toBe('ok')
+    expect((viaNew as any).__testMethod()).toBe('ok')
+  })
+
+  it('inherits statics from the underlying class (_MarkdownExit)', () => {
+    const Parent = Object.getPrototypeOf(MarkdownExit)
+    expect(typeof Parent).toBe('function')
+
+    Parent.__testStatic = () => 'static-ok'
+    expect((MarkdownExit as any).__testStatic()).toBe('static-ok')
+  })
+
+  it('instanceof also matches the underlying class', () => {
+    const Parent = Object.getPrototypeOf(MarkdownExit)
+    const inst = MarkdownExit()
+    expect(inst instanceof Parent).toBe(true)
+  })
+
+  it('instance.constructor points back to MarkdownExit', () => {
+    const inst = MarkdownExit()
+    expect(inst.constructor).toBe(MarkdownExit)
+  })
+})

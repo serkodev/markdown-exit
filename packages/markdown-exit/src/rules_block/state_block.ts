@@ -1,11 +1,11 @@
 /**
- * markdown-fit notes:
+ * markdown-exit notes:
  * - add 'table' to ParentType
  */
 
 // Parser state class
 
-import type { MarkdownFit } from '..'
+import type { MarkdownExit } from '..'
 import type { BlockRule } from '../parser_block'
 import type { Nesting } from '../token'
 import { isSpace } from '../common/utils'
@@ -19,7 +19,7 @@ export default class StateBlock {
   /**
    * link to parser instance
    */
-  md: MarkdownFit
+  md: MarkdownExit
 
   env: any
 
@@ -96,7 +96,7 @@ export default class StateBlock {
 
   static Token: typeof Token = Token
 
-  constructor(src: string, md: MarkdownFit, env: any, tokens: Token[]) {
+  constructor(src: string, md: MarkdownExit, env: any, tokens: Token[]) {
     this.src = src
     this.md = md
     this.env = env

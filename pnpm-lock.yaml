@@ -87,7 +87,7 @@ importers:
         specifier: catalog:tests
         version: 3.2.4(@types/debug@4.1.12)(@types/node@22.17.2)(jiti@2.5.1)(yaml@2.8.1)
 
-  packages/markdown-fit:
+  packages/markdown-exit:
     dependencies:
       entities:
         specifier: catalog:integrations
@@ -105,7 +105,7 @@ importers:
         specifier: catalog:integrations
         version: 2.1.0
     devDependencies:
-      '@markdown-fit/testgen':
+      '@markdown-exit/testgen':
         specifier: workspace:*
         version: link:../testgen
       '@types/linkify-it':

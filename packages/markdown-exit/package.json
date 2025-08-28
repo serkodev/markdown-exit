@@ -1,16 +1,16 @@
 {
-  "name": "markdown-fit",
+  "name": "markdown-exit",
   "type": "module",
   "version": "0.0.0",
   "description": "A TypeScript rewrite of markdown-it with enhancements",
   "license": "MIT",
-  "homepage": "https://github.com/serkodev/markdown-fit#readme",
+  "homepage": "https://github.com/serkodev/markdown-exit#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/serkodev/markdown-fit.git"
+    "url": "git+https://github.com/serkodev/markdown-exit.git"
   },
   "bugs": {
-    "url": "https://github.com/serkodev/markdown-fit/issues"
+    "url": "https://github.com/serkodev/markdown-exit/issues"
   },
   "keywords": [
     "markdown",
@@ -18,7 +18,7 @@
     "commonmark",
     "markdown-it",
     "markdown-it-plugin",
-    "markdown-fit"
+    "markdown-exit"
   ],
   "exports": {
     ".": "./dist/index.js",
@@ -45,7 +45,7 @@
     "uc.micro": "catalog:integrations"
   },
   "devDependencies": {
-    "@markdown-fit/testgen": "workspace:*",
+    "@markdown-exit/testgen": "workspace:*",
     "@types/linkify-it": "catalog:types",
     "@types/mdurl": "catalog:types"
   }

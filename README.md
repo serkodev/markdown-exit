@@ -1,4 +1,4 @@
-# markdown-fit
+# markdown-exit
 
 [![npm version][npm-version-src]][npm-version-href]
 [![bundle][bundle-src]][bundle-href]
@@ -11,7 +11,7 @@ A TypeScript rewrite of [markdown-it](https://github.com/markdown-it/markdown-it
 - **API compatibility:** Compatible with markdown-it `v14.1.0` and plugin API.
 - **TypeScript:** Ship robust types, improve DX, and enable type-safe development.
 - **Extensibility:** Provide a clean foundation for new features that are easier to prototype and maintain.
-- **New features:** Track via [features](https://github.com/serkodev/markdown-fit/issues?q=is:issue%20label:features) for details.
+- **New features:** Track via [features](https://github.com/serkodev/markdown-exit/issues?q=is:issue%20label:features) for details.
 
 ## Quickstart
 
@@ -20,13 +20,13 @@ A TypeScript rewrite of [markdown-it](https://github.com/markdown-it/markdown-it
 `v1+` (latest): All new features and may include breaking changes.
 
 ```bash
-npm i markdown-fit
+npm i markdown-exit
 ```
 
-`v0.x` (legacy): Full compatibility with markdown-it usage while adding TypeScript support, bug fixes and performance improvements. ([v0](https://github.com/serkodev/markdown-fit/tree/v0) branch)
+`v0.x` (legacy): Full compatibility with markdown-it usage while adding TypeScript support, bug fixes and performance improvements. ([v0](https://github.com/serkodev/markdown-exit/tree/v0) branch)
 
 ```bash
-npm i markdown-fit@legacy
+npm i markdown-exit@legacy
 ```
 
 ### Usage
@@ -34,19 +34,19 @@ npm i markdown-fit@legacy
 #### Named import (recommended)
 
 ```ts
-import { createMarkdownFit } from 'markdown-fit'
+import { createMarkdownExit } from 'markdown-exit'
 
 // factory helper
-const md = createMarkdownFit()
-md.render('# markdown-fit')
+const md = createMarkdownExit()
+md.render('# markdown-exit')
 ```
 
 ```ts
-import { MarkdownFit } from 'markdown-fit'
+import { MarkdownExit } from 'markdown-exit'
 
 // with the `new` keyword
-const md = new MarkdownFit()
-md.render('# markdown-fit')
+const md = new MarkdownExit()
+md.render('# markdown-exit')
 ```
 
 #### Default import
@@ -58,17 +58,17 @@ md.render('# markdown-fit')
 <summary>Example</summary>
 
 ```ts
-import MarkdownFit from 'markdown-fit'
+import MarkdownExit from 'markdown-exit'
 
 // callable function
-const md = MarkdownFit()
-md.render('# markdown-fit')
+const md = MarkdownExit()
+md.render('# markdown-exit')
 ```
 
 ```ts
 // with the `new` keyword
-const md = new MarkdownFit()
-md.render('# markdown-fit')
+const md = new MarkdownExit()
+md.render('# markdown-exit')
 ```
 </details>
 
@@ -96,9 +96,9 @@ This project owes its foundation to the [markdown-it](https://github.com/markdow
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/markdown-fit?style=flat&colorA=222&colorB=fff
-[npm-version-href]: https://npmjs.com/package/markdown-fit
-[bundle-src]: https://img.shields.io/bundlephobia/minzip/markdown-fit?style=flat&colorA=222&colorB=fff&label=minzip
-[bundle-href]: https://bundlephobia.com/result?p=markdown-fit
-[license-src]: https://img.shields.io/github/license/serkodev/markdown-fit.svg?style=flat&colorA=222&colorB=fff
-[license-href]: https://github.com/serkodev/markdown-fit/blob/main/LICENSE
+[npm-version-src]: https://img.shields.io/npm/v/markdown-exit?style=flat&colorA=222&colorB=fff
+[npm-version-href]: https://npmjs.com/package/markdown-exit
+[bundle-src]: https://img.shields.io/bundlephobia/minzip/markdown-exit?style=flat&colorA=222&colorB=fff&label=minzip
+[bundle-href]: https://bundlephobia.com/result?p=markdown-exit
+[license-src]: https://img.shields.io/github/license/serkodev/markdown-exit.svg?style=flat&colorA=222&colorB=fff
+[license-href]: https://github.com/serkodev/markdown-exit/blob/main/LICENSE

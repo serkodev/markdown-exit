@@ -1,9 +1,9 @@
 import crypto from 'node:crypto'
 import { describe, expect, it } from 'vitest'
-import MarkdownFit from '../src/index'
+import MarkdownExit from '../src/index'
 
 function test_pattern(str: string) {
-  expect(MarkdownFit().render(str)).toBeTruthy()
+  expect(MarkdownExit().render(str)).toBeTruthy()
 }
 
 /* eslint-disable prefer-template */

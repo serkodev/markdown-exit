@@ -1,5 +1,5 @@
 /**
- * markdown-fit notes:
+ * markdown-exit notes:
  * - drop re-export mdurl and ucmicro
  * - drop `assign` with `Object.assign`
  */

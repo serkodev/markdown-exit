@@ -1,14 +1,14 @@
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { generate } from '@markdown-fit/testgen'
+import { generate } from '@markdown-exit/testgen'
 import { assert, describe, it } from 'vitest'
-import MarkdownFit from '../src'
+import MarkdownExit from '../src'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 describe('markdown-it', () => {
-  const md = MarkdownFit({
+  const md = MarkdownExit({
     html: true,
     langPrefix: '',
     typographer: true,
@@ -28,7 +28,7 @@ describe('commonmark', () => {
     return text.replace(/<blockquote>\n<\/blockquote>/g, '<blockquote></blockquote>')
   }
 
-  const md = MarkdownFit('commonmark')
+  const md = MarkdownExit('commonmark')
   const path = resolve(__dirname, './fixtures/commonmark/*')
 
   for (const { skip, desc, header, first, second } of generate(path)) {

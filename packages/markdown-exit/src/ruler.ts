@@ -6,8 +6,8 @@ export interface RuleOptions {
 }
 
 /**
- * Helper class, used by {@link MarkdownFit.core}, {@link MarkdownFit.block} and
- * {@link MarkdownFit.inline} to manage sequences of functions (rules):
+ * Helper class, used by {@link MarkdownExit.core}, {@link MarkdownExit.block} and
+ * {@link MarkdownExit.inline} to manage sequences of functions (rules):
  *
  * - keep rules in defined order
  * - assign the name to each rule
@@ -17,8 +17,8 @@ export interface RuleOptions {
  * - caching lists of active rules
  *
  * You will not need use this class directly until write plugins. For simple
- * rules control use {@link MarkdownFit.disable}, {@link MarkdownFit.enable} and
- * {@link MarkdownFit.use}.
+ * rules control use {@link MarkdownExit.disable}, {@link MarkdownExit.enable} and
+ * {@link MarkdownExit.use}.
  */
 export default class Ruler<T extends (...args: any[]) => any> {
   private __rules__: Array<{

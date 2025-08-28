@@ -137,7 +137,7 @@ export default class Renderer {
    * var result = md.renderInline(...);
    * ```
    *
-   * @see https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/renderer.ts
+   * @see https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/renderer.ts
    */
   rules: RenderRuleRecord = Object.assign({}, default_rules)
 

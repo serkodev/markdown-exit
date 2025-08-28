@@ -1,11 +1,11 @@
 /**
- * markdown-fit notes:
+ * markdown-exit notes:
  * - remove md if it's unused
  */
 
 // Inline parser state
 
-import type { MarkdownFit } from '..'
+import type { MarkdownExit } from '..'
 import type { Nesting } from '../token'
 import { isMdAsciiPunct, isPunctChar, isWhiteSpace } from '../common/utils'
 import Token from '../token'
@@ -32,7 +32,7 @@ export interface TokenMeta {
 export default class StateInline {
   src: string
   env: any
-  md: MarkdownFit
+  md: MarkdownExit
   tokens: Token[]
   tokens_meta: Array<TokenMeta | null>
 
@@ -70,7 +70,7 @@ export default class StateInline {
    */
   linkLevel: number = 0
 
-  constructor(src: string, md: MarkdownFit, env: any, outTokens: Token[]) {
+  constructor(src: string, md: MarkdownExit, env: any, outTokens: Token[]) {
     this.src = src
     this.env = env
     this.md = md

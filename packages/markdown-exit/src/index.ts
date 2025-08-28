@@ -17,15 +17,15 @@ import cfg_zero from './presets/zero'
 import Renderer from './renderer'
 
 /**
- * MarkdownFit provides named presets as a convenience to quickly
+ * MarkdownExit provides named presets as a convenience to quickly
  * enable/disable active syntax rules and options for common use cases.
  *
- * - ["commonmark"](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/presets/commonmark.ts) -
+ * - ["commonmark"](https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/presets/commonmark.ts) -
  *   configures parser to strict [CommonMark](http://commonmark.org/) mode.
- * - [default](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/presets/default.ts) -
+ * - [default](https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/presets/default.ts) -
  *   similar to GFM, used when no preset name given. Enables all available rules,
  *   but still without html, typographer & autolinker.
- * - ["zero"](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/presets/zero.ts) -
+ * - ["zero"](https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/presets/zero.ts) -
  *   all rules disabled. Useful to quickly setup your config via `.enable()`.
  *   For example, when you need only `bold` and `italic` markup and nothing else.
  */
@@ -68,7 +68,7 @@ export interface Options {
   linkify?: boolean
 
   /**
-   * Set `true` to enable [some language-neutral replacement](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/rules_core/replacements.ts) +
+   * Set `true` to enable [some language-neutral replacement](https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/rules_core/replacements.ts) +
    * quotes beautification (smartquotes).
    * @default false
    */
@@ -168,30 +168,30 @@ function normalizeLinkText(url: string) {
   return mdurl.decode(mdurl.format(parsed), `${mdurl.decode.defaultChars}%`)
 }
 
-export type PluginSimple = (md: MarkdownFit) => void
-export type PluginWithOptions<T = any> = (md: MarkdownFit, options?: T) => void
-export type PluginWithParams = (md: MarkdownFit, ...params: any[]) => void
+export type PluginSimple = (md: MarkdownExit) => void
+export type PluginWithOptions<T = any> = (md: MarkdownExit, options?: T) => void
+export type PluginWithParams = (md: MarkdownExit, ...params: any[]) => void
 
 // TODO: add JSDoc usage and examples
-export class MarkdownFit {
+export class MarkdownExit {
   /**
    * Instance of {@link ParserInline}. You may need it to add new rules when
-   * writing plugins. For simple rules control use {@link MarkdownFit.disable} and
-   * {@link MarkdownFit.enable}.
+   * writing plugins. For simple rules control use {@link MarkdownExit.disable} and
+   * {@link MarkdownExit.enable}.
    */
   inline: ParserInline = new ParserInline()
 
   /**
    * Instance of {@link ParserBlock}. You may need it to add new rules when
-   * writing plugins. For simple rules control use {@link MarkdownFit.disable} and
-   * {@link MarkdownFit.enable}.
+   * writing plugins. For simple rules control use {@link MarkdownExit.disable} and
+   * {@link MarkdownExit.enable}.
    */
   block: ParserBlock = new ParserBlock()
 
   /**
    * Instance of {@link Core} chain executor. You may need it to add new rules when
-   * writing plugins. For simple rules control use {@link MarkdownFit.disable} and
-   * {@link MarkdownFit.enable}.
+   * writing plugins. For simple rules control use {@link MarkdownExit.disable} and
+   * {@link MarkdownExit.enable}.
    */
   core: ParserCore = new ParserCore()
 
@@ -210,13 +210,13 @@ export class MarkdownFit {
    * md.renderer.rules['my_token'] = myToken
    * ```
    *
-   * See {@link Renderer} docs and [source code](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/renderer.ts).
+   * See {@link Renderer} docs and [source code](https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/renderer.ts).
    */
   renderer: Renderer = new Renderer()
 
   /**
    * [linkify-it](https://github.com/markdown-it/linkify-it) instance.
-   * Used by [linkify](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/rules_core/linkify.ts)
+   * Used by [linkify](https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/rules_core/linkify.ts)
    * rule.
    */
   linkify: LinkifyIt = new LinkifyIt()
@@ -250,13 +250,13 @@ export class MarkdownFit {
 
   /**
    * Assorted utility functions, useful to write plugins. See details
-   * [here](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/common/utils.ts).
+   * [here](https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/common/utils.ts).
    */
   utils: typeof utils = utils
 
   /**
    * Link components parser functions, useful to write plugins. See details
-   * [here](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/helpers).
+   * [here](https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/helpers).
    */
   helpers: typeof helpers = Object.assign({}, helpers)
 
@@ -291,7 +291,7 @@ export class MarkdownFit {
    * ```
    *
    * __Note:__ To achieve the best possible performance, don't modify a
-   * `markdown-fit` instance options on the fly. If you need multiple configurations
+   * `markdown-exit` instance options on the fly. If you need multiple configurations
    * it's best to create multiple instances and initialize each with separate
    * config.
    */
@@ -305,7 +305,7 @@ export class MarkdownFit {
    *
    * Batch load of all options and compenent settings. This is internal method,
    * and you probably will not need it. But if you with - see available presets
-   * and data structure [here](https://github.com/serkodev/markdown-fit/tree/main/packages/markdown-fit/src/presets)
+   * and data structure [here](https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/presets)
    *
    * We strongly recommend to use presets instead of direct config loads. That
    * will give better compatibility with next versions.
@@ -315,11 +315,11 @@ export class MarkdownFit {
       const presetName = presets
       presets = config[presetName]
       if (!presets)
-        throw new Error(`Wrong \`markdown-fit\` preset "${presetName}", check name`)
+        throw new Error(`Wrong \`markdown-exit\` preset "${presetName}", check name`)
     }
 
     if (!presets)
-      throw new Error('Wrong `markdown-fit` preset, can\'t be empty')
+      throw new Error('Wrong `markdown-exit` preset, can\'t be empty')
 
     if (presets.options)
       this.set(presets.options)
@@ -371,7 +371,7 @@ export class MarkdownFit {
     const missed = list.filter(name => !result.includes(name))
 
     if (missed.length && !ignoreInvalid) {
-      throw new Error(`MarkdownFit. Failed to enable unknown rule(s): ${missed}`)
+      throw new Error(`MarkdownExit. Failed to enable unknown rule(s): ${missed}`)
     }
 
     return this
@@ -380,7 +380,7 @@ export class MarkdownFit {
   /**
    * chainable*
    *
-   * The same as {@link MarkdownFit.enable}, but turn specified rules off.
+   * The same as {@link MarkdownExit.enable}, but turn specified rules off.
    *
    * @param list rule name or list of rule names to disable.
    * @param ignoreInvalid set `true` to ignore errors when rule not found.
@@ -401,7 +401,7 @@ export class MarkdownFit {
     const missed = list.filter(name => !result.includes(name))
 
     if (missed.length && !ignoreInvalid) {
-      throw new Error(`MarkdownFit. Failed to disable unknown rule(s): ${missed}`)
+      throw new Error(`MarkdownExit. Failed to disable unknown rule(s): ${missed}`)
     }
     return this
   }
@@ -461,7 +461,7 @@ export class MarkdownFit {
    *
    * `env` can be used to inject additional metadata (`{}` by default).
    * But you will not need it with high probability. See also comment
-   * in {@link MarkdownFit.parse}.
+   * in {@link MarkdownExit.parse}.
    *
    * @param src source string
    * @param env environment sandbox
@@ -475,7 +475,7 @@ export class MarkdownFit {
   /**
    * internal*
    *
-   * The same as {@link MarkdownFit.parse} but skip all block rules. It returns the
+   * The same as {@link MarkdownExit.parse} but skip all block rules. It returns the
    * block tokens list with the single `inline` element, containing parsed inline
    * tokens in `children` property. Also updates `env` object.
    *
@@ -492,7 +492,7 @@ export class MarkdownFit {
   }
 
   /**
-   * Similar to {@link MarkdownFit.render} but for single paragraph content. Result
+   * Similar to {@link MarkdownExit.render} but for single paragraph content. Result
    * will NOT be wrapped into `<p>` tags.
    *
    * @param src source string
@@ -505,28 +505,28 @@ export class MarkdownFit {
   }
 }
 
-export function createMarkdownFit(options?: Options): MarkdownFit
-export function createMarkdownFit(presetName: PresetName, options?: Options): MarkdownFit
-export function createMarkdownFit(presetNameOrOptions?: any, options?: any): MarkdownFit {
-  return new MarkdownFit(presetNameOrOptions, options)
+export function createMarkdownExit(options?: Options): MarkdownExit
+export function createMarkdownExit(presetName: PresetName, options?: Options): MarkdownExit
+export function createMarkdownExit(presetNameOrOptions?: any, options?: any): MarkdownExit {
+  return new MarkdownExit(presetNameOrOptions, options)
 }
 
 // hybrid types callable construct signatures hack
-type MarkdownFitConstructor = {
-  new(options?: Options): MarkdownFit
-  new(presetName: PresetName, options?: Options): MarkdownFit
-  (options?: Options): MarkdownFit
-  (presetName: PresetName, options?: Options): MarkdownFit
-} & typeof MarkdownFit
+type MarkdownExitConstructor = {
+  new(options?: Options): MarkdownExit
+  new(presetName: PresetName, options?: Options): MarkdownExit
+  (options?: Options): MarkdownExit
+  (presetName: PresetName, options?: Options): MarkdownExit
+} & typeof MarkdownExit
 
-function _MarkdownFit(presetName?: PresetName | Options, options?: Options): MarkdownFit {
-  return new MarkdownFit(presetName as any, options)
+function _MarkdownExit(presetName?: PresetName | Options, options?: Options): MarkdownExit {
+  return new MarkdownExit(presetName as any, options)
 }
 
 // bridge statics
-Object.setPrototypeOf(_MarkdownFit, MarkdownFit)
+Object.setPrototypeOf(_MarkdownExit, MarkdownExit)
 // share the same instance prototype
-;(_MarkdownFit as any).prototype = MarkdownFit.prototype
-;(_MarkdownFit as any).prototype.constructor = _MarkdownFit
+;(_MarkdownExit as any).prototype = MarkdownExit.prototype
+;(_MarkdownExit as any).prototype.constructor = _MarkdownExit
 
-export default _MarkdownFit as MarkdownFitConstructor
+export default _MarkdownExit as MarkdownExitConstructor
