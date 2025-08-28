@@ -35,7 +35,7 @@
     "dev": "tsdown --watch",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
-    "release": "bumpp && npm publish"
+    "prepublishOnly": "pnpm build"
   },
   "dependencies": {
     "entities": "catalog:integrations",
