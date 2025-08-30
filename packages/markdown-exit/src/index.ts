@@ -1,5 +1,6 @@
 // Main parser class
 
+import type { RenderOptions } from './renderer'
 import type Token from './token'
 import type { Preset } from './types/preset'
 import LinkifyIt from 'linkify-it'
@@ -31,7 +32,7 @@ import Renderer from './renderer'
  */
 export type PresetName = 'default' | 'zero' | 'commonmark'
 
-export interface Options {
+export interface MarkdownExitOptions extends RenderOptions {
   /**
    * Set `true` to enable HTML tags in source. Be careful!
    * That's not safe! You may need external sanitizer to protect output from XSS.
@@ -39,27 +40,6 @@ export interface Options {
    * @default false
    */
   html?: boolean
-
-  /**
-   * Set `true` to add '/' when closing single tags
-   * (`<br />`). This is needed only for full CommonMark compatibility. In real
-   * world you will need HTML output.
-   * @default false
-   */
-  xhtmlOut?: boolean
-
-  /**
-   * Set `true` to convert `\n` in paragraphs into `<br>`.
-   * @default false
-   */
-  breaks?: boolean
-
-  /**
-   * CSS language class prefix for fenced blocks.
-   * Can be useful for external highlighters.
-   * @default 'language-'
-   */
-  langPrefix?: string
 
   /**
    * Set `true` to autoconvert URL-like text to links.
@@ -82,15 +62,6 @@ export interface Options {
    * @default '“”‘’'
    */
   quotes?: string | string[]
-
-  /**
-   * Highlighter function for fenced code blocks.
-   * Highlighter `function (str, lang, attrs)` should return escaped HTML. It can
-   * also return empty string if the source was not changed and should be escaped
-   * externally. If result starts with <pre... internal wrapper is skipped.
-   * @default null
-   */
-  highlight?: ((str: string, lang: string, attrs: string) => string) | null
 
   /**
    * Internal protection, recursion limit
@@ -260,14 +231,14 @@ export class MarkdownExit {
    */
   helpers: typeof helpers = Object.assign({}, helpers)
 
-  options: Required<Options> = { ...config.default.options }
+  options: Required<MarkdownExitOptions> = { ...config.default.options }
 
   // Overloads for constructor
-  constructor(options?: Options)
-  constructor(presetName: PresetName, options?: Options)
-  constructor(presetNameOrOptions?: PresetName | Options, options?: Options) {
+  constructor(options?: MarkdownExitOptions)
+  constructor(presetName: PresetName, options?: MarkdownExitOptions)
+  constructor(presetNameOrOptions?: PresetName | MarkdownExitOptions, options?: MarkdownExitOptions) {
     // normalize arguments
-    const [presetName, opts]: [PresetName, Options?] = typeof presetNameOrOptions === 'string'
+    const [presetName, opts]: [PresetName, MarkdownExitOptions?] = typeof presetNameOrOptions === 'string'
       ? [presetNameOrOptions, options]
       : ['default', presetNameOrOptions]
 
@@ -295,7 +266,7 @@ export class MarkdownExit {
    * it's best to create multiple instances and initialize each with separate
    * config.
    */
-  set(options: Options): this {
+  set(options: MarkdownExitOptions): this {
     Object.assign(this.options, options)
     return this
   }
@@ -505,21 +476,21 @@ export class MarkdownExit {
   }
 }
 
-export function createMarkdownExit(options?: Options): MarkdownExit
-export function createMarkdownExit(presetName: PresetName, options?: Options): MarkdownExit
+export function createMarkdownExit(options?: MarkdownExitOptions): MarkdownExit
+export function createMarkdownExit(presetName: PresetName, options?: MarkdownExitOptions): MarkdownExit
 export function createMarkdownExit(presetNameOrOptions?: any, options?: any): MarkdownExit {
   return new MarkdownExit(presetNameOrOptions, options)
 }
 
 // hybrid types callable construct signatures hack
 type MarkdownExitConstructor = {
-  new(options?: Options): MarkdownExit
-  new(presetName: PresetName, options?: Options): MarkdownExit
-  (options?: Options): MarkdownExit
-  (presetName: PresetName, options?: Options): MarkdownExit
+  new(options?: MarkdownExitOptions): MarkdownExit
+  new(presetName: PresetName, options?: MarkdownExitOptions): MarkdownExit
+  (options?: MarkdownExitOptions): MarkdownExit
+  (presetName: PresetName, options?: MarkdownExitOptions): MarkdownExit
 } & typeof MarkdownExit
 
-function _MarkdownExit(presetName?: PresetName | Options, options?: Options): MarkdownExit {
+function _MarkdownExit(presetName?: PresetName | MarkdownExitOptions, options?: MarkdownExitOptions): MarkdownExit {
   return new MarkdownExit(presetName as any, options)
 }
 

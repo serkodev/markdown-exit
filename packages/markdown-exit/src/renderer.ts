@@ -6,12 +6,43 @@
  * rules if you create plugin and adds new token types.
  */
 
-import type { Options } from '.'
 import type Token from './token'
 import type { HTMLAttribute } from './token'
 import { escapeHtml, unescapeAll } from './common/utils'
 
-export type RenderRule = (tokens: Token[], idx: number, options: Options, env: any, self: Renderer) => string
+export interface RenderOptions {
+  /**
+   * Set `true` to add '/' when closing single tags
+   * (`<br />`). This is needed only for full CommonMark compatibility. In real
+   * world you will need HTML output.
+   * @default false
+   */
+  xhtmlOut?: boolean
+
+  /**
+   * Set `true` to convert `\n` in paragraphs into `<br>`.
+   * @default false
+   */
+  breaks?: boolean
+
+  /**
+   * CSS language class prefix for fenced blocks.
+   * Can be useful for external highlighters.
+   * @default 'language-'
+   */
+  langPrefix?: string
+
+  /**
+   * Highlighter function for fenced code blocks.
+   * Highlighter `function (str, lang, attrs)` should return escaped HTML. It can
+   * also return empty string if the source was not changed and should be escaped
+   * externally. If result starts with <pre... internal wrapper is skipped.
+   * @default null
+   */
+  highlight?: ((str: string, lang: string, attrs: string) => string) | null
+}
+
+export type RenderRule = (tokens: Token[], idx: number, options: RenderOptions, env: any, self: Renderer) => string
 
 export interface RenderRuleRecord {
   [type: string]: RenderRule | undefined
@@ -175,7 +206,7 @@ export default class Renderer {
    * @param env additional data from parsed input (references, for example)
    */
   // eslint-disable-next-line unused-imports/no-unused-vars
-  renderToken(tokens: Token[], idx: number, options: Options, env?: any): string {
+  renderToken(tokens: Token[], idx: number, options: RenderOptions, env?: any): string {
     const token = tokens[idx]
     let result = ''
 
@@ -216,12 +247,12 @@ export default class Renderer {
           const nextToken = tokens[idx + 1]
 
           if (nextToken.type === 'inline' || nextToken.hidden) {
-          // Block-level tag containing an inline tag.
-          //
+            // Block-level tag containing an inline tag.
+            //
             needLf = false
           } else if (nextToken.nesting === -1 && nextToken.tag === token.tag) {
-          // Opening tag + closing tag of the same type. E.g. `<li></li>`.
-          //
+            // Opening tag + closing tag of the same type. E.g. `<li></li>`.
+            //
             needLf = false
           }
         }
@@ -240,7 +271,7 @@ export default class Renderer {
    * @param options params of parser instance
    * @param env additional data from parsed input (references, for example)
    */
-  renderInline(tokens: Token[], options: Options, env?: any): string {
+  renderInline(tokens: Token[], options: RenderOptions, env?: any): string {
     let result = ''
     const rules = this.rules
 
@@ -266,7 +297,7 @@ export default class Renderer {
    * @param options params of parser instance
    * @param env additional data from parsed input (references, for example)
    */
-  renderInlineAsText(tokens: Token[], options: Options, env?: any): string {
+  renderInlineAsText(tokens: Token[], options: RenderOptions, env?: any): string {
     let result = ''
 
     for (let i = 0, len = tokens.length; i < len; i++) {
@@ -301,7 +332,7 @@ export default class Renderer {
    * @param options params of parser instance
    * @param env additional data from parsed input (references, for example)
    */
-  render(tokens: Token[], options: Options, env?: any): string {
+  render(tokens: Token[], options: RenderOptions, env?: any): string {
     let result = ''
     const rules = this.rules
 

@@ -1,10 +1,10 @@
-import type { Options } from '..'
+import type { MarkdownExitOptions } from '..'
 import type { BlockRule } from '../parser_block'
 import type { CoreRule } from '../parser_core'
 import type { InlineRule, InlineRule2 } from '../parser_inline'
 
 export interface Preset {
-  options: Required<Options>
+  options: Required<MarkdownExitOptions>
   components: {
     core: {
       rules?: CoreRule[]
