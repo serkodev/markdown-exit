@@ -250,7 +250,7 @@ export default class Renderer {
       if (typeof rules[type] !== 'undefined') {
         result += rules[type](tokens, i, options, env, this)
       } else {
-        result += this.renderToken(tokens, i, options)
+        result += this.renderToken(tokens, i, options, env)
       }
     }
 
