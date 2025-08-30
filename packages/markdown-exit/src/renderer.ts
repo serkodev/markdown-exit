@@ -8,7 +8,7 @@
 
 import type Token from './token'
 import type { HTMLAttribute } from './token'
-import { escapeHtml, unescapeAll } from './common/utils'
+import { escapeHtml, isPromiseLike, unescapeAll } from './common/utils'
 
 export interface RenderOptions {
   /**
@@ -42,7 +42,7 @@ export interface RenderOptions {
   highlight?: ((str: string, lang: string, attrs: string) => string) | null
 }
 
-export type RenderRule = (tokens: Token[], idx: number, options: RenderOptions, env: any, self: Renderer) => string
+export type RenderRule = (tokens: Token[], idx: number, options: RenderOptions, env: any, self: Renderer) => string | Promise<string>
 
 export interface RenderRuleRecord {
   [type: string]: RenderRule | undefined
@@ -278,8 +278,12 @@ export default class Renderer {
     for (let i = 0, len = tokens.length; i < len; i++) {
       const type = tokens[i].type
 
-      if (typeof rules[type] !== 'undefined') {
-        result += rules[type](tokens, i, options, env, this)
+      const rule = rules[type]
+      if (rule) {
+        const _result = rule(tokens, i, options, env, this)
+        if (isPromiseLike<string>(_result))
+          throw new Error('Renderer.renderInline: async rule detected, use renderInlineAsync()')
+        result += _result
       } else {
         result += this.renderToken(tokens, i, options)
       }
@@ -341,13 +345,70 @@ export default class Renderer {
 
       if (type === 'inline') {
         result += this.renderInline(tokens[i].children!, options, env)
-      } else if (typeof rules[type] !== 'undefined') {
-        result += rules[type](tokens, i, options, env, this)
       } else {
-        result += this.renderToken(tokens, i, options, env)
+        const rule = rules[type]
+        if (rule) {
+          const _result = rule(tokens, i, options, env, this)
+          if (isPromiseLike<string>(_result))
+            throw new Error('Renderer.render: async rule detected, use renderAsync()')
+          result += _result
+        } else {
+          result += this.renderToken(tokens, i, options, env)
+        }
       }
     }
 
     return result
+  }
+
+  /**
+   * Async version of {@link Renderer.renderInline}. Runs all render rules in parallel
+   * (Promise.all) and preserves output order.
+   */
+  async renderInlineAsync(tokens: Token[], options: RenderOptions, env?: any): Promise<string> {
+    const tasks: Array<Promise<string>> = []
+    const rules = this.rules
+
+    for (let i = 0, len = tokens.length; i < len; i++) {
+      const type = tokens[i].type
+      const rule = rules[type]
+
+      if (rule) {
+        tasks.push(Promise.resolve(rule(tokens, i, options, env, this)))
+      } else {
+        tasks.push(Promise.resolve(this.renderToken(tokens, i, options, env)))
+      }
+    }
+
+    const parts = await Promise.all(tasks)
+    return parts.join('')
+  }
+
+  /**
+   * Async version of {@link Renderer.render}. Runs all render rules in parallel
+   * (Promise.all) and preserves output order.
+   */
+  async renderAsync(tokens: Token[], options: RenderOptions, env?: any): Promise<string> {
+    const tasks: Array<Promise<string>> = []
+    const rules = this.rules
+
+    for (let i = 0, len = tokens.length; i < len; i++) {
+      const tok = tokens[i]
+      const type = tok.type
+
+      if (type === 'inline') {
+        tasks.push(this.renderInlineAsync(tok.children!, options, env))
+      } else {
+        const rule = rules[type]
+        if (rule) {
+          tasks.push(Promise.resolve(rule(tokens, i, options, env, this)))
+        } else {
+          tasks.push(Promise.resolve(this.renderToken(tokens, i, options, env)))
+        }
+      }
+    }
+
+    const parts = await Promise.all(tasks)
+    return parts.join('')
   }
 }

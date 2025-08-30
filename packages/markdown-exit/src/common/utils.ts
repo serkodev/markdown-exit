@@ -256,3 +256,7 @@ export function normalizeReference(str: string): string {
   //
   return str.toLowerCase().toUpperCase()
 }
+
+export function isPromiseLike<T = unknown>(v: any): v is Promise<T> {
+  return typeof v?.then === 'function'
+}
