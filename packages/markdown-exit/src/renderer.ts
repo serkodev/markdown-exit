@@ -8,7 +8,7 @@
 
 import type Token from './token'
 import type { HTMLAttribute } from './token'
-import { escapeHtml, unescapeAll } from './common/utils'
+import { escapeHtml, isPromiseLike, unescapeAll } from './common/utils'
 
 export interface RenderOptions {
   /**
@@ -39,10 +39,10 @@ export interface RenderOptions {
    * externally. If result starts with <pre... internal wrapper is skipped.
    * @default null
    */
-  highlight?: ((str: string, lang: string, attrs: string) => string) | null
+  highlight?: ((str: string, lang: string, attrs: string) => string | Promise<string>) | null
 }
 
-export type RenderRule = (tokens: Token[], idx: number, options: RenderOptions, env: any, self: Renderer) => string
+export type RenderRule = (tokens: Token[], idx: number, options: RenderOptions, env: any, self: Renderer) => string | Promise<string>
 
 export interface RenderRuleRecord {
   [type: string]: RenderRule | undefined
@@ -75,7 +75,7 @@ default_rules.code_block = function (tokens, idx, options, env, slf) {
   }</code></pre>\n`
 }
 
-default_rules.fence = function (tokens, idx, options, env, slf) {
+default_rules.fence = function (tokens, idx, options, env, slf): string | Promise<string> {
   const token = tokens[idx]
   const info = token.info ? unescapeAll(token.info).trim() : ''
   let langName = ''
@@ -87,40 +87,52 @@ default_rules.fence = function (tokens, idx, options, env, slf) {
     langAttrs = arr.slice(2).join('')
   }
 
-  let highlighted
-  if (options.highlight) {
-    highlighted = options.highlight(token.content, langName, langAttrs) || escapeHtml(token.content)
-  } else {
-    highlighted = escapeHtml(token.content)
-  }
-
-  if (highlighted.indexOf('<pre') === 0) {
-    return `${highlighted}\n`
-  }
-
-  // If language exists, inject class gently, without modifying original token.
-  // May be, one day we will add .deepClone() for token and simplify this part, but
-  // now we prefer to keep things local.
-  if (info) {
-    const i = token.attrIndex('class')
-    const tmpAttrs: HTMLAttribute[] = token.attrs ? token.attrs.slice() : []
-
-    if (i < 0) {
-      tmpAttrs.push(['class', options.langPrefix + langName])
-    } else {
-      tmpAttrs[i] = tmpAttrs[i].slice() as HTMLAttribute
-      tmpAttrs[i][1] += ` ${options.langPrefix}${langName}`
+  function finalize(highlighted: string): string {
+    if (highlighted.indexOf('<pre') === 0) {
+      return `${highlighted}\n`
     }
 
-    // Fake token just to render attributes
-    const tmpToken = {
-      attrs: tmpAttrs,
+    // If language exists, inject class gently, without modifying original token.
+    // May be, one day we will add .deepClone() for token and simplify this part, but
+    // now we prefer to keep things local.
+    if (info) {
+      const i = token.attrIndex('class')
+      const tmpAttrs: HTMLAttribute[] = token.attrs ? token.attrs.slice() : []
+
+      if (i < 0) {
+        tmpAttrs.push(['class', options.langPrefix + langName])
+      } else {
+        tmpAttrs[i] = tmpAttrs[i].slice() as HTMLAttribute
+        tmpAttrs[i][1] += ` ${options.langPrefix}${langName}`
+      }
+
+      // Fake token just to render attributes
+      const tmpToken = {
+        attrs: tmpAttrs,
+      }
+
+      return `<pre><code${slf.renderAttrs(tmpToken)}>${highlighted}</code></pre>\n`
     }
 
-    return `<pre><code${slf.renderAttrs(tmpToken)}>${highlighted}</code></pre>\n`
+    return `<pre><code${slf.renderAttrs(token)}>${highlighted}</code></pre>\n`
   }
 
-  return `<pre><code${slf.renderAttrs(token)}>${highlighted}</code></pre>\n`
+  const resolveHighlighted = () => {
+    if (!options.highlight)
+      return escapeHtml(token.content)
+
+    const highlighted = options.highlight(token.content, langName, langAttrs)
+    if (isPromiseLike<string | undefined>(highlighted)) {
+      return highlighted.then(v => v || escapeHtml(token.content))
+    }
+    return highlighted || escapeHtml(token.content)
+  }
+
+  const highlighted = resolveHighlighted()
+
+  return isPromiseLike<string>(highlighted)
+    ? (highlighted.then(finalize))
+    : finalize(highlighted as string)
 }
 
 default_rules.image = function (tokens, idx, options, env, slf) {
@@ -278,8 +290,12 @@ export default class Renderer {
     for (let i = 0, len = tokens.length; i < len; i++) {
       const type = tokens[i].type
 
-      if (typeof rules[type] !== 'undefined') {
-        result += rules[type](tokens, i, options, env, this)
+      const rule = rules[type]
+      if (rule) {
+        const _result = rule(tokens, i, options, env, this)
+        if (isPromiseLike<string>(_result))
+          throw new Error('Renderer.renderInline: async rule detected, use renderInlineAsync()')
+        result += _result
       } else {
         result += this.renderToken(tokens, i, options)
       }
@@ -341,13 +357,70 @@ export default class Renderer {
 
       if (type === 'inline') {
         result += this.renderInline(tokens[i].children!, options, env)
-      } else if (typeof rules[type] !== 'undefined') {
-        result += rules[type](tokens, i, options, env, this)
       } else {
-        result += this.renderToken(tokens, i, options, env)
+        const rule = rules[type]
+        if (rule) {
+          const _result = rule(tokens, i, options, env, this)
+          if (isPromiseLike<string>(_result))
+            throw new Error('Renderer.render: async rule detected, use renderAsync()')
+          result += _result
+        } else {
+          result += this.renderToken(tokens, i, options, env)
+        }
       }
     }
 
     return result
+  }
+
+  /**
+   * Async version of {@link Renderer.renderInline}. Runs all render rules in parallel
+   * (Promise.all) and preserves output order.
+   */
+  async renderInlineAsync(tokens: Token[], options: RenderOptions, env?: any): Promise<string> {
+    const tasks: Array<Promise<string>> = []
+    const rules = this.rules
+
+    for (let i = 0, len = tokens.length; i < len; i++) {
+      const type = tokens[i].type
+      const rule = rules[type]
+
+      if (rule) {
+        tasks.push(Promise.resolve(rule(tokens, i, options, env, this)))
+      } else {
+        tasks.push(Promise.resolve(this.renderToken(tokens, i, options, env)))
+      }
+    }
+
+    const parts = await Promise.all(tasks)
+    return parts.join('')
+  }
+
+  /**
+   * Async version of {@link Renderer.render}. Runs all render rules in parallel
+   * (Promise.all) and preserves output order.
+   */
+  async renderAsync(tokens: Token[], options: RenderOptions, env?: any): Promise<string> {
+    const tasks: Array<Promise<string>> = []
+    const rules = this.rules
+
+    for (let i = 0, len = tokens.length; i < len; i++) {
+      const tok = tokens[i]
+      const type = tok.type
+
+      if (type === 'inline') {
+        tasks.push(this.renderInlineAsync(tok.children!, options, env))
+      } else {
+        const rule = rules[type]
+        if (rule) {
+          tasks.push(Promise.resolve(rule(tokens, i, options, env, this)))
+        } else {
+          tasks.push(Promise.resolve(this.renderToken(tokens, i, options, env)))
+        }
+      }
+    }
+
+    const parts = await Promise.all(tasks)
+    return parts.join('')
   }
 }
