@@ -297,7 +297,7 @@ export default class Renderer {
           throw new Error('Renderer.renderInline: async rule detected, use renderInlineAsync()')
         result += _result
       } else {
-        result += this.renderToken(tokens, i, options)
+        result += this.renderToken(tokens, i, options, env)
       }
     }
 
