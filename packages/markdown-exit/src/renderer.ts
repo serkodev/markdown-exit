@@ -39,7 +39,7 @@ export interface RenderOptions {
    * externally. If result starts with <pre... internal wrapper is skipped.
    * @default null
    */
-  highlight?: ((str: string, lang: string, attrs: string) => string) | null
+  highlight?: ((str: string, lang: string, attrs: string) => string | Promise<string>) | null
 }
 
 export type RenderRule = (tokens: Token[], idx: number, options: RenderOptions, env: any, self: Renderer) => string | Promise<string>
@@ -75,7 +75,7 @@ default_rules.code_block = function (tokens, idx, options, env, slf) {
   }</code></pre>\n`
 }
 
-default_rules.fence = function (tokens, idx, options, env, slf) {
+default_rules.fence = function (tokens, idx, options, env, slf): string | Promise<string> {
   const token = tokens[idx]
   const info = token.info ? unescapeAll(token.info).trim() : ''
   let langName = ''
@@ -87,40 +87,52 @@ default_rules.fence = function (tokens, idx, options, env, slf) {
     langAttrs = arr.slice(2).join('')
   }
 
-  let highlighted
-  if (options.highlight) {
-    highlighted = options.highlight(token.content, langName, langAttrs) || escapeHtml(token.content)
-  } else {
-    highlighted = escapeHtml(token.content)
-  }
-
-  if (highlighted.indexOf('<pre') === 0) {
-    return `${highlighted}\n`
-  }
-
-  // If language exists, inject class gently, without modifying original token.
-  // May be, one day we will add .deepClone() for token and simplify this part, but
-  // now we prefer to keep things local.
-  if (info) {
-    const i = token.attrIndex('class')
-    const tmpAttrs: HTMLAttribute[] = token.attrs ? token.attrs.slice() : []
-
-    if (i < 0) {
-      tmpAttrs.push(['class', options.langPrefix + langName])
-    } else {
-      tmpAttrs[i] = tmpAttrs[i].slice() as HTMLAttribute
-      tmpAttrs[i][1] += ` ${options.langPrefix}${langName}`
+  function finalize(highlighted: string): string {
+    if (highlighted.indexOf('<pre') === 0) {
+      return `${highlighted}\n`
     }
 
-    // Fake token just to render attributes
-    const tmpToken = {
-      attrs: tmpAttrs,
+    // If language exists, inject class gently, without modifying original token.
+    // May be, one day we will add .deepClone() for token and simplify this part, but
+    // now we prefer to keep things local.
+    if (info) {
+      const i = token.attrIndex('class')
+      const tmpAttrs: HTMLAttribute[] = token.attrs ? token.attrs.slice() : []
+
+      if (i < 0) {
+        tmpAttrs.push(['class', options.langPrefix + langName])
+      } else {
+        tmpAttrs[i] = tmpAttrs[i].slice() as HTMLAttribute
+        tmpAttrs[i][1] += ` ${options.langPrefix}${langName}`
+      }
+
+      // Fake token just to render attributes
+      const tmpToken = {
+        attrs: tmpAttrs,
+      }
+
+      return `<pre><code${slf.renderAttrs(tmpToken)}>${highlighted}</code></pre>\n`
     }
 
-    return `<pre><code${slf.renderAttrs(tmpToken)}>${highlighted}</code></pre>\n`
+    return `<pre><code${slf.renderAttrs(token)}>${highlighted}</code></pre>\n`
   }
 
-  return `<pre><code${slf.renderAttrs(token)}>${highlighted}</code></pre>\n`
+  const resolveHighlighted = () => {
+    if (!options.highlight)
+      return escapeHtml(token.content)
+
+    const highlighted = options.highlight(token.content, langName, langAttrs)
+    if (isPromiseLike<string | undefined>(highlighted)) {
+      return highlighted.then(v => v || escapeHtml(token.content))
+    }
+    return highlighted || escapeHtml(token.content)
+  }
+
+  const highlighted = resolveHighlighted()
+
+  return isPromiseLike<string>(highlighted)
+    ? (highlighted.then(finalize))
+    : finalize(highlighted as string)
 }
 
 default_rules.image = function (tokens, idx, options, env, slf) {
