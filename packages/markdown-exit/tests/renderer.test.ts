@@ -1,4 +1,3 @@
-import type { RenderOptions } from '../src/renderer'
 import { describe, expect, it } from 'vitest'
 import { createMarkdownExit } from '../src'
 import Renderer from '../src/renderer'
@@ -8,7 +7,7 @@ describe('renderAsync', () => {
     const tokens = createMarkdownExit().parse('# markdown-exit')
 
     const r = new Renderer()
-    const html = await r.renderAsync(tokens, {} as RenderOptions)
+    const html = await r.renderAsync(tokens, {})
     expect(html).toBe('<h1>markdown-exit</h1>\n')
   })
 
@@ -31,7 +30,7 @@ describe('renderAsync', () => {
 
     const tokens = createMarkdownExit().parse('`A` `B` `C`')
 
-    const p = r.renderAsync(tokens, {} as RenderOptions)
+    const p = r.renderAsync(tokens, {})
 
     // Immediately after kicking off renderAsync, all text rules should have started
     expect(log).toEqual(['start-0', 'start-2', 'start-4'])
@@ -47,17 +46,19 @@ describe('renderAsync', () => {
     expect(start2).toBeLessThan(done0)
   })
 
+  async function asyncHighlight(str: string, lang: string): Promise<string> {
+    await new Promise(resolve => setTimeout(resolve, 5))
+    return `<pre class="hl ${lang}"><code>${str}</code></pre>`
+  }
+
   it('supports async highlighter for fenced code blocks', async () => {
     const tokens = createMarkdownExit().parse('```js\nconsole.log(1)\n```')
 
     const r = new Renderer()
     const html = await r.renderAsync(tokens, {
       langPrefix: 'language-',
-      highlight: async (str: string, lang: string) => {
-        await new Promise(resolve => setTimeout(resolve, 5))
-        return `<pre class="hl ${lang}"><code>${str}</code></pre>`
-      },
-    } as RenderOptions)
+      highlight: asyncHighlight,
+    })
 
     expect(html).toMatchInlineSnapshot(`
       "<pre class="hl js"><code>console.log(1)
@@ -66,5 +67,15 @@ describe('renderAsync', () => {
     `)
 
     expect(html.endsWith('\n')).toBe(true)
+  })
+
+  it('throws if async rule is used with sync render', () => {
+    const tokens = createMarkdownExit().parse('```js\nconsole.log(1)\n```')
+
+    const r = new Renderer()
+    expect(() => r.render(tokens, {
+      langPrefix: 'language-',
+      highlight: asyncHighlight,
+    })).toThrow()
   })
 })
