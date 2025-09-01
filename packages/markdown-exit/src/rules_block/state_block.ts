@@ -8,6 +8,7 @@
 import type { MarkdownExit } from '..'
 import type { BlockRule } from '../parser_block'
 import type { Nesting } from '../token'
+import type { MarkdownExitEnv } from '../types/shared'
 import { isSpace } from '../common/utils'
 import Token from '../token'
 
@@ -21,7 +22,7 @@ export default class StateBlock {
    */
   md: MarkdownExit
 
-  env: any
+  env: MarkdownExitEnv
 
   //
   // Internal state vartiables
@@ -96,7 +97,7 @@ export default class StateBlock {
 
   static Token: typeof Token = Token
 
-  constructor(src: string, md: MarkdownExit, env: any, tokens: Token[]) {
+  constructor(src: string, md: MarkdownExit, env: MarkdownExitEnv, tokens: Token[]) {
     this.src = src
     this.md = md
     this.env = env
