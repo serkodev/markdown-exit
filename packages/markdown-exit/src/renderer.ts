@@ -40,7 +40,7 @@ export interface RenderOptions {
    * externally. If result starts with <pre... internal wrapper is skipped.
    * @default null
    */
-  highlight?: ((str: string, lang: string, attrs: string) => string | Promise<string>) | null
+  highlight?: ((str: string, lang: string, attrs: string, env: MarkdownExitEnv) => string | Promise<string>) | null
 }
 
 export type RenderRule = (tokens: Token[], idx: number, options: RenderOptions, env: MarkdownExitEnv, self: Renderer) => string | Promise<string>
@@ -122,7 +122,7 @@ default_rules.fence = function (tokens, idx, options, env, slf): string | Promis
     if (!options.highlight)
       return escapeHtml(token.content)
 
-    const highlighted = options.highlight(token.content, langName, langAttrs)
+    const highlighted = options.highlight(token.content, langName, langAttrs, env)
     if (isPromiseLike<string | undefined>(highlighted)) {
       return highlighted.then(v => v || escapeHtml(token.content))
     }
