@@ -8,6 +8,7 @@
 import type { MarkdownExit } from '.'
 import type Token from './token'
 
+import type { MarkdownExitEnv } from './types/shared'
 import Ruler from './ruler'
 import r_blockquote from './rules_block/blockquote'
 import r_code from './rules_block/code'
@@ -129,7 +130,7 @@ export default class ParserBlock {
   /**
    * Process input string and push block tokens into `outTokens`
    */
-  parse(src: string, md: MarkdownExit, env: any, outTokens: Token[]) {
+  parse(src: string, md: MarkdownExit, env: MarkdownExitEnv, outTokens: Token[]) {
     if (!src)
       return
 

@@ -8,6 +8,7 @@
 
 import type Token from './token'
 import type { HTMLAttribute } from './token'
+import type { MarkdownExitEnv } from './types/shared'
 import { escapeHtml, isPromiseLike, unescapeAll } from './common/utils'
 
 export interface RenderOptions {
@@ -42,7 +43,7 @@ export interface RenderOptions {
   highlight?: ((str: string, lang: string, attrs: string) => string | Promise<string>) | null
 }
 
-export type RenderRule = (tokens: Token[], idx: number, options: RenderOptions, env: any, self: Renderer) => string | Promise<string>
+export type RenderRule = (tokens: Token[], idx: number, options: RenderOptions, env: MarkdownExitEnv, self: Renderer) => string | Promise<string>
 
 export interface RenderRuleRecord {
   [type: string]: RenderRule | undefined
@@ -218,7 +219,7 @@ export default class Renderer {
    * @param env additional data from parsed input (references, for example)
    */
   // eslint-disable-next-line unused-imports/no-unused-vars
-  renderToken(tokens: Token[], idx: number, options: RenderOptions, env?: any): string {
+  renderToken(tokens: Token[], idx: number, options: RenderOptions, env: MarkdownExitEnv = {}): string {
     const token = tokens[idx]
     let result = ''
 
@@ -283,7 +284,7 @@ export default class Renderer {
    * @param options params of parser instance
    * @param env additional data from parsed input (references, for example)
    */
-  renderInline(tokens: Token[], options: RenderOptions, env?: any): string {
+  renderInline(tokens: Token[], options: RenderOptions, env: MarkdownExitEnv = {}): string {
     let result = ''
     const rules = this.rules
 
@@ -313,7 +314,7 @@ export default class Renderer {
    * @param options params of parser instance
    * @param env additional data from parsed input (references, for example)
    */
-  renderInlineAsText(tokens: Token[], options: RenderOptions, env?: any): string {
+  renderInlineAsText(tokens: Token[], options: RenderOptions, env: MarkdownExitEnv = {}): string {
     let result = ''
 
     for (let i = 0, len = tokens.length; i < len; i++) {
@@ -348,7 +349,7 @@ export default class Renderer {
    * @param options params of parser instance
    * @param env additional data from parsed input (references, for example)
    */
-  render(tokens: Token[], options: RenderOptions, env?: any): string {
+  render(tokens: Token[], options: RenderOptions, env: MarkdownExitEnv = {}): string {
     let result = ''
     const rules = this.rules
 

@@ -7,6 +7,7 @@
 
 import type { MarkdownExit } from '.'
 import type Token from './token'
+import type { MarkdownExitEnv } from './types/shared'
 import Ruler from './ruler'
 import r_autolink from './rules_inline/autolink'
 import r_backticks from './rules_inline/backticks'
@@ -21,7 +22,6 @@ import r_link from './rules_inline/link'
 import r_linkify from './rules_inline/linkify'
 import r_newline from './rules_inline/newline'
 import StateInline from './rules_inline/state_inline'
-
 import r_strikethrough from './rules_inline/strikethrough'
 import r_text from './rules_inline/text'
 
@@ -202,7 +202,7 @@ export default class ParserInline {
   /**
    * Process input string and push inline tokens into `outTokens`
    */
-  parse(str: string, md: MarkdownExit, env: any, outTokens: Token[]) {
+  parse(str: string, md: MarkdownExit, env: MarkdownExitEnv, outTokens: Token[]) {
     const state = new this.State(str, md, env, outTokens)
 
     this.tokenize(state)

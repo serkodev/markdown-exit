@@ -7,6 +7,7 @@
 
 import type { MarkdownExit } from '..'
 import type { Nesting } from '../token'
+import type { MarkdownExitEnv } from '../types/shared'
 import { isMdAsciiPunct, isPunctChar, isWhiteSpace } from '../common/utils'
 import Token from '../token'
 
@@ -31,7 +32,7 @@ export interface TokenMeta {
 
 export default class StateInline {
   src: string
-  env: any
+  env: MarkdownExitEnv
   md: MarkdownExit
   tokens: Token[]
   tokens_meta: Array<TokenMeta | null>
@@ -70,7 +71,7 @@ export default class StateInline {
    */
   linkLevel: number = 0
 
-  constructor(src: string, md: MarkdownExit, env: any, outTokens: Token[]) {
+  constructor(src: string, md: MarkdownExit, env: MarkdownExitEnv, outTokens: Token[]) {
     this.src = src
     this.env = env
     this.md = md
