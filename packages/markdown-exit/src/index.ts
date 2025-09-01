@@ -2,6 +2,7 @@
 
 import type Token from './token'
 import type { Preset } from './types/preset'
+import type { MarkdownExitEnv } from './types/shared'
 import LinkifyIt from 'linkify-it'
 import * as mdurl from 'mdurl'
 import punycode from 'punycode.js'
@@ -11,7 +12,6 @@ import ParserBlock from './parser_block'
 import ParserCore from './parser_core'
 import ParserInline from './parser_inline'
 import cfg_commonmark from './presets/commonmark'
-
 import cfg_default from './presets/default'
 import cfg_zero from './presets/zero'
 import Renderer from './renderer'
@@ -444,7 +444,7 @@ export class MarkdownExit {
    * @param src source string
    * @param env environment sandbox
    */
-  parse(src: string, env?: any): Token[] {
+  parse(src: string, env: MarkdownExitEnv = {}): Token[] {
     if (typeof src !== 'string') {
       throw new TypeError('Input data should be a String')
     }
@@ -466,9 +466,7 @@ export class MarkdownExit {
    * @param src source string
    * @param env environment sandbox
    */
-  render(src: string, env?: any): string {
-    env = env || {}
-
+  render(src: string, env: MarkdownExitEnv = {}): string {
     return this.renderer.render(this.parse(src, env), this.options, env)
   }
 
@@ -482,7 +480,7 @@ export class MarkdownExit {
    * @param src source string
    * @param env environment sandbox
    */
-  parseInline(src: string, env?: any): Token[] {
+  parseInline(src: string, env: MarkdownExitEnv = {}): Token[] {
     const state = new this.core.State(src, this, env)
 
     state.inlineMode = true
@@ -498,9 +496,7 @@ export class MarkdownExit {
    * @param src source string
    * @param env environment sandbox
    */
-  renderInline(src: string, env?: any): string {
-    env = env || {}
-
+  renderInline(src: string, env: MarkdownExitEnv = {}): string {
     return this.renderer.render(this.parseInline(src, env), this.options, env)
   }
 }
