@@ -168,6 +168,11 @@ default_rules.html_inline = function (tokens, idx /* , options, env */) {
   return tokens[idx].content
 }
 
+default_rules.reference = function (tokens, idx) {
+  // should be empty string
+  return tokens[idx].content
+}
+
 export default class Renderer {
   /**
    * Contains render rules for tokens. Can be updated and extended.
@@ -259,7 +264,7 @@ export default class Renderer {
         if (idx + 1 < tokens.length) {
           const nextToken = tokens[idx + 1]
 
-          if (nextToken.type === 'inline' || nextToken.hidden) {
+          if (nextToken.type === 'inline' || nextToken.type === 'reference' || nextToken.hidden) {
             // Block-level tag containing an inline tag.
             //
             needLf = false
