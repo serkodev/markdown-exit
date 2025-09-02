@@ -1,22 +1,22 @@
 import type { PluginWithOptions } from '../src'
 import type Token from '../src/token'
 import { assert, describe, it } from 'vitest'
-import markdownit from '../src'
+import MarkdownExit from '../src'
 
 describe('aPI', () => {
   it('constructor', () => {
     assert.throws(() => {
       // @ts-expect-error throw
-      markdownit('bad preset')
+      MarkdownExit('bad preset')
     })
 
     // options should override preset
-    const md = markdownit('commonmark', { html: false })
+    const md = MarkdownExit('commonmark', { html: false })
     assert.strictEqual(md.render('<!-- -->'), '<p>&lt;!-- --&gt;</p>\n')
   })
 
   it('configure coverage', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     // conditions coverage
     // @ts-expect-error empty preset
@@ -38,7 +38,7 @@ describe('aPI', () => {
       }
     }
 
-    const md = markdownit()
+    const md = MarkdownExit()
 
     md.use(plugin, 'foo')
     assert.strictEqual(succeeded, false)
@@ -47,7 +47,7 @@ describe('aPI', () => {
   })
 
   it('highlight', () => {
-    const md = markdownit({
+    const md = MarkdownExit({
       highlight(str) {
         return `<pre><code>==${str}==</code></pre>`
       },
@@ -57,7 +57,7 @@ describe('aPI', () => {
   })
 
   it('highlight escape by default', () => {
-    const md = markdownit({
+    const md = MarkdownExit({
       highlight() {
         return ''
       },
@@ -67,7 +67,7 @@ describe('aPI', () => {
   })
 
   it('highlight arguments', () => {
-    const md = markdownit({
+    const md = MarkdownExit({
       highlight(str, lang, attrs) {
         assert.strictEqual(lang, 'a')
         assert.strictEqual(attrs, 'b  c  d')
@@ -79,7 +79,7 @@ describe('aPI', () => {
   })
 
   it('force hardbreaks', () => {
-    const md = markdownit({ breaks: true })
+    const md = MarkdownExit({ breaks: true })
 
     assert.strictEqual(md.render('a\nb'), '<p>a<br>\nb</p>\n')
     md.set({ xhtmlOut: true })
@@ -87,7 +87,7 @@ describe('aPI', () => {
   })
 
   it('xhtmlOut enabled', () => {
-    const md = markdownit({ xhtmlOut: true })
+    const md = MarkdownExit({ xhtmlOut: true })
 
     assert.strictEqual(md.render('---'), '<hr />\n')
     assert.strictEqual(md.render('![]()'), '<p><img src="" alt="" /></p>\n')
@@ -95,7 +95,7 @@ describe('aPI', () => {
   })
 
   it('xhtmlOut disabled', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     assert.strictEqual(md.render('---'), '<hr>\n')
     assert.strictEqual(md.render('![]()'), '<p><img src="" alt=""></p>\n')
@@ -103,7 +103,7 @@ describe('aPI', () => {
   })
 
   it('bulk enable/disable rules in different chains', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     const was = {
       core: md.core.ruler.getRules('').length,
@@ -135,7 +135,7 @@ describe('aPI', () => {
   })
 
   it('bulk enable/disable with errors control', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     assert.throws(() => {
       md.enable(['link', 'code', 'invalid'])
@@ -152,7 +152,7 @@ describe('aPI', () => {
   })
 
   it('bulk enable/disable should understand strings', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     md.disable('emphasis')
     assert(md.renderInline('_foo_'), '_foo_')
@@ -162,7 +162,7 @@ describe('aPI', () => {
   })
 
   it('input type check', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     assert.throws(
       // @ts-expect-error throw
@@ -174,7 +174,7 @@ describe('aPI', () => {
 
 describe('plugins', () => {
   it('should not loop infinitely if all rules are disabled', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     md.inline.ruler.enableOnly([])
     md.inline.ruler2.enableOnly([])
@@ -184,7 +184,7 @@ describe('plugins', () => {
   })
 
   it('should not loop infinitely if inline rule doesn\'t increment pos', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     md.inline.ruler.after('text', 'custom', (state/* , silent */) => {
       if (state.src.charCodeAt(state.pos) !== 0x40/* @ */)
@@ -197,7 +197,7 @@ describe('plugins', () => {
   })
 
   it('should not loop infinitely if block rule doesn\'t increment pos', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     md.block.ruler.before('paragraph', 'custom', (state, startLine/* , endLine, silent */) => {
       const pos = state.bMarks[startLine] + state.tShift[startLine]
@@ -213,13 +213,13 @@ describe('plugins', () => {
 
 describe('misc', () => {
   it('should replace NULL characters', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     assert.strictEqual(md.render('foo\u0000bar'), '<p>foo\uFFFDbar</p>\n')
   })
 
   it('should correctly parse strings without tailing \n', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     assert.strictEqual(md.render('123'), '<p>123</p>\n')
     assert.strictEqual(md.render('123\n'), '<p>123</p>\n')
@@ -229,19 +229,19 @@ describe('misc', () => {
   })
 
   it('should quickly exit on empty string', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     assert.strictEqual(md.render(''), '')
   })
 
   it('should parse inlines only', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     assert.strictEqual(md.renderInline('a *b* c'), 'a <em>b</em> c')
   })
 
   it('renderer should have pluggable inline and block rules', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     md.renderer.rules.em_open = () => '<it>'
     md.renderer.rules.em_close = () => '</it>'
@@ -252,7 +252,7 @@ describe('misc', () => {
   })
 
   it('zero preset should disable everything', () => {
-    const md = markdownit('zero')
+    const md = MarkdownExit('zero')
 
     assert.strictEqual(md.render('___foo___'), '<p>___foo___</p>\n')
     assert.strictEqual(md.renderInline('___foo___'), '___foo___')
@@ -264,13 +264,13 @@ describe('misc', () => {
   })
 
   it('should correctly check block termination rules when those are disabled (#13)', () => {
-    const md = markdownit('zero')
+    const md = MarkdownExit('zero')
 
     assert.strictEqual(md.render('foo\nbar'), '<p>foo\nbar</p>\n')
   })
 
   it('should normalize CR to LF', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     assert.strictEqual(
       md.render('# test\r\r - hello\r - world\r'),
@@ -279,7 +279,7 @@ describe('misc', () => {
   })
 
   it('should normalize CR+LF to LF', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     assert.strictEqual(
       md.render('# test\r\n\r\n - hello\r\n - world\r\n'),
@@ -288,7 +288,7 @@ describe('misc', () => {
   })
 
   it('should escape surrogate pairs (coverage)', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     assert.strictEqual(md.render('\\\uD835\uDC9C'), '<p>\\\uD835\uDC9C</p>\n')
     assert.strictEqual(md.render('\\\uD835x'), '<p>\\\uD835x</p>\n')
@@ -298,7 +298,7 @@ describe('misc', () => {
 
 describe('url normalization', () => {
   it('should be overridable', () => {
-    const md = markdownit({ linkify: true })
+    const md = MarkdownExit({ linkify: true })
 
     md.normalizeLink = function (url) {
       assert(url.match(/example\.com/), 'wrong url passed')
@@ -320,7 +320,7 @@ describe('url normalization', () => {
 
 describe('links validation', () => {
   it('override validator, disable everything', () => {
-    const md = markdownit({ linkify: true })
+    const md = MarkdownExit({ linkify: true })
 
     md.validateLink = () => false
 
@@ -335,7 +335,7 @@ describe('links validation', () => {
 
 describe('maxNesting', () => {
   it('block parser should not nest above limit', () => {
-    const md = markdownit({ maxNesting: 2 })
+    const md = MarkdownExit({ maxNesting: 2 })
     assert.strictEqual(
       md.render('>foo\n>>bar\n>>>baz'),
       '<blockquote>\n<p>foo</p>\n<blockquote></blockquote>\n</blockquote>\n',
@@ -343,7 +343,7 @@ describe('maxNesting', () => {
   })
 
   it('inline parser should not nest above limit', () => {
-    const md = markdownit({ maxNesting: 1 })
+    const md = MarkdownExit({ maxNesting: 1 })
     assert.strictEqual(
       md.render('[`foo`]()'),
       '<p><a href="">`foo`</a></p>\n',
@@ -351,7 +351,7 @@ describe('maxNesting', () => {
   })
 
   it('inline nesting coverage', () => {
-    const md = markdownit({ maxNesting: 2 })
+    const md = MarkdownExit({ maxNesting: 2 })
     assert.strictEqual(
       md.render('[[[[[[[[[[[[[[[[[[foo]()'),
       '<p>[[[[[[[[[[[[[[[[[[foo]()</p>\n',
@@ -360,7 +360,7 @@ describe('maxNesting', () => {
 })
 
 describe('smartquotes', () => {
-  const md = markdownit({
+  const md = MarkdownExit({
     typographer: true,
 
     // all strings have different length to make sure
@@ -391,7 +391,7 @@ describe('smartquotes', () => {
 })
 
 describe('ordered list info', () => {
-  const md = markdownit()
+  const md = MarkdownExit()
 
   function type_filter(tokens: Token[], type: string) {
     return tokens.filter(t => t.type === type)
@@ -426,7 +426,7 @@ describe('ordered list info', () => {
 
 describe('token attributes', () => {
   it('.attrJoin', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     const tokens = md.parse('```')
     const t = tokens[0]
@@ -441,7 +441,7 @@ describe('token attributes', () => {
   })
 
   it('.attrSet', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     const tokens = md.parse('```')
     const t = tokens[0]
@@ -462,7 +462,7 @@ describe('token attributes', () => {
   })
 
   it('.attrGet', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
 
     const tokens = md.parse('```')
     const t = tokens[0]

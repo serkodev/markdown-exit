@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import markdownit from '../src'
+import MarkdownExit from '../src'
 
 describe('parse reference-style links', () => {
   const fixture = `[hobbit-hole][1]
@@ -7,13 +7,13 @@ describe('parse reference-style links', () => {
 [1]: https://en.wikipedia.org/wiki/Hobbit#Lifestyle "Hobbit lifestyles"`
 
   it('without env param (issue #6)', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
     const result = md.parse(fixture)
     expect(result).toBeTruthy()
   })
 
   it('able to write input env', () => {
-    const md = markdownit()
+    const md = MarkdownExit()
     const env = {}
     const result = md.parse(fixture, env)
     expect(result).toBeTruthy()
