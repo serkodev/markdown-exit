@@ -1,0 +1,24 @@
+renders reference links
+.
+[hobbit-hole][1]
+  
+[1]: https://en.wikipedia.org/wiki/Hobbit#Lifestyle "Hobbit lifestyles"
+.
+<p><a href="https://en.wikipedia.org/wiki/Hobbit#Lifestyle" title="Hobbit lifestyles">hobbit-hole</a></p>
+.
+blockquote with reference
+.
+> [foo]: bar
+[foo]
+.
+<blockquote></blockquote>
+<p><a href="bar">foo</a></p>
+.
+paragraph with reference
+.
+[foo*]: /url
+
+*[foo*]
+.
+<p>*<a href="/url">foo*</a></p>
+.
