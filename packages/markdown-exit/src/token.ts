@@ -62,6 +62,7 @@ export default class Token {
    * - Info string for "fence" tokens
    * - The value "auto" for autolink "link_open" and "link_close" tokens
    * - The string value of the item marker for ordered-list "list_item_open" tokens
+   * - Label string of "reference" tokens
    */
   info: string = ''
 

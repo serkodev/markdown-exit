@@ -220,5 +220,11 @@ export default function reference(state: StateBlock, startLine: number, endLine:
   }
 
   state.line = nextLine
+
+  const token = state.push('reference', '', 0)
+  token.map = [startLine, state.line]
+  token.info = label
+  token.meta = { title, href }
+
   return true
 }
