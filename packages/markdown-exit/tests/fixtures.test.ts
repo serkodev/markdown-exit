@@ -10,13 +10,10 @@ describe('markdown-it', async () => {
     typographer: true,
     linkify: true,
   })
-  const files = import.meta.glob('./fixtures/markdown-it/*', {
-    query: '?raw',
-    import: 'default',
-    eager: true,
-  })
-  for (const [path, content] of Object.entries(files)) {
-    for (const { skip, desc, header, first, second } of generateFromContent(content as string, { defaultDesc: basename(path) })) {
+  const fixtures = import.meta.glob<string>('./fixtures/markdown-it/*', { query: '?raw', import: 'default' })
+
+  for (const [path, fixture] of Object.entries(fixtures)) {
+    for (const { skip, desc, header, first, second } of generateFromContent(await fixture(), { defaultDesc: basename(path) })) {
       it.skipIf(skip)(`${desc}: ${header}`, () => {
         assert.strictEqual(md.render(first), second)
       })
@@ -24,19 +21,15 @@ describe('markdown-it', async () => {
   }
 })
 
-describe('commonmark', () => {
+describe('commonmark', async () => {
   function normalize(text: string) {
     return text.replace(/<blockquote>\n<\/blockquote>/g, '<blockquote></blockquote>')
   }
 
   const md = MarkdownExit('commonmark')
-  const files = import.meta.glob('./fixtures/commonmark/*', {
-    query: '?raw',
-    import: 'default',
-    eager: true,
-  })
-  for (const [path, content] of Object.entries(files)) {
-    for (const { skip, desc, header, first, second } of generateFromContent(content as string, { defaultDesc: basename(path) })) {
+  const fixtures = import.meta.glob<string>('./fixtures/commonmark/*', { query: '?raw', import: 'default' })
+  for (const [path, fixture] of Object.entries(fixtures)) {
+    for (const { skip, desc, header, first, second } of generateFromContent(await fixture(), { defaultDesc: basename(path) })) {
       it.skipIf(skip)(`${desc}: ${header}`, () => {
         assert.strictEqual(md.render(first), normalize(second))
       })
