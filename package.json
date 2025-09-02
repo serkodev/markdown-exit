@@ -9,8 +9,9 @@
     "build": "pnpm -r run build",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
-    "release": "pnpm lint && pnpm test --run && bumpp -r && pnpm -r publish",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "prepack": "pnpm lint && pnpm typecheck && pnpm test --run && pnpm build",
+    "release": "pnpm prepack && bumpp -r && pnpm -r publish"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:",
