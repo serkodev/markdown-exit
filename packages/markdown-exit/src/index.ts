@@ -442,6 +442,14 @@ export class MarkdownExit {
   }
 
   /**
+   * Async version of {@link MarkdownExit.render}. Runs all render rules in parallel
+   * (Promise.all) and preserves output order.
+   */
+  renderAsync(src: string, env: MarkdownExitEnv = {}): Promise<string> {
+    return this.renderer.renderAsync(this.parse(src, env), this.options, env)
+  }
+
+  /**
    * internal*
    *
    * The same as {@link MarkdownExit.parse} but skip all block rules. It returns the
@@ -469,6 +477,14 @@ export class MarkdownExit {
    */
   renderInline(src: string, env: MarkdownExitEnv = {}): string {
     return this.renderer.render(this.parseInline(src, env), this.options, env)
+  }
+
+  /**
+   * Async version of {@link MarkdownExit.renderInline}. Runs all render rules in parallel
+   * (Promise.all) and preserves output order.
+   */
+  renderInlineAsync(src: string, env: MarkdownExitEnv = {}): Promise<string> {
+    return this.renderer.renderAsync(this.parseInline(src, env), this.options, env)
   }
 }
 
