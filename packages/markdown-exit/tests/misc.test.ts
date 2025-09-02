@@ -1,6 +1,6 @@
 import type { PluginWithOptions } from '../src'
 import type Token from '../src/token'
-import { assert, describe, it } from 'vitest'
+import { assert, describe, expect, it } from 'vitest'
 import markdownit from '../src'
 
 describe('aPI', () => {
@@ -472,5 +472,37 @@ describe('token attributes', () => {
     t.attrSet('myattr', 'myvalue')
 
     assert.strictEqual(t.attrGet('myattr'), 'myvalue')
+  })
+})
+
+describe('markdown-exit references', () => {
+  const md = markdownit()
+
+  it('reference as hidden info', () => {
+    const fixture = `\`\`\`js
+console.log(1)
+\`\`\`
+[//]: js
+
+\`\`\`ts
+console.log(2)
+\`\`\`
+[//]: ts
+`
+    const tokens = md.parse(fixture)
+
+    const firstRefIndex = tokens.findIndex(token => token.type === 'reference')
+    if (firstRefIndex === -1)
+      throw new Error('No reference token found')
+    const firstRef = tokens[firstRefIndex]
+    expect(firstRef.info).toEqual('//')
+    expect(tokens[firstRefIndex - 1].info).toEqual(firstRef.meta.href)
+
+    const secondRefIndex = tokens.findIndex(token => token.type === 'reference')
+    if (secondRefIndex === -1)
+      throw new Error('No reference token found')
+    const secondRef = tokens[secondRefIndex]
+    expect(secondRef.info).toEqual('//')
+    expect(tokens[secondRefIndex - 1].info).toEqual(secondRef.meta.href)
   })
 })
