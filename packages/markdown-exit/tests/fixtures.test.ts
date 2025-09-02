@@ -1,25 +1,26 @@
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { generate } from '@markdown-exit/testgen'
+import { basename } from 'node:path'
+import { generateFromContent } from '@markdown-exit/testgen'
 import { assert, describe, it } from 'vitest'
 import MarkdownExit from '../src'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-
-describe('markdown-it', () => {
+describe('markdown-it', async () => {
   const md = MarkdownExit({
     html: true,
     langPrefix: '',
     typographer: true,
     linkify: true,
   })
-  const path = resolve(__dirname, './fixtures/markdown-it/*')
-
-  for (const { skip, desc, header, first, second } of generate(path)) {
-    it.skipIf(skip)(`${desc}: ${header}`, () => {
-      assert.strictEqual(md.render(first), second)
-    })
+  const files = import.meta.glob('./fixtures/markdown-it/*', {
+    query: '?raw',
+    import: 'default',
+    eager: true,
+  })
+  for (const [path, content] of Object.entries(files)) {
+    for (const { skip, desc, header, first, second } of generateFromContent(content as string, { defaultDesc: basename(path) })) {
+      it.skipIf(skip)(`${desc}: ${header}`, () => {
+        assert.strictEqual(md.render(first), second)
+      })
+    }
   }
 })
 
@@ -29,11 +30,16 @@ describe('commonmark', () => {
   }
 
   const md = MarkdownExit('commonmark')
-  const path = resolve(__dirname, './fixtures/commonmark/*')
-
-  for (const { skip, desc, header, first, second } of generate(path)) {
-    it.skipIf(skip)(`${desc}: ${header}`, () => {
-      assert.strictEqual(md.render(first), normalize(second))
-    })
+  const files = import.meta.glob('./fixtures/commonmark/*', {
+    query: '?raw',
+    import: 'default',
+    eager: true,
+  })
+  for (const [path, content] of Object.entries(files)) {
+    for (const { skip, desc, header, first, second } of generateFromContent(content as string, { defaultDesc: basename(path) })) {
+      it.skipIf(skip)(`${desc}: ${header}`, () => {
+        assert.strictEqual(md.render(first), normalize(second))
+      })
+    }
   }
 })

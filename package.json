@@ -20,6 +20,7 @@
     "shiki": "catalog:tests",
     "tsdown": "catalog:",
     "typescript": "catalog:",
+    "vite": "catalog:",
     "vitest": "catalog:tests"
   }
 }
