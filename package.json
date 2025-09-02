@@ -17,6 +17,7 @@
     "@types/node": "catalog:types",
     "bumpp": "catalog:",
     "eslint": "catalog:",
+    "shiki": "catalog:tests",
     "tsdown": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:tests"
