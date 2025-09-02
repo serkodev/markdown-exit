@@ -20,6 +20,7 @@
     "eslint": "catalog:",
     "tsdown": "catalog:",
     "typescript": "catalog:",
+    "vite": "catalog:",
     "vitest": "catalog:tests"
   }
 }

@@ -1,39 +1,38 @@
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { generate } from '@markdown-exit/testgen'
+import { basename } from 'node:path'
+import { generateFromContent } from '@markdown-exit/testgen'
 import { assert, describe, it } from 'vitest'
 import MarkdownExit from '../src'
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-
-describe('markdown-it', () => {
+describe('markdown-it', async () => {
   const md = MarkdownExit({
     html: true,
     langPrefix: '',
     typographer: true,
     linkify: true,
   })
-  const path = resolve(__dirname, './fixtures/markdown-it/*')
+  const fixtures = import.meta.glob<string>('./fixtures/markdown-it/*', { query: '?raw', import: 'default' })
 
-  for (const { skip, desc, header, first, second } of generate(path)) {
-    it.skipIf(skip)(`${desc}: ${header}`, () => {
-      assert.strictEqual(md.render(first), second)
-    })
+  for (const [path, fixture] of Object.entries(fixtures)) {
+    for (const { skip, desc, header, first, second } of generateFromContent(await fixture(), { defaultDesc: basename(path) })) {
+      it.skipIf(skip)(`${desc}: ${header}`, () => {
+        assert.strictEqual(md.render(first), second)
+      })
+    }
   }
 })
 
-describe('commonmark', () => {
+describe('commonmark', async () => {
   function normalize(text: string) {
     return text.replace(/<blockquote>\n<\/blockquote>/g, '<blockquote></blockquote>')
   }
 
   const md = MarkdownExit('commonmark')
-  const path = resolve(__dirname, './fixtures/commonmark/*')
-
-  for (const { skip, desc, header, first, second } of generate(path)) {
-    it.skipIf(skip)(`${desc}: ${header}`, () => {
-      assert.strictEqual(md.render(first), normalize(second))
-    })
+  const fixtures = import.meta.glob<string>('./fixtures/commonmark/*', { query: '?raw', import: 'default' })
+  for (const [path, fixture] of Object.entries(fixtures)) {
+    for (const { skip, desc, header, first, second } of generateFromContent(await fixture(), { defaultDesc: basename(path) })) {
+      it.skipIf(skip)(`${desc}: ${header}`, () => {
+        assert.strictEqual(md.render(first), normalize(second))
+      })
+    }
   }
 })

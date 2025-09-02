@@ -6,6 +6,7 @@ catalog:
   eslint: ^9.34.0
   tsdown: ^0.14.2
   typescript: ^5.9.2
+  vite: ^7.1.4
 catalogs:
   integrations:
     entities: ^6.0.1
