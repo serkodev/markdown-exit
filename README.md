@@ -94,6 +94,7 @@ This project owes its foundation to the [markdown-it](https://github.com/markdow
 
 - [John MacFarlane](https://github.com/jgm) for the CommonMark spec and reference implementations.
 - [Definition owners](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/a26d35b5c331fbdb512ac7dfb1b846d282336c67/.github/CODEOWNERS#L4713C1-L4713C106) of [@types/markdown-it](https://www.npmjs.com/package/@types/markdown-it) for the type definitions reference.
+- [Anthony Fu](https://github.com/antfu) for inspiring async rendering by [markdown-it-async](https://github.com/antfu/markdown-it-async).
 
 ## License
 
