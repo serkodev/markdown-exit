@@ -14,4 +14,11 @@ export default antfu(
       'style/operator-linebreak': 'off',
     },
   },
+  {
+    files: ['**/*.md'],
+    rules: {
+      // allows line break with two spaces
+      'style/no-trailing-spaces': 'off',
+    },
+  },
 )
