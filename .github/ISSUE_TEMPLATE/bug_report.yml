@@ -1,0 +1,51 @@
+name: 🐞 Bug Report
+description: Report an issue
+labels: [pending triage]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: markdown-exit version
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Steps to reproduce the problem (ideally with minimal code).
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What did you expect to happen?
+      placeholder: Rendered output, tokens, or behavior you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened?
+      placeholder: The incorrect output, error, or behavior you observed.
+    validations:
+      required: true
+  - type: textarea
+    id: system-info
+    attributes:
+      label: System Info
+      description: Output of `npx envinfo --system --npmPackages markdown-exit --binaries --browsers`
+      placeholder: System, Binaries, Browsers
+      render: shell
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched the existing issues to avoid duplicates
+          required: true
+        - label: I have provided a minimal, self-contained reproduction
+          required: true
+        - label: I'm interested in working on this issue

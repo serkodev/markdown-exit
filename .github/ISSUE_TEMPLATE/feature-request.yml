@@ -1,0 +1,26 @@
+name: ✨ Feature Request
+description: Suggest a new feature or improvement
+labels: [pending triage]
+body:
+  - type: input
+    id: summary
+    attributes:
+      label: Summary
+      description: Short description of the feature
+    validations:
+      required: true
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: Why do you want this feature? What problem does it solve?
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How would you like it to work?
+  - type: checkboxes
+    attributes:
+      label: Would you like to work on this new feature?
+      options:
+        - label: I'm interested in working on this new feature
