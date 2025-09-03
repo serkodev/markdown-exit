@@ -11,7 +11,7 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "prepack": "pnpm lint && pnpm typecheck && pnpm test --run && pnpm build",
-    "release": "pnpm prepack && bumpp -r && pnpm -r publish"
+    "release": "pnpm prepack && bumpp -r && pnpm -r publish --tag legacy"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:",
