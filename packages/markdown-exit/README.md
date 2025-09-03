@@ -1,3 +1,5 @@
+![markdown-exit banner](https://markdown-exit.pages.dev/banner.svg)
+
 # markdown-exit
 
 [![npm version][npm-version-src]][npm-version-href]
@@ -96,9 +98,9 @@ This project owes its foundation to the [markdown-it](https://github.com/markdow
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/markdown-exit?style=flat&colorA=222&colorB=fff
+[npm-version-src]: https://img.shields.io/npm/v/markdown-exit?style=flat&colorA=00AF6B&colorB=000
 [npm-version-href]: https://npmjs.com/package/markdown-exit
-[bundle-src]: https://img.shields.io/bundlephobia/minzip/markdown-exit?style=flat&colorA=222&colorB=fff&label=minzip
+[bundle-src]: https://img.shields.io/bundlephobia/minzip/markdown-exit?style=flat&colorA=00AF6B&colorB=000&label=minzip
 [bundle-href]: https://bundlephobia.com/result?p=markdown-exit
-[license-src]: https://img.shields.io/github/license/serkodev/markdown-exit.svg?style=flat&colorA=222&colorB=fff
+[license-src]: https://img.shields.io/github/license/serkodev/markdown-exit.svg?style=flat&colorA=00AF6B&colorB=000
 [license-href]: https://github.com/serkodev/markdown-exit/blob/main/LICENSE
