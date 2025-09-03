@@ -21,6 +21,10 @@ A TypeScript rewrite of [markdown-it](https://github.com/markdown-it/markdown-it
 
 `v1+` (latest): All new features and may include breaking changes.
 
+> [!IMPORTANT]
+> 🚧 **markdown-exit** v1 is currently in **public beta** (`v1.0.0-beta.*`).
+> Breaking changes may occur until a stable `v1.0.0` is released.
+
 ```bash
 npm i markdown-exit
 ```
