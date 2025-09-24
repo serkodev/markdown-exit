@@ -229,7 +229,7 @@ export class MarkdownExit {
    * Link components parser functions, useful to write plugins. See details
    * [here](https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/helpers).
    */
-  helpers: typeof helpers = Object.assign({}, helpers)
+  helpers = utils.assign({}, helpers)
 
   options: Required<MarkdownExitOptions> = { ...config.default.options }
 
@@ -267,7 +267,7 @@ export class MarkdownExit {
    * config.
    */
   set(options: MarkdownExitOptions): this {
-    Object.assign(this.options, options)
+    utils.assign(this.options, options)
     return this
   }
 

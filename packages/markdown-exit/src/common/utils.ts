@@ -1,19 +1,39 @@
-/**
- * markdown-exit notes:
- * - drop re-export mdurl and ucmicro
- * - drop `assign` with `Object.assign`
- */
-
 // Utilities
 //
 
 import { decodeHTML } from 'entities'
+import * as mdurl from 'mdurl'
 import * as ucmicro from 'uc.micro'
 
 const _hasOwnProperty = Object.prototype.hasOwnProperty
 
 export function has(object: object, key: string | number | symbol): boolean {
   return _hasOwnProperty.call(object, key)
+}
+
+// Utility: turn a union into an intersection (A | B) -> (A & B)
+type UnionToIntersection<U> =
+  (U extends unknown ? (x: U) => void : never) extends (x: infer R) => void ? R : never
+
+/**
+ * Merge objects
+ */
+export function assign<
+  T extends object,
+  S extends readonly (object | null | undefined)[],
+>(target: T, ...sources: S): T & UnionToIntersection<NonNullable<S[number]>>
+
+// Implementation signature
+export function assign(target: object, ...sources: unknown[]): any {
+  for (const s of sources) {
+    if (!s)
+      continue
+    if (typeof s !== 'object') {
+      throw new TypeError('source must be object')
+    }
+    Object.assign(target, s as object)
+  }
+  return target
 }
 
 // Remove element from array and put another array at those position.
@@ -260,3 +280,10 @@ export function normalizeReference(str: string): string {
 export function isPromiseLike<T = unknown>(v: any): v is Promise<T> {
   return typeof v?.then === 'function'
 }
+
+/**
+ * Re-export libraries commonly used in both markdown-it and its plugins,
+ * so plugins won't have to depend on them explicitly, which reduces their
+ * bundled size (e.g. a browser build).
+ */
+export const lib = { mdurl, ucmicro }
