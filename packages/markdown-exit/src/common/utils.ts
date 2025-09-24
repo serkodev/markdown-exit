@@ -1,12 +1,8 @@
-/**
- * markdown-exit notes:
- * - drop re-export mdurl and ucmicro
- */
-
 // Utilities
 //
 
 import { decodeHTML } from 'entities'
+import * as mdurl from 'mdurl'
 import * as ucmicro from 'uc.micro'
 
 const _hasOwnProperty = Object.prototype.hasOwnProperty
@@ -280,3 +276,10 @@ export function normalizeReference(str: string): string {
   //
   return str.toLowerCase().toUpperCase()
 }
+
+/**
+ * Re-export libraries commonly used in both markdown-it and its plugins,
+ * so plugins won't have to depend on them explicitly, which reduces their
+ * bundled size (e.g. a browser build).
+ */
+export const lib = { mdurl, ucmicro }
