@@ -1,7 +1,6 @@
 /**
  * markdown-exit notes:
  * - drop re-export mdurl and ucmicro
- * - drop `assign` with `Object.assign`
  */
 
 // Utilities
@@ -14,6 +13,31 @@ const _hasOwnProperty = Object.prototype.hasOwnProperty
 
 export function has(object: object, key: string | number | symbol): boolean {
   return _hasOwnProperty.call(object, key)
+}
+
+// Utility: turn a union into an intersection (A | B) -> (A & B)
+type UnionToIntersection<U> =
+  (U extends unknown ? (x: U) => void : never) extends (x: infer R) => void ? R : never
+
+/**
+ * Merge objects
+ */
+export function assign<
+  T extends object,
+  S extends readonly (object | null | undefined)[],
+>(target: T, ...sources: S): T & UnionToIntersection<NonNullable<S[number]>>
+
+// Implementation signature
+export function assign(target: object, ...sources: unknown[]): any {
+  for (const s of sources) {
+    if (!s)
+      continue
+    if (typeof s !== 'object') {
+      throw new TypeError('source must be object')
+    }
+    Object.assign(target, s as object)
+  }
+  return target
 }
 
 // Remove element from array and put another array at those position.

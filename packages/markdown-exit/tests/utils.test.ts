@@ -23,6 +23,16 @@ describe('utils', () => {
     assert.strictEqual(isValidEntityCode(0x7F), false)
   })
 
+  it('assign', () => {
+    const assign = utils.assign
+
+    assert.deepEqual(assign({ a: 1 }, null, { b: 2 }), { a: 1, b: 2 })
+    assert.throws(() => {
+      // @ts-expect-error expect throw
+      assign({}, 123)
+    })
+  })
+
   it('escapeRE', () => {
     const escapeRE = utils.escapeRE
 

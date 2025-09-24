@@ -10,7 +10,7 @@ import type { Options } from '.'
 import type Token from './token'
 import type { HTMLAttribute } from './token'
 import type { MarkdownExitEnv } from './types/shared'
-import { escapeHtml, unescapeAll } from './common/utils'
+import { assign, escapeHtml, unescapeAll } from './common/utils'
 
 export type RenderRule = (tokens: Token[], idx: number, options: Options, env: MarkdownExitEnv, self: Renderer) => string
 
@@ -140,7 +140,7 @@ export default class Renderer {
    *
    * @see https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/renderer.ts
    */
-  rules: RenderRuleRecord = Object.assign({}, default_rules)
+  rules: RenderRuleRecord = assign({}, default_rules)
 
   /**
    * Creates new {@link Renderer} instance and fill {@link Renderer#rules} with defaults.
