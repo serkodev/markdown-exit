@@ -5,6 +5,10 @@ import { decodeHTML } from 'entities'
 import * as mdurl from 'mdurl'
 import * as ucmicro from 'uc.micro'
 
+export function isString(obj: unknown): obj is string {
+  return typeof obj === 'string'
+}
+
 const _hasOwnProperty = Object.prototype.hasOwnProperty
 
 export function has(object: object, key: string | number | symbol): boolean {
