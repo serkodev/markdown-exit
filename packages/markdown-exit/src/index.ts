@@ -423,6 +423,7 @@ export class MarkdownExit {
    */
   use(plugin: PluginSimple): this
   use<T = any>(plugin: PluginWithOptions<T>, options?: T): this
+  use(plugin: PluginWithParams, ...params: any[]): this
   use(plugin: PluginWithParams, ...params: any[]): this {
     plugin.apply(plugin, [this, ...params])
     return this
