@@ -21,39 +21,37 @@ export interface RuleOptions {
  * {@link MarkdownExit.use}.
  */
 export default class Ruler<T extends (...args: any[]) => any> {
+  /**
+   * List of added rules. Each element is:
+   *
+   * ```js
+   * {
+   *   name: XXX,
+   *   enabled: Boolean,
+   *   fn: Function(),
+   *   alt: [ name2, name3 ]
+   * }
+   * ```
+   */
   private __rules__: Array<{
     name: string
     enabled: boolean
     fn: T
     alt: string[]
-  }>
+  }> = []
 
-  private __cache__: Record<string, T[]> | null
+  /**
+   * Cached rule chains.
+   *
+   * First level - chain name, '' for default.
+   * Second level - diginal anchor for fast filtering by charcodes.
+   */
+  private __cache__: Record<string, T[]> | null = null
 
-  constructor() {
-    // List of added rules. Each element is:
-    //
-    // {
-    //   name: XXX,
-    //   enabled: Boolean,
-    //   fn: Function(),
-    //   alt: [ name2, name3 ]
-    // }
-    //
-    this.__rules__ = []
-
-    // Cached rule chains.
-    //
-    // First level - chain name, '' for default.
-    // Second level - diginal anchor for fast filtering by charcodes.
-    //
-    this.__cache__ = null
-  }
-
-  // Helper methods, should not be used directly
-
-  // Find rule index by name
-  //
+  /**
+   * Helper methods, should not be used directly
+   * Find rule index by name
+   */
   private __find__(name: string): number {
     for (let i = 0; i < this.__rules__.length; i++) {
       if (this.__rules__[i].name === name) {
@@ -63,8 +61,9 @@ export default class Ruler<T extends (...args: any[]) => any> {
     return -1
   }
 
-  // Build rules lookup cache
-  //
+  /**
+   * Build rules lookup cache
+   */
   private __compile__(): void {
     const chains = ['']
 
