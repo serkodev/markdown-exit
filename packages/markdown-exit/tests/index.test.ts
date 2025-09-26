@@ -1,5 +1,5 @@
-import { describe, expect, it } from 'vitest'
-import MarkdownExit from '../src'
+import { describe, expect, expectTypeOf, it } from 'vitest'
+import MarkdownExit, { createMarkdownExit } from '../src'
 
 describe('callable and constructable', () => {
   it('is constructable', () => {
@@ -53,5 +53,27 @@ describe('callable and constructable', () => {
   it('instance.constructor points back to MarkdownExit', () => {
     const inst = MarkdownExit()
     expect(inst.constructor).toBe(MarkdownExit)
+  })
+
+  it('createMarkdownExit is not equal to MarkdownExit', () => {
+    expect(createMarkdownExit).not.toEqual(MarkdownExit)
+  })
+
+  it('types are correct', () => {
+    // newable
+    expectTypeOf(MarkdownExit).toBeConstructibleWith('commonmark')
+
+    // callable
+    expectTypeOf(MarkdownExit).toBeCallableWith('commonmark')
+
+    const a = new MarkdownExit()
+    const b = MarkdownExit()
+    expectTypeOf(a).toEqualTypeOf(b)
+
+    // direct use as type
+    expectTypeOf(a).toEqualTypeOf<MarkdownExit>()
+
+    expectTypeOf(a).toHaveProperty('use')
+    expectTypeOf(a.use).parameter(0).toBeFunction()
   })
 })

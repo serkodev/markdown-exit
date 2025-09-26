@@ -394,6 +394,7 @@ export class MarkdownExit {
    */
   use(plugin: PluginSimple): this
   use<T = any>(plugin: PluginWithOptions<T>, options?: T): this
+  use(plugin: PluginWithParams, ...params: any[]): this
   use(plugin: PluginWithParams, ...params: any[]): this {
     plugin.apply(plugin, [this, ...params])
     return this
@@ -495,21 +496,30 @@ export function createMarkdownExit(presetNameOrOptions?: any, options?: any): Ma
 }
 
 // hybrid types callable construct signatures hack
-type MarkdownExitConstructor = {
-  new(options?: MarkdownExitOptions): MarkdownExit
-  new(presetName: PresetName, options?: MarkdownExitOptions): MarkdownExit
-  (options?: MarkdownExitOptions): MarkdownExit
-  (presetName: PresetName, options?: MarkdownExitOptions): MarkdownExit
-} & typeof MarkdownExit
 
-function _MarkdownExit(presetName?: PresetName | MarkdownExitOptions, options?: MarkdownExitOptions): MarkdownExit {
-  return new MarkdownExit(presetName as any, options)
+/**
+ * Make class callable without `new` operator.
+ */
+function createCallableClass<T extends new (...args: any) => any>(Class: T) {
+  function callable(...args: ConstructorParameters<T>): InstanceType<T> {
+    return new Class(...args)
+  }
+
+  // bridge statics
+  Object.setPrototypeOf(callable, MarkdownExit)
+
+  // share the same instance prototype
+  ;(callable as any).prototype = MarkdownExit.prototype
+  ;(callable as any).prototype.constructor = callable
+
+  return callable as unknown as T
 }
 
-// bridge statics
-Object.setPrototypeOf(_MarkdownExit, MarkdownExit)
-// share the same instance prototype
-;(_MarkdownExit as any).prototype = MarkdownExit.prototype
-;(_MarkdownExit as any).prototype.constructor = _MarkdownExit
+// type and default const variable name must be the same
+// for correct d.ts generation
+type MarkdownExitConstructor = InstanceType<typeof MarkdownExit>
 
-export default _MarkdownExit as MarkdownExitConstructor
+// eslint-disable-next-line ts/no-redeclare
+const MarkdownExitConstructor = createCallableClass(MarkdownExit) as unknown as (typeof createMarkdownExit & typeof MarkdownExit)
+
+export default MarkdownExitConstructor

@@ -95,7 +95,10 @@ export default class StateBlock {
 
   level: number = 0
 
-  static Token: typeof Token = Token
+  /**
+   * re-export Token class to use in block rules
+   */
+  Token = Token
 
   constructor(src: string, md: MarkdownExit, env: MarkdownExitEnv, tokens: Token[]) {
     this.src = src
@@ -285,7 +288,4 @@ export default class StateBlock {
 
     return queue.join('')
   }
-
-  // re-export Token class to use in block rules
-  Token = Token
 }
