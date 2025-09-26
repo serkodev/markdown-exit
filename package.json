@@ -6,6 +6,7 @@
   "packageManager": "pnpm@10.15.0",
   "license": "MIT",
   "scripts": {
+    "dev": "pnpm -F markdown-exit dev",
     "build": "pnpm -r run build",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
