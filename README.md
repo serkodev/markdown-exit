@@ -78,6 +78,17 @@ md.render('# markdown-exit')
 
 Visit markdown-it [API Documentation](https://markdown-it.github.io/markdown-it/) for more info and examples.
 
+### Migrate from markdown-it
+
+markdown-exit is designed to be a drop-in replacement for markdown-it with enhancements. After installing markdown-exit, simply update your imports:
+
+```diff
+- import MarkdownIt from 'markdown-it'
++ import MarkdownExit from 'markdown-exit'
+```
+
+Everything else should work as expected. ✨
+
 ## References / Thanks
 
 This project owes its foundation to the [markdown-it](https://github.com/markdown-it/markdown-it) community and all its [contributors](https://github.com/markdown-it/markdown-it/graphs/contributors).
