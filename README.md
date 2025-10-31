@@ -5,6 +5,7 @@
 [![npm version][npm-version-src]][npm-version-href]
 [![bundle][bundle-src]][bundle-href]
 [![License][license-src]][license-href]
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/serkodev/markdown-exit)
 
 A TypeScript rewrite of [markdown-it](https://github.com/markdown-it/markdown-it) with first-class typings, modern tooling, and enhancements.
 
