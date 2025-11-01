@@ -8,6 +8,12 @@ catalog:
   typescript: ^5.9.2
   vite: ^7.1.4
 catalogs:
+  bench:
+    '@types/commonmark': ^0.27.10
+    '@types/markdown-it': ^14.1.2
+    commonmark: ^0.31.2
+    markdown-it: ^14.1.0
+    marked: ^16.4.1
   integrations:
     entities: ^6.0.1
     linkify-it: ^5.0.0

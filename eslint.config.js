@@ -3,6 +3,10 @@ import antfu from '@antfu/eslint-config'
 export default antfu(
   {
     pnpm: true,
+    ignores: [
+      'packages/bench/samples/**/*',
+      'packages/markdown-exit/tests/fixtures/**/*',
+    ],
   },
   {
     rules: {

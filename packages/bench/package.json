@@ -1,0 +1,17 @@
+{
+  "name": "bench",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "bench": "vitest bench"
+  },
+  "devDependencies": {
+    "@types/commonmark": "catalog:bench",
+    "@types/markdown-it": "catalog:bench",
+    "commonmark": "catalog:bench",
+    "markdown-exit": "workspace:*",
+    "markdown-it": "catalog:bench",
+    "marked": "catalog:bench",
+    "vitest": "catalog:tests"
+  }
+}
