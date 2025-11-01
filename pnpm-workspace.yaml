@@ -1,12 +1,12 @@
 packages:
   - packages/*
 catalog:
-  '@antfu/eslint-config': ^5.2.1
-  bumpp: ^10.2.3
-  eslint: ^9.34.0
-  tsdown: ^0.14.2
-  typescript: ^5.9.2
-  vite: ^7.1.4
+  '@antfu/eslint-config': ^6.2.0
+  bumpp: ^10.3.1
+  eslint: ^9.39.0
+  tsdown: ^0.15.12
+  typescript: ^5.9.3
+  vite: ^7.1.12
 catalogs:
   bench:
     '@types/commonmark': ^0.27.10
@@ -15,18 +15,18 @@ catalogs:
     markdown-it: ^14.1.0
     marked: ^16.4.1
   integrations:
-    entities: ^6.0.1
+    entities: ^7.0.0
     linkify-it: ^5.0.0
     mdurl: ^2.0.0
     punycode.js: ^2.3.1
     uc.micro: ^2.1.0
   tests:
     js-yaml: ^4.1.0
-    shiki: ^3.12.1
-    tinyglobby: ^0.2.14
-    vitest: ^3.2.4
+    shiki: ^3.14.0
+    tinyglobby: ^0.2.15
+    vitest: ^4.0.6
   types:
     '@types/js-yaml': ^4.0.9
     '@types/linkify-it': ^5.0.0
     '@types/mdurl': ^2.0.0
-    '@types/node': ^22.18.0
+    '@types/node': ^22.18.13
