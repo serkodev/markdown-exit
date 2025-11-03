@@ -54,6 +54,10 @@ export default defineConfig({
       { icon: 'npm', link: 'https://www.npmjs.com/package/markdown-exit' },
     ],
 
+    search: {
+      provider: 'local',
+    },
+
     footer: {
       message: 'Released under the MIT License.',
       copyright: 'Copyright © Alex Kocharin, Vitaly Puzrin, SerKo',
