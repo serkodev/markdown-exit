@@ -1,15 +1,31 @@
 import { defineConfig } from 'vitepress'
 
+const title = 'markdown-exit'
+const description = 'The Modern Toolkit for Markdown'
+const docsUrl = 'https://markdown-exit.pages.dev/'
+const ogImage = `${docsUrl}og-image.png`
+
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: 'markdown-exit',
   description: 'The Modern Toolkit for Markdown',
+  head: [
+    ['link', { rel: 'icon', type: 'image/svg+xml', href: '/logo-mini.svg' }],
+    ['meta', { name: 'theme-color', content: '#00AF6B' }],
+    ['meta', { property: 'og:title', content: title }],
+    ['meta', { property: 'og:description', content: description }],
+    ['meta', { property: 'og:image', content: ogImage }],
+    ['meta', { property: 'og:type', content: 'website' }],
+    ['meta', { property: 'og:url', content: docsUrl }],
+    ['meta', { property: 'twitter:card', content: 'summary_large_image' }],
+    ['meta', { property: 'twitter:image', content: ogImage }],
+  ],
   markdown: {
     theme: { light: 'github-light', dark: 'vitesse-dark' },
   },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
-    logo: { src: '/logo.svg', height: 24 },
+    logo: { src: '/logo-mini.svg', height: 24 },
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Guide', link: '/guide/introduction.md', activeMatch: '/guide/' },
