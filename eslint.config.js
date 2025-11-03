@@ -26,4 +26,10 @@ export default antfu(
       'style/no-trailing-spaces': 'off',
     },
   },
+  {
+    files: ['**/*.md/*.[jt]s'],
+    rules: {
+      'unused-imports/no-unused-vars': 'off',
+    },
+  },
 )
