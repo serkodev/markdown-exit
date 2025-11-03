@@ -28,4 +28,4 @@ catalogs:
     '@types/js-yaml': ^4.0.9
     '@types/linkify-it': ^5.0.0
     '@types/mdurl': ^2.0.0
-    '@types/node': ^22.18.13
+    '@types/node': ^24.10.0
