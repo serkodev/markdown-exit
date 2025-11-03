@@ -3,7 +3,9 @@ import type { TypeDocOptions } from 'typedoc'
 import { rm } from 'node:fs/promises'
 import { Application } from 'typedoc'
 
-const tsconfig = '../tsconfig.json'
+const PROJECT_PATH = '../packages/markdown-exit'
+
+const tsconfig = `${PROJECT_PATH}/tsconfig.json`
 
 console.log('📚 Generating reference...')
 
@@ -31,7 +33,7 @@ async function runTypedoc(tsconfig: string): Promise<void> {
       'typedoc-plugin-frontmatter',
     ],
     out: './reference/api',
-    entryPoints: ['../packages/markdown-exit/src/index.ts'],
+    entryPoints: [`${PROJECT_PATH}/src/index.ts`],
     excludeInternal: true,
 
     hideBreadcrumbs: true,
