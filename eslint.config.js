@@ -6,6 +6,7 @@ export default antfu(
     ignores: [
       'packages/bench/samples/**/*',
       'packages/markdown-exit/tests/fixtures/**/*',
+      'docs/reference/api/**/*',
     ],
   },
   {
@@ -23,6 +24,12 @@ export default antfu(
     rules: {
       // allows line break with two spaces
       'style/no-trailing-spaces': 'off',
+    },
+  },
+  {
+    files: ['**/*.md/*.[jt]s'],
+    rules: {
+      'unused-imports/no-unused-vars': 'off',
     },
   },
 )

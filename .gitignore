@@ -2,3 +2,8 @@ node_modules
 dist
 *.log
 .DS_Store
+
+# docs
+docs/.vitepress/dist
+docs/.vitepress/cache
+docs/reference/api
