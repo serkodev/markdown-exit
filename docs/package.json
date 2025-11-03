@@ -1,0 +1,21 @@
+{
+  "name": "markdown-exit-docs",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview",
+    "generate": "node .vitepress/scripts/generate-reference.ts"
+  },
+  "dependencies": {
+    "vue": "catalog:docs"
+  },
+  "devDependencies": {
+    "typedoc": "catalog:docs",
+    "typedoc-plugin-frontmatter": "catalog:docs",
+    "typedoc-plugin-markdown": "catalog:docs",
+    "typedoc-vitepress-theme": "catalog:docs",
+    "vitepress": "catalog:docs"
+  }
+}

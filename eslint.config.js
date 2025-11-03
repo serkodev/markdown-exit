@@ -6,6 +6,7 @@ export default antfu(
     ignores: [
       'packages/bench/samples/**/*',
       'packages/markdown-exit/tests/fixtures/**/*',
+      'docs/reference/api/**/*',
     ],
   },
   {
