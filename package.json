@@ -6,13 +6,17 @@
   "packageManager": "pnpm@10.20.0",
   "license": "MIT",
   "scripts": {
-    "dev": "pnpm -F markdown-exit dev",
-    "build": "pnpm -r run build",
+    "dev": "pnpm -F markdown-exit run dev",
+    "build": "pnpm -F markdown-exit run build",
     "test": "vitest",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
-    "prepack": "pnpm lint && pnpm typecheck && pnpm test --run && pnpm build",
-    "release": "pnpm prepack && bumpp -r && pnpm -r publish"
+    "prepack": "pnpm lint && pnpm test --run && pnpm build && pnpm typecheck",
+    "release": "pnpm prepack && bumpp -r && pnpm -r publish",
+    "docs:dev": "pnpm -C docs run dev",
+    "docs:build": "pnpm -C docs run build",
+    "docs:preview": "pnpm -C docs run preview",
+    "docs:generate": "pnpm -C docs run generate"
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:",
