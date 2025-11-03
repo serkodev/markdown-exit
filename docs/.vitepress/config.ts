@@ -7,6 +7,9 @@ export default defineConfig({
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
+      { text: 'Home', link: '/' },
+      { text: 'Guide', link: '/guide/introduction.md', activeMatch: '/guide/' },
+      { text: 'API Reference', link: '/reference/api/Interface.MarkdownExitOptions.md', activeMatch: '/reference/' },
     ],
 
     sidebar: [
@@ -44,6 +47,7 @@ export default defineConfig({
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/serkodev/markdown-exit' },
+      { icon: 'npm', link: 'https://www.npmjs.com/package/markdown-exit' },
     ],
 
     footer: {
