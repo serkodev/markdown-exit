@@ -44,15 +44,19 @@
  * -------------------------------------------------------------------------- */
 
 :root {
+  --exit-primary: #00AF6B;
+  --exit-primary-light: #0ace83;
+  --exit-primary-soft: #00af6c20;
+
   --vp-c-default-1: var(--vp-c-gray-1);
   --vp-c-default-2: var(--vp-c-gray-2);
   --vp-c-default-3: var(--vp-c-gray-3);
   --vp-c-default-soft: var(--vp-c-gray-soft);
 
-  --vp-c-brand-1: var(--vp-c-indigo-1);
-  --vp-c-brand-2: var(--vp-c-indigo-2);
-  --vp-c-brand-3: var(--vp-c-indigo-3);
-  --vp-c-brand-soft: var(--vp-c-indigo-soft);
+  --vp-c-brand-1: var(--exit-primary);
+  --vp-c-brand-2: var(--exit-primary-light);
+  --vp-c-brand-3: var(--exit-primary);
+  --vp-c-brand-soft: var(--exit-primary-soft);
 
   --vp-c-tip-1: var(--vp-c-brand-1);
   --vp-c-tip-2: var(--vp-c-brand-2);
@@ -68,6 +72,13 @@
   --vp-c-danger-2: var(--vp-c-red-2);
   --vp-c-danger-3: var(--vp-c-red-3);
   --vp-c-danger-soft: var(--vp-c-red-soft);
+}
+
+.dark {
+    --vp-c-bg: #141415;
+    --vp-c-bg-alt: #1a1c1b;
+    --vp-c-bg-elv: #1a1c1b;
+    --vp-c-bg-soft: #1a1c1b;
 }
 
 /**
@@ -94,14 +105,14 @@
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: -webkit-linear-gradient(
     120deg,
-    #bd34fe 30%,
-    #41d1ff
+    #00EE92 30%,
+    #008551
   );
 
   --vp-home-hero-image-background-image: linear-gradient(
     -45deg,
-    #bd34fe 50%,
-    #47caff 50%
+    #39e2a225 50%,
+    #96efcd2b 50%
   );
   --vp-home-hero-image-filter: blur(44px);
 }

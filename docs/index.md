@@ -6,6 +6,9 @@ hero:
   name: "markdown-exit"
   text: "The Modern\nToolkit for Markdown"
   tagline: Fast, Full CommonMark Support and Extensible
+  image:
+    src: /logo.svg
+    alt: markdown-exit
   actions:
     - theme: brand
       text: Get Started

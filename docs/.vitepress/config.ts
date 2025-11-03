@@ -4,8 +4,12 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'markdown-exit',
   description: 'The Modern Toolkit for Markdown',
+  markdown: {
+    theme: { light: 'github-light', dark: 'vitesse-dark' },
+  },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
+    logo: { src: '/logo.svg', height: 24 },
     nav: [
       { text: 'Home', link: '/' },
       { text: 'Guide', link: '/guide/introduction.md', activeMatch: '/guide/' },
