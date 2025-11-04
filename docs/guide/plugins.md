@@ -55,9 +55,6 @@ export function pluginCustom(md: MarkdownExit) {
 
 Release read the `MarkdownExit` class [properties](/reference/api/Class.MarkdownExit.html#properties) type definition for more details about the available plugin APIs.
 
-> [!NOTE] Known Issue
-> There are some type definition issue when developing **markdown-exit** plugins using TypeScript. We will provide a better solution in future releases to improve the DX
-
 ### Async Render Rules
 
 A nice feature of **markdown-exit** is its built-in support for [async rendering](/guide/rendering.html#async-rendering), allowing you to implement async render rules in your plugin.
