@@ -124,7 +124,7 @@ default_rules.html_inline = function (tokens, idx /* , options, env */) {
   return tokens[idx].content
 }
 
-export default class Renderer {
+export class Renderer {
   /**
    * Contains render rules for tokens. Can be updated and extended.
    *

@@ -14,7 +14,7 @@ import ParserInline from './parser_inline'
 import cfg_commonmark from './presets/commonmark'
 import cfg_default from './presets/default'
 import cfg_zero from './presets/zero'
-import Renderer from './renderer'
+import { Renderer } from './renderer'
 
 /**
  * MarkdownExit provides named presets as a convenience to quickly
