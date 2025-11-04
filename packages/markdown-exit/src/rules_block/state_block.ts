@@ -12,8 +12,6 @@ import type { MarkdownExitEnv } from '../types/shared'
 import { isSpace } from '../common/utils'
 import Token from '../token'
 
-export type ParentType = 'root' | BlockRule
-
 export default class StateBlock {
   src: string
 
@@ -91,7 +89,7 @@ export default class StateBlock {
   /**
    * used in lists to determine if they interrupt a paragraph
    */
-  parentType: ParentType = 'root'
+  parentType: BlockRule | 'root' | (string & {}) = 'root'
 
   level: number = 0
 
