@@ -20,7 +20,7 @@ export interface RuleOptions {
  * rules control use {@link MarkdownExit.disable}, {@link MarkdownExit.enable} and
  * {@link MarkdownExit.use}.
  */
-export default class Ruler<T extends (...args: any[]) => any> {
+export class Ruler<T extends (...args: any[]) => any> {
   /**
    * List of added rules. Each element is:
    *

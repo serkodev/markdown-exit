@@ -6,7 +6,7 @@
  * transformations.
  */
 
-import Ruler from './ruler'
+import { Ruler } from './ruler'
 import r_block from './rules_core/block'
 
 import r_inline from './rules_core/inline'
