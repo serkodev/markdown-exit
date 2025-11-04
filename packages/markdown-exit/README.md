@@ -5,22 +5,23 @@
 [![npm version][npm-version-src]][npm-version-href]
 [![bundle][bundle-src]][bundle-href]
 [![License][license-src]][license-href]
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/serkodev/markdown-exit)
 
 A TypeScript rewrite of [markdown-it](https://github.com/markdown-it/markdown-it) with first-class typings, modern tooling, and enhancements.
 
-## Compatibility & Differences
+## Features
 
-- **API compatibility:** Compatible with markdown-it `v14.1.0` and plugin API.
-- **TypeScript:** Ship robust types, improve DX, and enable type-safe development.
-- **Extensibility:** Provide a clean foundation for new features that are easier to prototype and maintain.
-- **New features:** Track via [features](https://github.com/serkodev/markdown-exit/issues?q=is:issue%20label:features) for details.
+- 🛡️ **Type Safety:** Ship robust types, improve DX, and enable type-safe development.
+- ⚡ **New features:** [Async rendering](https://markdown-exit.pages.dev/guide/rendering.html#async-rendering) for all rules includeing syntax highlighting and [more](https://github.com/serkodev/markdown-exit/issues?q=is:issue%20label:features).
+- 🔌 **Extensibility:** Extend the markdown syntax, custom rendering with [Plugins](https://markdown-exit.pages.dev/guide/plugins.html).
+- 🤝 **Compatibility:** Compatible with markdown-it `v14.1.0` and plugin API.
 
-## Quickstart
+## Documentation
 
-### Install
+Read the [documentation](https://markdown-exit.pages.dev/) for more details.
 
-`v1+` (latest): All new features and may include breaking changes.
+## Installation
+
+v1+ [`@latest`](https://www.npmjs.com/package/markdown-exit/v/latest): All new features and may include breaking changes.
 
 > [!IMPORTANT]
 > 🚧 **markdown-exit** v1 is currently in **public beta** (`v1.0.0-beta.*`).  
@@ -30,22 +31,25 @@ A TypeScript rewrite of [markdown-it](https://github.com/markdown-it/markdown-it
 npm i markdown-exit
 ```
 
-`v0.x` (legacy): Full compatibility with markdown-it usage while adding TypeScript support, bug fixes and performance improvements. ([v0](https://github.com/serkodev/markdown-exit/tree/v0) branch)
+<details>
+<summary>v0.x <a href="https://www.npmjs.com/package/markdown-exit/v/legacy"><code>@legacy</code></a></summary>
+
+Full compatibility with markdown-it usage while adding TypeScript support, bug fixes and performance improvements. ([v0](https://github.com/serkodev/markdown-exit/tree/v0) branch)
 
 ```bash
 npm i markdown-exit@legacy
 ```
 
-### Usage
+</details>
 
-#### Named import (recommended)
+## Usage
 
 ```ts
 import { createMarkdownExit } from 'markdown-exit'
 
 // factory helper
 const md = createMarkdownExit()
-md.render('# markdown-exit')
+const html = md.render('# markdown-exit')
 ```
 
 ```ts
@@ -53,16 +57,14 @@ import { MarkdownExit } from 'markdown-exit'
 
 // with the `new` keyword
 const md = new MarkdownExit()
-md.render('# markdown-exit')
+const html = md.render('# markdown-exit')
 ```
 
-#### Default import
+<details>
+<summary>Default import</summary>
 
 > [!NOTE]
 > Default export (with callable constructor support) is retained for markdown-it compatibility, but it may have drawbacks in module interop and tree-shaking.
-
-<details>
-<summary>Example</summary>
 
 ```ts
 import MarkdownExit from 'markdown-exit'
@@ -79,22 +81,22 @@ md.render('# markdown-exit')
 ```
 </details>
 
-#### Documentation
+### Guides
 
-Visit markdown-it [API Documentation](https://markdown-it.github.io/markdown-it/) for more info and examples.
+- [Markdown Syntax](https://markdown-exit.pages.dev/guide/markdown-syntax.html)
+- [Redering](https://markdown-exit.pages.dev/guide/rendering.html)
+- [Plugins](https://markdown-exit.pages.dev/guide/plugins.html)
 
-### Migrate from markdown-it
+## Migrate from markdown-it
 
-markdown-exit is designed to be a drop-in replacement for markdown-it with enhancements. After installing markdown-exit, simply update your imports:
+Drop-in replacement for markdown-it with enhancements, see [Migration Guide](https://markdown-exit.pages.dev/guide/migrate-from-markdown-it.html) for details.
 
 ```diff
 - import MarkdownIt from 'markdown-it'
 + import MarkdownExit from 'markdown-exit'
 ```
 
-Everything else should work as expected. ✨
-
-## References / Thanks
+## Credits
 
 This project owes its foundation to the [markdown-it](https://github.com/markdown-it/markdown-it) community and all its [contributors](https://github.com/markdown-it/markdown-it/graphs/contributors).
 
