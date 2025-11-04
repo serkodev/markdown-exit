@@ -11,7 +11,7 @@ export type HTMLAttribute = [name: string, value: string]
 
 export type SourceMapLineRange = [line_begin: number, line_end: number]
 
-export default class Token {
+export class Token {
   /**
    * Type of the token, e.g. "paragraph_open"
    */

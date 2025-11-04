@@ -3,7 +3,7 @@
 
 import type { MarkdownExit } from '..'
 import type { MarkdownExitEnv } from '../types/shared'
-import Token from '../token'
+import { Token } from '../token'
 
 export default class StateCore {
   src: string

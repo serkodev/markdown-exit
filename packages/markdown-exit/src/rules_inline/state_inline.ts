@@ -9,7 +9,7 @@ import type { MarkdownExit } from '..'
 import type { Nesting } from '../token'
 import type { MarkdownExitEnv } from '../types/shared'
 import { isMdAsciiPunct, isPunctChar, isWhiteSpace } from '../common/utils'
-import Token from '../token'
+import { Token } from '../token'
 
 export interface Scanned {
   can_open: boolean

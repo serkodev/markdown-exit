@@ -1,7 +1,7 @@
 import { codeToHtml, createHighlighter } from 'shiki'
 import { describe, expect, it } from 'vitest'
 import { createMarkdownExit } from '../src'
-import Renderer from '../src/renderer'
+import { Renderer } from '../src/renderer'
 
 describe('renderAsync', () => {
   it('basic usage: renders paragraph with inline text', async () => {

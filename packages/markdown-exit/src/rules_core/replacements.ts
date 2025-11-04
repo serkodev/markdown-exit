@@ -9,7 +9,7 @@
 // -- → &ndash;, --- → &mdash;
 //
 
-import type Token from '../token'
+import type { Token } from '../token'
 import type StateCore from './state_core'
 
 // TODO:

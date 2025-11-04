@@ -1,5 +1,5 @@
 import { assert, describe, it } from 'vitest'
-import Ruler from '../src/ruler'
+import { Ruler } from '../src/ruler'
 
 describe('ruler', () => {
   it('should replace rule (.at)', () => {

@@ -6,8 +6,7 @@
  * rules if you create plugin and adds new token types.
  */
 
-import type Token from './token'
-import type { HTMLAttribute } from './token'
+import type { HTMLAttribute, Token } from './token'
 import type { MarkdownExitEnv } from './types/shared'
 import { assign, escapeHtml, isPromiseLike, unescapeAll } from './common/utils'
 
@@ -173,7 +172,7 @@ default_rules.reference = function (tokens, idx) {
   return tokens[idx].content
 }
 
-export default class Renderer {
+export class Renderer {
   /**
    * Contains render rules for tokens. Can be updated and extended.
    *

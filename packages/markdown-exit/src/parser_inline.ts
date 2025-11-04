@@ -6,9 +6,9 @@
  */
 
 import type { MarkdownExit } from '.'
-import type Token from './token'
+import type { Token } from './token'
 import type { MarkdownExitEnv } from './types/shared'
-import Ruler from './ruler'
+import { Ruler } from './ruler'
 import r_autolink from './rules_inline/autolink'
 import r_backticks from './rules_inline/backticks'
 import r_balance_pairs from './rules_inline/balance_pairs'

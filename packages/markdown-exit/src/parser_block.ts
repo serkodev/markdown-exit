@@ -6,10 +6,10 @@
  */
 
 import type { MarkdownExit } from '.'
-import type Token from './token'
+import type { Token } from './token'
 
 import type { MarkdownExitEnv } from './types/shared'
-import Ruler from './ruler'
+import { Ruler } from './ruler'
 import r_blockquote from './rules_block/blockquote'
 import r_code from './rules_block/code'
 import r_fence from './rules_block/fence'
