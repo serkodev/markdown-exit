@@ -7,8 +7,7 @@
  */
 
 import type { Options } from '.'
-import type Token from './token'
-import type { HTMLAttribute } from './token'
+import type { HTMLAttribute, Token } from './token'
 import type { MarkdownExitEnv } from './types/shared'
 import { assign, escapeHtml, unescapeAll } from './common/utils'
 
@@ -125,7 +124,7 @@ default_rules.html_inline = function (tokens, idx /* , options, env */) {
   return tokens[idx].content
 }
 
-export default class Renderer {
+export class Renderer {
   /**
    * Contains render rules for tokens. Can be updated and extended.
    *
