@@ -1,5 +1,5 @@
 import type { PluginWithOptions } from '../src'
-import type Token from '../src/token'
+import type { Token } from '../src/token'
 import { assert, describe, it } from 'vitest'
 import MarkdownExit from '../src'
 

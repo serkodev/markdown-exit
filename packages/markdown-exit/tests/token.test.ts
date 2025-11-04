@@ -1,5 +1,5 @@
 import { assert, describe, it } from 'vitest'
-import Token from '../src/token'
+import { Token } from '../src/token'
 
 describe('token', () => {
   it('attr', () => {

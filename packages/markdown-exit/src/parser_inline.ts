@@ -6,7 +6,7 @@
  */
 
 import type { MarkdownExit } from '.'
-import type Token from './token'
+import type { Token } from './token'
 import type { MarkdownExitEnv } from './types/shared'
 import { Ruler } from './ruler'
 import r_autolink from './rules_inline/autolink'

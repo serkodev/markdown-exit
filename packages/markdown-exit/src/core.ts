@@ -1,6 +1,6 @@
 // Main parser class
 
-import type Token from './token'
+import type { Token } from './token'
 import type { Preset } from './types/preset'
 import type { MarkdownExitEnv } from './types/shared'
 import LinkifyIt from 'linkify-it'

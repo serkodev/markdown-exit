@@ -7,8 +7,7 @@
  */
 
 import type { Options } from '.'
-import type Token from './token'
-import type { HTMLAttribute } from './token'
+import type { HTMLAttribute, Token } from './token'
 import type { MarkdownExitEnv } from './types/shared'
 import { assign, escapeHtml, unescapeAll } from './common/utils'
 

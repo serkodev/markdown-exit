@@ -1,7 +1,6 @@
 // Process ![image](<src> "title")
 
-import type Token from '../token'
-import type { HTMLAttribute } from '../token'
+import type { HTMLAttribute, Token } from '../token'
 import type StateInline from './state_inline'
 import { isSpace, normalizeReference } from '../common/utils'
 

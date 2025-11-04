@@ -1,7 +1,7 @@
 // Convert straight quotation marks to typographic ones
 //
 
-import type Token from '../token'
+import type { Token } from '../token'
 import type StateCore from './state_core'
 import { isMdAsciiPunct, isPunctChar, isWhiteSpace } from '../common/utils'
 

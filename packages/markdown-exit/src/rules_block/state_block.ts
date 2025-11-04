@@ -10,7 +10,7 @@ import type { BlockRule } from '../parser_block'
 import type { Nesting } from '../token'
 import type { MarkdownExitEnv } from '../types/shared'
 import { isSpace } from '../common/utils'
-import Token from '../token'
+import { Token } from '../token'
 
 export default class StateBlock {
   src: string
