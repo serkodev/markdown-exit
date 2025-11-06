@@ -2,11 +2,8 @@ import type { createMarkdownExit } from './core'
 import { MarkdownExit } from './core'
 
 export * from './core'
-export type { RuleBlock } from './parser_block'
-export type { RuleCore } from './parser_core'
-export type { RuleInline } from './parser_inline'
+export * from './parser'
 export * from './renderer'
-export * from './ruler'
 export * from './token'
 
 // hybrid types callable construct signatures hack

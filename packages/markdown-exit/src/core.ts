@@ -1,17 +1,11 @@
 // Main parser class
 
+import type { ParserOptions } from './parser'
 import type { RenderOptions } from './renderer'
-import type { Token } from './token'
 import type { Preset } from './types/preset'
 import type { MarkdownExitEnv } from './types/shared'
-import LinkifyIt from 'linkify-it'
-import * as mdurl from 'mdurl'
-import punycode from 'punycode.js'
 import * as utils from './common/utils'
-import * as helpers from './helpers/index'
-import ParserBlock from './parser_block'
-import ParserCore from './parser_core'
-import ParserInline from './parser_inline'
+import { Parser } from './parser'
 import cfg_commonmark from './presets/commonmark'
 import cfg_default from './presets/default'
 import cfg_zero from './presets/zero'
@@ -32,42 +26,8 @@ import { Renderer } from './renderer'
  */
 export type PresetName = 'default' | 'zero' | 'commonmark'
 
-export interface MarkdownExitOptions extends RenderOptions {
-  /**
-   * Set `true` to enable HTML tags in source. Be careful!
-   * That's not safe! You may need external sanitizer to protect output from XSS.
-   * It's better to extend features via plugins, instead of enabling HTML.
-   * @default false
-   */
-  html?: boolean
-
-  /**
-   * Set `true` to autoconvert URL-like text to links.
-   * @default false
-   */
-  linkify?: boolean
-
-  /**
-   * Set `true` to enable [some language-neutral replacement](https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/rules_core/replacements.ts) +
-   * quotes beautification (smartquotes).
-   * @default false
-   */
-  typographer?: boolean
-
-  /**
-   * Double + single quotes replacement
-   * pairs, when typographer enabled and smartquotes on. For example, you can
-   * use `'«»„“'` for Russian, `'„“‚‘'` for German, and
-   * `['«\xA0', '\xA0»', '‹\xA0', '\xA0›']` for French (including nbsp).
-   * @default '“”‘’'
-   */
-  quotes?: string | string[]
-
-  /**
-   * Internal protection, recursion limit
-   */
-  maxNesting?: number
-}
+// not use `type =` for generate corrent typedoc
+export interface MarkdownExitOptions extends ParserOptions, RenderOptions {}
 
 const config: Record<string, Preset> = {
   default: cfg_default,
@@ -75,97 +35,11 @@ const config: Record<string, Preset> = {
   commonmark: cfg_commonmark,
 }
 
-//
-// This validator can prohibit more than really needed to prevent XSS. It's a
-// tradeoff to keep code simple and to be secure by default.
-//
-// If you need different setup - override validator method as you wish. Or
-// replace it with dummy function and use external sanitizer.
-//
-
-// eslint-disable-next-line regexp/no-unused-capturing-group
-const BAD_PROTO_RE = /^(vbscript|javascript|file|data):/
-
-// eslint-disable-next-line regexp/no-unused-capturing-group
-const GOOD_DATA_RE = /^data:image\/(gif|png|jpeg|webp);/
-
-function validateLink(url: string) {
-  // url should be normalized at this point, and existing entities are decoded
-  const str = url.trim().toLowerCase()
-
-  return BAD_PROTO_RE.test(str) ? GOOD_DATA_RE.test(str) : true
-}
-
-const RECODE_HOSTNAME_FOR = ['http:', 'https:', 'mailto:']
-
-function normalizeLink(url: string) {
-  const parsed = mdurl.parse(url, true)
-
-  if (parsed.hostname) {
-    // Encode hostnames in urls like:
-    // `http://host/`, `https://host/`, `mailto:user@host`, `//host/`
-    //
-    // We don't encode unknown schemas, because it's likely that we encode
-    // something we shouldn't (e.g. `skype:name` treated as `skype:host`)
-    //
-    if (!parsed.protocol || RECODE_HOSTNAME_FOR.includes(parsed.protocol)) {
-      try {
-        parsed.hostname = punycode.toASCII(parsed.hostname)
-      } catch { /**/ }
-    }
-  }
-
-  return mdurl.encode(mdurl.format(parsed))
-}
-
-function normalizeLinkText(url: string) {
-  const parsed = mdurl.parse(url, true)
-
-  if (parsed.hostname) {
-    // Encode hostnames in urls like:
-    // `http://host/`, `https://host/`, `mailto:user@host`, `//host/`
-    //
-    // We don't encode unknown schemas, because it's likely that we encode
-    // something we shouldn't (e.g. `skype:name` treated as `skype:host`)
-    //
-    if (!parsed.protocol || RECODE_HOSTNAME_FOR.includes(parsed.protocol)) {
-      try {
-        parsed.hostname = punycode.toUnicode(parsed.hostname)
-      } catch { /**/ }
-    }
-  }
-
-  // add '%' to exclude list because of https://github.com/markdown-it/markdown-it/issues/720
-  return mdurl.decode(mdurl.format(parsed), `${mdurl.decode.defaultChars}%`)
-}
-
 export type PluginSimple = (md: MarkdownExit) => void
 export type PluginWithOptions<T = any> = (md: MarkdownExit, options?: T) => void
 export type PluginWithParams = (md: MarkdownExit, ...params: any[]) => void
 
-// TODO: add JSDoc usage and examples
-export class MarkdownExit {
-  /**
-   * Instance of {@link ParserInline}. You may need it to add new rules when
-   * writing plugins. For simple rules control use {@link MarkdownExit.disable} and
-   * {@link MarkdownExit.enable}.
-   */
-  inline: ParserInline = new ParserInline()
-
-  /**
-   * Instance of {@link ParserBlock}. You may need it to add new rules when
-   * writing plugins. For simple rules control use {@link MarkdownExit.disable} and
-   * {@link MarkdownExit.enable}.
-   */
-  block: ParserBlock = new ParserBlock()
-
-  /**
-   * Instance of {@link Core} chain executor. You may need it to add new rules when
-   * writing plugins. For simple rules control use {@link MarkdownExit.disable} and
-   * {@link MarkdownExit.enable}.
-   */
-  core: ParserCore = new ParserCore()
-
+export class MarkdownExit extends Parser {
   /**
    * Instance of {@link Renderer}. Use it to modify output look. Or to add rendering
    * rules for new token types, generated by plugins.
@@ -185,38 +59,6 @@ export class MarkdownExit {
    */
   renderer: Renderer = new Renderer()
 
-  /**
-   * [linkify-it](https://github.com/markdown-it/linkify-it) instance.
-   * Used by [linkify](https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/rules_core/linkify.ts)
-   * rule.
-   */
-  linkify: LinkifyIt = new LinkifyIt()
-
-  /**
-   * Link validation function. CommonMark allows too much in links. By default
-   * we disable `javascript:`, `vbscript:`, `file:` schemas, and almost all `data:...` schemas
-   * except some embedded image types.
-   *
-   * You can change this behaviour:
-   *
-   * ```javascript
-   * // enable everything
-   * md.validateLink = () => true
-   * ```
-   */
-  validateLink: (url: string) => boolean = validateLink
-
-  /**
-   * Function used to encode link url to a machine-readable format,
-   * which includes url-encoding, punycode, etc.
-   */
-  normalizeLink: (url: string) => string = normalizeLink
-
-  /**
-   * Function used to decode link url to a human-readable format`
-   */
-  normalizeLinkText: (url: string) => string = normalizeLinkText
-
   // Expose utils & helpers for easy acces from plugins
 
   /**
@@ -225,18 +67,14 @@ export class MarkdownExit {
    */
   utils: typeof utils = utils
 
-  /**
-   * Link components parser functions, useful to write plugins. See details
-   * [here](https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/helpers).
-   */
-  helpers = utils.assign({}, helpers)
-
   options: Required<MarkdownExitOptions> = { ...config.default.options }
 
   // Overloads for constructor
   constructor(options?: MarkdownExitOptions)
   constructor(presetName: PresetName, options?: MarkdownExitOptions)
   constructor(presetNameOrOptions?: PresetName | MarkdownExitOptions, options?: MarkdownExitOptions) {
+    super()
+
     // normalize arguments
     const [presetName, opts]: [PresetName, MarkdownExitOptions?] = typeof presetNameOrOptions === 'string'
       ? [presetNameOrOptions, options]
@@ -401,34 +239,6 @@ export class MarkdownExit {
   }
 
   /**
-   * internal
-   *
-   * Parse input string and returns list of block tokens (special token type
-   * "inline" will contain list of inline tokens). You should not call this
-   * method directly, until you write custom renderer (for example, to produce
-   * AST).
-   *
-   * `env` is used to pass data between "distributed" rules and return additional
-   * metadata like reference info, needed for the renderer. It also can be used to
-   * inject data in specific cases. Usually, you will be ok to pass `{}`,
-   * and then pass updated object to renderer.
-   *
-   * @param src source string
-   * @param env environment sandbox
-   */
-  parse(src: string, env: MarkdownExitEnv = {}): Token[] {
-    if (typeof src !== 'string') {
-      throw new TypeError('Input data should be a String')
-    }
-
-    const state = new this.core.State(src, this, env)
-
-    this.core.process(state)
-
-    return state.tokens
-  }
-
-  /**
    * Render markdown string into html. It does all magic for you :).
    *
    * `env` can be used to inject additional metadata (`{}` by default).
@@ -448,25 +258,6 @@ export class MarkdownExit {
    */
   renderAsync(src: string, env: MarkdownExitEnv = {}): Promise<string> {
     return this.renderer.renderAsync(this.parse(src, env), this.options, env)
-  }
-
-  /**
-   * internal*
-   *
-   * The same as {@link MarkdownExit.parse} but skip all block rules. It returns the
-   * block tokens list with the single `inline` element, containing parsed inline
-   * tokens in `children` property. Also updates `env` object.
-   *
-   * @param src source string
-   * @param env environment sandbox
-   */
-  parseInline(src: string, env: MarkdownExitEnv = {}): Token[] {
-    const state = new this.core.State(src, this, env)
-
-    state.inlineMode = true
-    this.core.process(state)
-
-    return state.tokens
   }
 
   /**

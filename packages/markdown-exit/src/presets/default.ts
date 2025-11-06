@@ -1,11 +1,11 @@
 // markdown-exit default options
 
 import type { Preset } from '../types/preset'
+import { defaultOptions } from '../parser'
 
 const defaultPreset: Preset = {
   options: {
-    // Enable HTML tags in source
-    html: false,
+    ...defaultOptions,
 
     // Use '/' to close single tags (<br />)
     xhtmlOut: false,
@@ -16,19 +16,6 @@ const defaultPreset: Preset = {
     // CSS language prefix for fenced blocks
     langPrefix: 'language-',
 
-    // autoconvert URL-like texts to links
-    linkify: false,
-
-    // Enable some language-neutral replacements + quotes beautification
-    typographer: false,
-
-    // Double + single quotes replacement pairs, when typographer enabled,
-    // and smartquotes on. Could be either a String or an Array.
-    //
-    // For example, you can use '«»„“' for Russian, '„“‚‘' for German,
-    // and ['«\xA0', '\xA0»', '‹\xA0', '\xA0›'] for French (including nbsp).
-    quotes: '\u201C\u201D\u2018\u2019', /* “”‘’ */
-
     // Highlighter function. Should return escaped HTML,
     // or '' if the source string is not changed and should be escaped externaly.
     // If result starts with <pre... internal wrapper is skipped.
@@ -36,9 +23,6 @@ const defaultPreset: Preset = {
     // function (/*str, lang*/) { return ''; }
     //
     highlight: null,
-
-    // Internal protection, recursion limit
-    maxNesting: 100,
   },
 
   components: {
