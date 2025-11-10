@@ -1,4 +1,5 @@
 import { defineConfig } from 'vitepress'
+import { createMarkdownExit } from '../../packages/markdown-exit/src'
 
 const title = 'markdown-exit'
 const description = 'The Modern Toolkit for Markdown'
@@ -22,6 +23,22 @@ export default defineConfig({
   ],
   markdown: {
     theme: { light: 'github-light', dark: 'vitesse-dark' },
+    // HACK: replace vitepress markdown-it instance with markdown-exit
+    // reference: https://github.com/vuejs/vitepress/blob/be260fda6efc1d6c4b56219d7a17a19ab7a4ba76/src/node/markdown/markdown.ts#L263-L266
+    preConfig: (md) => {
+      const exit = createMarkdownExit(md.options)
+      exit.linkify.set({ fuzzyLink: false })
+
+      // use restoreEntities plugin from vitepress
+      const textJoinRule = md.core.ruler.getRules('').find(r => r.name === 'text_join')
+      const textRenderRule = md.renderer.rules.text
+      if (!textJoinRule || !textRenderRule)
+        throw new Error('Cannot find restoreEntities plugin from vitepress ')
+      exit.core.ruler.at('text_join', textJoinRule as any)
+      exit.renderer.rules.text = textRenderRule as any
+
+      Object.assign(md, exit)
+    },
   },
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
