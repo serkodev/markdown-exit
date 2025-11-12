@@ -24,8 +24,11 @@ const html = md.renderInline('**markdown-exit** is awesome!')
 You can provide a custom syntax highlighter function via the [`highlight`](/reference/api/Interface.MarkdownExitOptions.html#highlight) option.
 
 ```ts
+import { createMarkdownExit } from 'markdown-exit'
 import { createHighlighterCoreSync } from 'shiki/core'
 import { createJavaScriptRegexEngine } from 'shiki/engine/javascript'
+import nord from '@shikijs/themes/nord'
+import js from '@shikijs/langs/javascript'
 
 const shiki = createHighlighterCoreSync({
   themes: [nord],
@@ -35,7 +38,7 @@ const shiki = createHighlighterCoreSync({
 
 const md = createMarkdownExit({
   highlight(str, lang) {
-    return shiki.highlight(str, { lang, theme: 'nord' })
+    return shiki.codeToHtml(str, { lang, theme: 'nord' })
   }
 })
 ```
