@@ -23,10 +23,7 @@ const html = md.renderInline('**markdown-exit** is awesome!')
 
 You can provide a custom syntax highlighter function via the [`highlight`](/reference/api/Interface.MarkdownExitOptions.html#highlight) option.
 
-```ts
-import { createHighlighterCoreSync } from 'shiki/core'
-import { createJavaScriptRegexEngine } from 'shiki/engine/javascript'
-
+```ts {8-10}
 const shiki = createHighlighterCoreSync({
   themes: [nord],
   langs: [js],
@@ -40,13 +37,15 @@ const md = createMarkdownExit({
 })
 ```
 
+Please refer to the [documentation](https://shiki.style/guide/sync-usage#synchronous-usage) for more details of Shiki's synchronous usage above.
+
 ## Async Rendering
 
 If your [`highlight`](/reference/api/Interface.MarkdownExitOptions.html#highlight) or any render rules are asynchronous, you can use [`renderAsync`](/reference/api/Class.MarkdownExit.html#renderasync) or [`renderInlineAsync`](/reference/api/Class.MarkdownExit.html#renderinlineasync) to render markdown asynchronously for better performance.
 
 For example, multiple code blocks highlighted with an async highlighter (like [Shiki](https://shiki.style/)) can be processed in parallel to speed up rendering.
 
-```ts
+```ts {4-6}
 import { codeToHtml } from 'shiki'
 
 const md = createMarkdownExit({
