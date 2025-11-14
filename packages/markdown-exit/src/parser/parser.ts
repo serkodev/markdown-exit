@@ -83,7 +83,7 @@ export class Parser {
 
   /**
    * [linkify-it](https://github.com/markdown-it/linkify-it) instance.
-   * Used by [linkify](https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/rules_core/linkify.ts)
+   * Used by [linkify](https://github.com/serkodev/markdown-exit/blob/main/packages/markdown-exit/src/parser/core/rules/linkify.ts)
    * rule.
    */
   linkify: LinkifyIt = new LinkifyIt()
@@ -115,7 +115,7 @@ export class Parser {
 
   /**
    * Link components parser functions, useful to write plugins. See details
-   * [here](https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/helpers).
+   * [here](https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/parser/helpers).
    */
   helpers = { ...helpers }
 
