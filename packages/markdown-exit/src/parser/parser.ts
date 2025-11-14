@@ -23,7 +23,7 @@ export interface ParserOptions {
   linkify?: boolean
 
   /**
-   * Set `true` to enable [some language-neutral replacement](https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/rules_core/replacements.ts) +
+   * Set `true` to enable [some language-neutral replacement](https://github.com/serkodev/markdown-exit/blob/main/packages/markdown-exit/src/parser/core/rules/replacements.ts) +
    * quotes beautification (smartquotes).
    * @default false
    */
