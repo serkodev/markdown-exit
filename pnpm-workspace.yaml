@@ -5,10 +5,10 @@ packages:
 catalog:
   '@antfu/eslint-config': ^6.2.0
   bumpp: ^10.3.1
-  eslint: ^9.39.0
-  tsdown: ^0.15.12
+  eslint: ^9.39.1
+  tsdown: ^0.16.4
   typescript: ^5.9.3
-  vite: ^7.1.12
+  vite: ^7.2.2
 
 catalogs:
   bench:
@@ -16,14 +16,14 @@ catalogs:
     '@types/markdown-it': ^14.1.2
     commonmark: ^0.31.2
     markdown-it: ^14.1.0
-    marked: ^16.4.1
+    marked: ^16.4.2
   docs:
     typedoc: ^0.28.14
     typedoc-plugin-frontmatter: ^1.3.0
     typedoc-plugin-markdown: ^4.9.0
     typedoc-vitepress-theme: ^1.1.2
     vitepress: 2.0.0-alpha.12
-    vue: ^3.5.22
+    vue: ^3.5.24
   integrations:
     entities: ^7.0.0
     linkify-it: ^5.0.0
@@ -31,15 +31,15 @@ catalogs:
     punycode.js: ^2.3.1
     uc.micro: ^2.1.0
   tests:
-    js-yaml: ^4.1.0
-    shiki: ^3.14.0
+    js-yaml: ^4.1.1
+    shiki: ^3.15.0
     tinyglobby: ^0.2.15
-    vitest: ^4.0.6
+    vitest: ^4.0.9
   types:
     '@types/js-yaml': ^4.0.9
     '@types/linkify-it': ^5.0.0
     '@types/mdurl': ^2.0.0
-    '@types/node': ^24.10.0
+    '@types/node': ^24.10.1
 
 onlyBuiltDependencies:
   - esbuild

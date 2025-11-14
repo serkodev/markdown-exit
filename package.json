@@ -3,7 +3,7 @@
   "type": "module",
   "version": "1.0.0-beta.6",
   "private": true,
-  "packageManager": "pnpm@10.20.0",
+  "packageManager": "pnpm@10.22.0",
   "license": "MIT",
   "scripts": {
     "dev": "pnpm -F markdown-exit run dev",
