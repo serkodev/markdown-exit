@@ -37,6 +37,12 @@ Thanks to the [markdown-it](https://github.com/markdown-it) community has develo
 
 Browse all markdown-it plugins on the [npm](https://www.npmjs.org/browse/keyword/markdown-it-plugin).
 
+## Plugins for markdown-exit
+
+The community is also developing plugins specifically for **markdown-exit** by taking advantage of its unique features, such as async rendering:
+
+- [markdown-exit-image](https://github.com/barbapapazes/markdown-exit-image)
+
 ## Plugin Development
 
 As **markdown-it** plugins are supported, it’s recommended to read the [markdown-it architecture](https://github.com/markdown-it/markdown-it/blob/d2782d892a51201b25d3eeab172201ad5a53a24c/docs/architecture.md) before starting plugin development.
