@@ -10,6 +10,12 @@ const md = createMarkdownExit()
 md.use(plugin)
 ```
 
+## Plugins for markdown-exit
+
+The community is also developing plugins specifically for **markdown-exit** by taking advantage of its unique features, such as async rendering:
+
+- [markdown-exit-image](https://github.com/barbapapazes/markdown-exit-image)
+
 ## Plugins from markdown-it
 
 **markdown-exit** supports plugins and compatible with [markdown-it](https://github.com/markdown-it/markdown-it) plugins.
@@ -39,12 +45,6 @@ Browse all markdown-it plugins on the [npm](https://www.npmjs.org/browse/keyword
 ### Community
 
 - [mdit-plugins](https://github.com/mdit-plugins/mdit-plugins) - A collection of various markdown-it plugins written in TypeScript.
-
-## Plugins for markdown-exit
-
-The community is also developing plugins specifically for **markdown-exit** by taking advantage of its unique features, such as async rendering:
-
-- [markdown-exit-image](https://github.com/barbapapazes/markdown-exit-image)
 
 ## Plugin Development
 
