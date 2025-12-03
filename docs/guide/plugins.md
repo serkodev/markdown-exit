@@ -33,6 +33,7 @@ Thanks to the [markdown-it](https://github.com/markdown-it) community has develo
 - [markdown-it-container](https://github.com/markdown-it/markdown-it-container)
 - [markdown-it-ins](https://github.com/markdown-it/markdown-it-ins)
 - [markdown-it-mark](https://github.com/markdown-it/markdown-it-mark)
+- [mdit-plugins](https://github.com/mdit-plugins/mdit-plugins) - A collection of various markdown-it plugins written in TypeScript.
 
 Browse all markdown-it plugins on the [npm](https://www.npmjs.org/browse/keyword/markdown-it-plugin).
 
