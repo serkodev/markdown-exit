@@ -36,6 +36,10 @@ Thanks to the [markdown-it](https://github.com/markdown-it) community has develo
 
 Browse all markdown-it plugins on the [npm](https://www.npmjs.org/browse/keyword/markdown-it-plugin).
 
+### Community
+
+- [mdit-plugins](https://github.com/mdit-plugins/mdit-plugins) - A collection of various markdown-it plugins written in TypeScript.
+
 ## Plugins for markdown-exit
 
 The community is also developing plugins specifically for **markdown-exit** by taking advantage of its unique features, such as async rendering:
