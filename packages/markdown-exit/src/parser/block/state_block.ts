@@ -107,39 +107,33 @@ export default class StateBlock<T extends Parser = Parser> {
     // Create caches
     // Generate markers.
     const s = this.src
+    const len = s.length
 
-    for (let start = 0, pos = 0, indent = 0, offset = 0, len = s.length, indent_found = false; pos < len; pos++) {
-      const ch = s.charCodeAt(pos)
+    for (let start = 0; start < len;) {
+      const lineEnd = s.indexOf('\n', start)
+      const end = lineEnd === -1 ? len : lineEnd
+      let indent = 0
+      let offset = 0
+      let pos = start
 
-      if (!indent_found) {
+      while (pos < end) {
+        const ch = s.charCodeAt(pos)
         if (isSpace(ch)) {
           indent++
-
-          if (ch === 0x09) {
-            offset += 4 - offset % 4
-          } else {
-            offset++
-          }
-          continue
-        } else {
-          indent_found = true
-        }
-      }
-
-      if (ch === 0x0A || pos === len - 1) {
-        if (ch !== 0x0A)
+          offset += (ch === 0x09) ? (4 - offset % 4) : 1
           pos++
-        this.bMarks.push(start)
-        this.eMarks.push(pos)
-        this.tShift.push(indent)
-        this.sCount.push(offset)
-        this.bsCount.push(0)
-
-        indent_found = false
-        indent = 0
-        offset = 0
-        start = pos + 1
+          continue
+        }
+        break
       }
+
+      this.bMarks.push(start)
+      this.eMarks.push(end)
+      this.tShift.push(indent)
+      this.sCount.push(offset)
+      this.bsCount.push(0)
+
+      start = end + 1
     }
 
     // Push fake entry to simplify cache bounds checks
@@ -186,8 +180,9 @@ export default class StateBlock<T extends Parser = Parser> {
    * Skip spaces from given position.
    */
   skipSpaces(pos: number): number {
-    for (let max = this.src.length; pos < max; pos++) {
-      const ch = this.src.charCodeAt(pos)
+    const src = this.src
+    for (let max = src.length; pos < max; pos++) {
+      const ch = src.charCodeAt(pos)
       if (!isSpace(ch))
         break
     }
@@ -201,8 +196,10 @@ export default class StateBlock<T extends Parser = Parser> {
     if (pos <= min)
       return pos
 
+    const src = this.src
     while (pos > min) {
-      if (!isSpace(this.src.charCodeAt(--pos)))
+      const code = src.charCodeAt(--pos)
+      if (!isSpace(code))
         return pos + 1
     }
     return pos
@@ -212,8 +209,9 @@ export default class StateBlock<T extends Parser = Parser> {
    * Skip char codes from given position
    */
   skipChars(pos: number, code: number): number {
-    for (let max = this.src.length; pos < max; pos++) {
-      if (this.src.charCodeAt(pos) !== code)
+    const src = this.src
+    for (let max = src.length; pos < max; pos++) {
+      if (src.charCodeAt(pos) !== code)
         break
     }
     return pos
@@ -226,8 +224,9 @@ export default class StateBlock<T extends Parser = Parser> {
     if (pos <= min)
       return pos
 
+    const src = this.src
     while (pos > min) {
-      if (code !== this.src.charCodeAt(--pos))
+      if (code !== src.charCodeAt(--pos))
         return pos + 1
     }
     return pos
@@ -241,8 +240,10 @@ export default class StateBlock<T extends Parser = Parser> {
       return ''
     }
 
-    const queue = Array.from({ length: end - begin })
+    /* perf */// eslint-disable-next-line unicorn/no-new-array
+    const queue = new Array<string>(end - begin)
 
+    const src = this.src
     for (let i = 0, line = begin; line < end; line++, i++) {
       let lineIndent = 0
       const lineStart = this.bMarks[line]
@@ -257,7 +258,7 @@ export default class StateBlock<T extends Parser = Parser> {
       }
 
       while (first < last && lineIndent < indent) {
-        const ch = this.src.charCodeAt(first)
+        const ch = src.charCodeAt(first)
 
         if (isSpace(ch)) {
           if (ch === 0x09) {
@@ -278,7 +279,7 @@ export default class StateBlock<T extends Parser = Parser> {
       if (lineIndent > indent) {
         // partially expanding tabs in code blocks, e.g '\t\tfoobar'
         // with indent=2 becomes '  \tfoobar'
-        queue[i] = Array.from({ length: lineIndent - indent + 1 }).join(' ') + this.src.slice(first, last)
+        queue[i] = ' '.repeat(lineIndent - indent) + this.src.slice(first, last)
       } else {
         queue[i] = this.src.slice(first, last)
       }

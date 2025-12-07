@@ -76,7 +76,8 @@ export default class StateInline<T extends Parser = Parser> {
     this.env = env
     this.md = md
     this.tokens = outTokens
-    this.tokens_meta = Array.from({ length: outTokens.length })
+    /* perf */// eslint-disable-next-line unicorn/no-new-array
+    this.tokens_meta = new Array(outTokens.length)
     this.posMax = this.src.length
   }
 
@@ -134,21 +135,22 @@ export default class StateInline<T extends Parser = Parser> {
    *  - canSplitWord - determine if these markers can be found inside a word
    */
   scanDelims(start: number, canSplitWord: boolean) {
+    const src = this.src
     const max = this.posMax
-    const marker = this.src.charCodeAt(start)
+    const marker = src.charCodeAt(start)
 
     // treat beginning of the line as a whitespace
-    const lastChar = start > 0 ? this.src.charCodeAt(start - 1) : 0x20
+    const lastChar = start > 0 ? src.charCodeAt(start - 1) : 0x20
 
     let pos = start
-    while (pos < max && this.src.charCodeAt(pos) === marker) {
+    while (pos < max && src.charCodeAt(pos) === marker) {
       pos++
     }
 
     const count = pos - start
 
     // treat end of the line as a whitespace
-    const nextChar = pos < max ? this.src.charCodeAt(pos) : 0x20
+    const nextChar = pos < max ? src.charCodeAt(pos) : 0x20
 
     const isLastPunctChar = isMdAsciiPunct(lastChar) || isPunctChar(String.fromCharCode(lastChar))
     const isNextPunctChar = isMdAsciiPunct(nextChar) || isPunctChar(String.fromCharCode(nextChar))

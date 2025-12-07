@@ -65,7 +65,7 @@ export class Ruler<T extends (...args: any[]) => any> {
    * Build rules lookup cache
    */
   private __compile__(): void {
-    const chains = ['']
+    const chains = new Set<string>([''])
 
     // collect unique names
     for (const rule of this.__rules__) {
@@ -73,16 +73,14 @@ export class Ruler<T extends (...args: any[]) => any> {
         continue
 
       for (const altName of rule.alt) {
-        if (!chains.includes(altName)) {
-          chains.push(altName)
-        }
+        chains.add(altName)
       }
     }
 
     this.__cache__ = {}
 
     for (const chain of chains) {
-      this.__cache__[chain] = []
+      const fns: T[] = []
       for (const rule of this.__rules__) {
         if (!rule.enabled)
           continue
@@ -90,8 +88,9 @@ export class Ruler<T extends (...args: any[]) => any> {
         if (chain && !rule.alt.includes(chain))
           continue
 
-        this.__cache__[chain].push(rule.fn)
+        fns.push(rule.fn)
       }
+      this.__cache__[chain] = fns
     }
   }
 

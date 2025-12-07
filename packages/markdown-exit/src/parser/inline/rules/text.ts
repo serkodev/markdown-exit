@@ -43,8 +43,9 @@ function isTerminatorChar(ch: number) {
 
 export default function text(state: StateInline, silent: boolean) {
   let pos = state.pos
+  const src = state.src
 
-  while (pos < state.posMax && !isTerminatorChar(state.src.charCodeAt(pos))) {
+  while (pos < state.posMax && !isTerminatorChar(src.charCodeAt(pos))) {
     pos++
   }
 
@@ -52,7 +53,7 @@ export default function text(state: StateInline, silent: boolean) {
     return false
 
   if (!silent) {
-    state.pending += state.src.slice(state.pos, pos)
+    state.pending += src.slice(state.pos, pos)
   }
 
   state.pos = pos

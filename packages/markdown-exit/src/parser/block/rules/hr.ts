@@ -40,7 +40,7 @@ export default function hr(state: StateBlock, startLine: number, endLine: number
 
   const token = state.push('hr', 'hr', 0)
   token.map = [startLine, state.line]
-  token.markup = Array.from({ length: cnt + 1 }).join(String.fromCharCode(marker))
+  token.markup = String.fromCharCode(marker).repeat(cnt)
 
   return true
 }

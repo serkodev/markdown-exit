@@ -4,7 +4,6 @@
 //
 
 import type StateCore from '../state_core'
-import { arrayReplaceAt } from '../../../common/utils'
 
 function isLinkOpen(str: string) {
   return /^<a[>\s]/i.test(str)
@@ -14,18 +13,19 @@ function isLinkClose(str: string) {
 }
 
 export default function linkify(state: StateCore) {
-  const blockTokens = state.tokens
-
   if (!state.md.options.linkify)
     return
 
+  const blockTokens = state.tokens
+  const linkify = state.md.linkify
+
   for (let j = 0, l = blockTokens.length; j < l; j++) {
     if (blockTokens[j].type !== 'inline' ||
-      !state.md.linkify.pretest(blockTokens[j].content)) {
+      !linkify.pretest(blockTokens[j].content)) {
       continue
     }
 
-    let tokens = blockTokens[j].children!
+    const tokens = blockTokens[j].children!
 
     let htmlLinkLevel = 0
 
@@ -55,9 +55,14 @@ export default function linkify(state: StateCore) {
       if (htmlLinkLevel > 0)
         continue
 
-      if (currentToken.type === 'text' && state.md.linkify.test(currentToken.content)) {
+      if (currentToken.type === 'text') {
         const text = currentToken.content
-        let links = state.md.linkify.match(text) ?? []
+        if (!linkify.pretest(text))
+          continue
+
+        const links = linkify.match(text)
+        if (!links?.length)
+          continue
 
         // Now split string to nodes
         const nodes = []
@@ -67,34 +72,33 @@ export default function linkify(state: StateCore) {
         // forbid escape sequence at the start of the string,
         // this avoids http\://example.com/ from being linkified as
         // http:<a href="//example.com/">//example.com/</a>
-        if (links.length > 0 &&
-          links[0].index === 0 &&
+        const startFrom = (links[0].index === 0 &&
           i > 0 &&
-          tokens[i - 1].type === 'text_special') {
-          links = links.slice(1)
-        }
+          tokens[i - 1].type === 'text_special')
+          ? 1
+          : 0
 
-        for (let ln = 0; ln < links.length; ln++) {
-          const url = links[ln].url
-          const fullUrl = state.md.normalizeLink(url)
+        for (let ln = startFrom; ln < links.length; ln++) {
+          const link = links[ln]
+          const fullUrl = state.md.normalizeLink(link.url)
           if (!state.md.validateLink(fullUrl))
             continue
 
-          let urlText = links[ln].text
+          let urlText = link.text
 
           // Linkifier might send raw hostnames like "example.com", where url
           // starts with domain name. So we prepend http:// in those cases,
           // and remove it afterwards.
           //
-          if (!links[ln].schema) {
+          if (!link.schema) {
             urlText = state.md.normalizeLinkText(`http://${urlText}`).replace(/^http:\/\//, '')
-          } else if (links[ln].schema === 'mailto:' && !/^mailto:/i.test(urlText)) {
+          } else if (link.schema === 'mailto:' && !/^mailto:/i.test(urlText)) {
             urlText = state.md.normalizeLinkText(`mailto:${urlText}`).replace(/^mailto:/, '')
           } else {
             urlText = state.md.normalizeLinkText(urlText)
           }
 
-          const pos = links[ln].index
+          const pos = link.index
 
           if (pos > lastPos) {
             const token = new state.Token('text', '', 0)
@@ -121,7 +125,7 @@ export default function linkify(state: StateCore) {
           token_c.info = 'auto'
           nodes.push(token_c)
 
-          lastPos = links[ln].lastIndex
+          lastPos = link.lastIndex
         }
         if (lastPos < text.length) {
           const token = new state.Token('text', '', 0)
@@ -131,7 +135,7 @@ export default function linkify(state: StateCore) {
         }
 
         // replace current node
-        blockTokens[j].children = tokens = arrayReplaceAt(tokens, i, nodes)
+        tokens.splice(i, 1, ...nodes)
       }
     }
   }

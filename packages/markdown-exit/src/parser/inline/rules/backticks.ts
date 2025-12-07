@@ -4,7 +4,8 @@ import type StateInline from '../state_inline'
 
 export default function backtick(state: StateInline, silent: boolean) {
   let pos = state.pos
-  const ch = state.src.charCodeAt(pos)
+  const src = state.src
+  const ch = src.charCodeAt(pos)
 
   if (ch !== 0x60/* ` */)
     return false
@@ -14,11 +15,11 @@ export default function backtick(state: StateInline, silent: boolean) {
   const max = state.posMax
 
   // scan marker length
-  while (pos < max && state.src.charCodeAt(pos) === 0x60/* ` */) {
+  while (pos < max && src.charCodeAt(pos) === 0x60/* ` */) {
     pos++
   }
 
-  const marker = state.src.slice(start, pos)
+  const marker = src.slice(start, pos)
   const openerLength = marker.length
 
   if (state.backticksScanned && (state.backticks[openerLength] || 0) <= start) {
@@ -33,14 +34,14 @@ export default function backtick(state: StateInline, silent: boolean) {
 
   // Nothing found in the cache, scan until the end of the line (or until marker is found)
   while (true) {
-    matchStart = state.src.indexOf('`', matchEnd)
+    matchStart = src.indexOf('`', matchEnd)
     if (matchStart === -1)
       break
 
     matchEnd = matchStart + 1
 
     // scan marker length
-    while (matchEnd < max && state.src.charCodeAt(matchEnd) === 0x60/* ` */) {
+    while (matchEnd < max && src.charCodeAt(matchEnd) === 0x60/* ` */) {
       matchEnd++
     }
 
@@ -51,7 +52,7 @@ export default function backtick(state: StateInline, silent: boolean) {
       if (!silent) {
         const token = state.push('code_inline', 'code', 0)
         token.markup = marker
-        token.content = state.src.slice(pos, matchStart)
+        token.content = src.slice(pos, matchStart)
           .replace(/\n/g, ' ')
           .replace(/^ (.+) $/, '$1')
       }
