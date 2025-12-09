@@ -199,15 +199,18 @@ export class Renderer {
    * Render token attributes to string.
    */
   renderAttrs(token: Pick<Token, 'attrs'>): string {
-    let i, l, result
-
-    if (!token.attrs)
+    const attrs = token.attrs
+    if (!attrs)
       return ''
 
-    result = ''
+    const len = attrs.length
+    if (len === 0)
+      return ''
 
-    for (i = 0, l = token.attrs.length; i < l; i++) {
-      result += ` ${escapeHtml(token.attrs[i][0])}="${escapeHtml(token.attrs[i][1])}"`
+    let result = ''
+
+    for (let i = 0; i < len; i++) {
+      result += ` ${escapeHtml(attrs[i][0])}="${escapeHtml(attrs[i][1])}"`
     }
 
     return result
@@ -322,16 +325,17 @@ export class Renderer {
     let result = ''
 
     for (let i = 0, len = tokens.length; i < len; i++) {
-      switch (tokens[i].type) {
+      const token = tokens[i]
+      switch (token.type) {
         case 'text':
-          result += tokens[i].content
+          result += token.content
           break
         case 'image':
-          result += this.renderInlineAsText(tokens[i].children!, options, env)
+          result += this.renderInlineAsText(token.children!, options, env)
           break
         case 'html_inline':
         case 'html_block':
-          result += tokens[i].content
+          result += token.content
           break
         case 'softbreak':
         case 'hardbreak':

@@ -55,13 +55,17 @@ export function createCommonmark() {
   return (input: string): string => renderer.render(parser.parse(input))
 }
 
-export function createRunners(): Record<string, (input: string) => string> {
+export function createRunners(): Record<string, Record<string, (input: string) => string>> {
   return {
-    'markdown-exit': createMarkdownExit(),
-    'markdown-exit-commonmark': createMarkdownExitCommonMark(),
-    'markdown-it': createMarkdownIt(),
-    'markdown-it-commonmark': createMarkdownItCommonMark(),
-    'marked': createMarked(),
-    'commonmark': createCommonmark(),
+    markdown: {
+      'markdown-exit': createMarkdownExit(),
+      'markdown-it': createMarkdownIt(),
+      'marked': createMarked(),
+    },
+    commonmark: {
+      'commonmark': createCommonmark(),
+      'markdown-exit-commonmark': createMarkdownExitCommonMark(),
+      'markdown-it-commonmark': createMarkdownItCommonMark(),
+    },
   }
 }

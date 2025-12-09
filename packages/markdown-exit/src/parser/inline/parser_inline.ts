@@ -113,8 +113,9 @@ export default class ParserInline<T extends Parser = Parser> {
     const maxNesting = state.md.options.maxNesting
     const cache = state.cache
 
-    if (typeof cache[pos] !== 'undefined') {
-      state.pos = cache[pos]
+    const cachedPos = cache[pos]
+    if (cachedPos !== undefined) {
+      state.pos = cachedPos
       return
     }
 
