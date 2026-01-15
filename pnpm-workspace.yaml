@@ -35,10 +35,11 @@ catalogs:
     punycode.js: ^2.3.1
     uc.micro: ^2.1.0
   tests:
+    '@codspeed/vitest-plugin': ^5.0.1
     js-yaml: ^4.1.1
     shiki: ^3.20.0
     tinyglobby: ^0.2.15
-    vitest: ^4.0.16
+    vitest: ^3.2.4
   types:
     '@types/js-yaml': ^4.0.9
     '@types/linkify-it': ^5.0.0

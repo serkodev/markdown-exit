@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "catalog:",
+    "@codspeed/vitest-plugin": "catalog:tests",
     "@types/node": "catalog:types",
     "bumpp": "catalog:",
     "eslint": "catalog:",

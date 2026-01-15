@@ -5,6 +5,7 @@
 [![npm version][npm-version-src]][npm-version-href]
 [![bundle][bundle-src]][bundle-href]
 [![License][license-src]][license-href]
+[![CodSpeed][codspeed-src]][codspeed-href]
 
 A TypeScript rewrite of [markdown-it](https://github.com/markdown-it/markdown-it) with first-class typings, modern tooling, and enhancements.
 
@@ -122,3 +123,5 @@ This project owes its foundation to the [markdown-it](https://github.com/markdow
 [bundle-href]: https://bundlephobia.com/result?p=markdown-exit
 [license-src]: https://img.shields.io/github/license/serkodev/markdown-exit.svg?style=flat&colorA=00AF6B&colorB=000
 [license-href]: https://github.com/serkodev/markdown-exit/blob/main/LICENSE
+[codspeed-src]: https://img.shields.io/badge/CodSpeed-benchmark-blue
+[codspeed-href]: https://codspeed.io/serkodev/markdown-exit?utm_source=badge

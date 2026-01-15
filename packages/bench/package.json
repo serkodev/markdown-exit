@@ -6,6 +6,7 @@
     "bench": "vitest bench"
   },
   "devDependencies": {
+    "@codspeed/vitest-plugin": "catalog:tests",
     "@types/commonmark": "catalog:bench",
     "@types/markdown-it": "catalog:bench",
     "commonmark": "catalog:bench",
