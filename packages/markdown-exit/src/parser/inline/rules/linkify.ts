@@ -41,7 +41,14 @@ export default function linkify(state: StateInline, silent: boolean) {
     return false
 
   // disallow '*' at the end of the link (conflicts with emphasis)
-  url = url.replace(/\*+$/, '')
+  // do manual backsearch to avoid perf issues with regex /\*+$/ on "****...****a".
+  let urlEnd = url.length
+  while (urlEnd > 0 && url.charCodeAt(urlEnd - 1) === 0x2A/* * */) {
+    urlEnd--
+  }
+  if (urlEnd !== url.length) {
+    url = url.slice(0, urlEnd)
+  }
 
   const fullUrl = state.md.normalizeLink(url)
   if (!state.md.validateLink(fullUrl))
