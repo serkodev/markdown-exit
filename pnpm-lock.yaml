@@ -135,6 +135,12 @@ importers:
 
   packages/markdown-exit:
     dependencies:
+      '@types/linkify-it':
+        specifier: catalog:types
+        version: 5.0.0
+      '@types/mdurl':
+        specifier: catalog:types
+        version: 2.0.0
       entities:
         specifier: catalog:integrations
         version: 7.0.0
@@ -154,12 +160,6 @@ importers:
       '@markdown-exit/testgen':
         specifier: workspace:*
         version: link:../testgen
-      '@types/linkify-it':
-        specifier: catalog:types
-        version: 5.0.0
-      '@types/mdurl':
-        specifier: catalog:types
-        version: 2.0.0
 
   packages/testgen:
     dependencies:
