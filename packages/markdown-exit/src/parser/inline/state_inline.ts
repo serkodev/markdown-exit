@@ -67,7 +67,7 @@ export default class StateInline<T extends Parser = Parser> {
 
   /**
    * Counter used to disable inline linkify-it execution
-   * inside <a> and markdown links
+   * inside `<a>` and markdown links
    */
   linkLevel: number = 0
 
