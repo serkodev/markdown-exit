@@ -7,6 +7,9 @@ export type { RuleCore } from './parser_core'
 export type { RuleInline } from './parser_inline'
 export * from './renderer'
 export * from './ruler'
+export { default as StateBlock } from './rules_block/state_block'
+export { default as StateCore } from './rules_core/state_core'
+export { default as StateInline } from './rules_inline/state_inline'
 export * from './token'
 
 // hybrid types callable construct signatures hack
