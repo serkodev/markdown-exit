@@ -10,6 +10,7 @@ It is a TypeScript rewrite of [markdown-it](https://github.com/markdown-it/markd
 - Supports [async rendering](/guide/rendering.html#async-rendering)
 - Tree-shaking friendly
 - [Smaller bundle size](https://pkg-size.dev/markdown-exit) (~30% reduction)
+- Better performance (see [benchmarks](https://codspeed.io/serkodev/markdown-exit/benchmarks))
 - Bug fixes and [additional features](https://github.com/serkodev/markdown-exit/issues?q=is:issue%20label:features)
 
 #### Why a separate codebase from markdown-it?
