@@ -38,6 +38,8 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
+    "@types/linkify-it": "catalog:types",
+    "@types/mdurl": "catalog:types",
     "entities": "catalog:integrations",
     "linkify-it": "catalog:integrations",
     "mdurl": "catalog:integrations",
@@ -45,8 +47,6 @@
     "uc.micro": "catalog:integrations"
   },
   "devDependencies": {
-    "@markdown-exit/testgen": "workspace:*",
-    "@types/linkify-it": "catalog:types",
-    "@types/mdurl": "catalog:types"
+    "@markdown-exit/testgen": "workspace:*"
   }
 }
