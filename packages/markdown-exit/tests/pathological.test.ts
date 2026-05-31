@@ -1,9 +1,10 @@
+import type { Options } from '../src/index'
 import crypto from 'node:crypto'
 import { describe, expect, it } from 'vitest'
 import MarkdownExit from '../src/index'
 
-function test_pattern(str: string) {
-  expect(MarkdownExit().render(str)).toBeTruthy()
+function test_pattern(str: string, options?: Options | undefined) {
+  expect(MarkdownExit(options).render(str)).toBeTruthy()
 }
 
 /* eslint-disable prefer-template */
@@ -133,4 +134,8 @@ describe('markdown-it', () => {
     const result = md.render('https://test.com?' + '*'.repeat(70000) + 'a')
     expect(result).toBeTruthy()
   }, 500)
+
+  it('a lot of smartquotes', async () => {
+    await test_pattern('"'.repeat(160000), { typographer: true })
+  })
 })

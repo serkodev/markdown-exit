@@ -1,7 +1,7 @@
 // heading (#, ##, ...)
 
 import type StateBlock from '../state_block'
-import { isSpace } from '../../../common/utils'
+import { asciiTrim, isSpace } from '../../../common/utils'
 
 export default function heading(state: StateBlock, startLine: number, endLine: number, silent: boolean) {
   let pos = state.bMarks[startLine] + state.tShift[startLine]
@@ -45,7 +45,7 @@ export default function heading(state: StateBlock, startLine: number, endLine: n
   token_o.map = [startLine, state.line]
 
   const token_i = state.push('inline', '', 0)
-  token_i.content = state.src.slice(pos, max).trim()
+  token_i.content = asciiTrim(state.src.slice(pos, max))
   token_i.map = [startLine, state.line]
   token_i.children = []
 

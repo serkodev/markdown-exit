@@ -1,7 +1,7 @@
 // Process html entity - &#123;, &#xAF;, &quot;, ...
 
 import type StateInline from '../state_inline'
-import { decodeHTML } from 'entities'
+import { decodeHTMLStrict } from 'entities'
 import { fromCodePoint, isValidEntityCode } from '../../../common/utils'
 
 const DIGITAL_RE = /^&#(x[a-f0-9]{1,6}|\d{1,7});/i
@@ -36,7 +36,7 @@ export default function entity(state: StateInline, silent: boolean) {
   } else {
     const match = state.src.slice(pos).match(NAMED_RE)
     if (match) {
-      const decoded = decodeHTML(match[0])
+      const decoded = decodeHTMLStrict(match[0])
       if (decoded !== match[0]) {
         if (!silent) {
           const token = state.push('text_special', '', 0)

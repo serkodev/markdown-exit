@@ -58,6 +58,13 @@ describe('utils', () => {
     })
   })
 
+  it('isPunctCharCode', () => {
+    assert.strictEqual(utils.isPunctCharCode(0x2014), true)
+    assert.strictEqual(utils.isPunctCharCode(0x61), false)
+
+    assert.strictEqual(utils.isPunctCharCode(0x2014), utils.isPunctChar('\u2014'))
+  })
+
   it('unescapeMd', () => {
     const unescapeMd = utils.unescapeMd
 

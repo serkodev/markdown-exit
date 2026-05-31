@@ -30,7 +30,7 @@ catalogs:
     vue: ^3.5.26
   integrations:
     entities: ^7.0.0
-    linkify-it: ^5.0.0
+    linkify-it: ^5.0.1
     mdurl: ^2.0.0
     punycode.js: ^2.3.1
     uc.micro: ^2.1.0
