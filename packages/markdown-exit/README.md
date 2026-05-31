@@ -5,22 +5,16 @@
 [![npm version][npm-version-src]][npm-version-href]
 [![bundle][bundle-src]][bundle-href]
 [![License][license-src]][license-href]
+[![CodSpeed][codspeed-src]][codspeed-href]
 
 A TypeScript rewrite of [markdown-it](https://github.com/markdown-it/markdown-it) with first-class typings, modern tooling, and enhancements.
 
 ## Features
 
-<<<<<<< HEAD
 - 🛡️ **Type Safety:** Ship robust types, improve DX, and enable type-safe development.
 - ⚡ **New features:** [Async rendering](https://markdown-exit.pages.dev/guide/rendering.html#async-rendering) for all rules includeing syntax highlighting and [more](https://github.com/serkodev/markdown-exit/issues?q=is:issue%20label:features).
 - 🔌 **Extensibility:** Extend the markdown syntax, custom rendering with [Plugins](https://markdown-exit.pages.dev/guide/plugins.html).
-- 🤝 **Compatibility:** Compatible with markdown-it `v14.1.0` and plugin API.
-=======
-- **API compatibility:** Compatible with markdown-it `v14.2.0` and plugin API.
-- **TypeScript:** Ship robust types, improve DX, and enable type-safe development.
-- **Extensibility:** Provide a clean foundation for new features that are easier to prototype and maintain.
-- **New features:** Track via [features](https://github.com/serkodev/markdown-exit/issues?q=is:issue%20label:features) for details.
->>>>>>> v0
+- 🤝 **Compatibility:** Compatible with markdown-it `v14.2.0` and plugin API.
 
 ## Documentation
 
@@ -129,3 +123,5 @@ This project owes its foundation to the [markdown-it](https://github.com/markdow
 [bundle-href]: https://bundlephobia.com/result?p=markdown-exit
 [license-src]: https://img.shields.io/github/license/serkodev/markdown-exit.svg?style=flat&colorA=00AF6B&colorB=000
 [license-href]: https://github.com/serkodev/markdown-exit/blob/main/LICENSE
+[codspeed-src]: https://img.shields.io/badge/CodSpeed-benchmark-blue
+[codspeed-href]: https://codspeed.io/serkodev/markdown-exit?utm_source=badge
