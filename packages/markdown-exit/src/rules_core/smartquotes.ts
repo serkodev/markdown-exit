@@ -3,20 +3,47 @@
 
 import type { Token } from '../token'
 import type StateCore from './state_core'
-import { isMdAsciiPunct, isPunctChar, isWhiteSpace } from '../common/utils'
+import { isMdAsciiPunct, isPunctCharCode, isWhiteSpace } from '../common/utils'
 
 const QUOTE_TEST_RE = /['"]/
 const QUOTE_RE = /['"]/g
 const APOSTROPHE = '\u2019' /* ’ */
 
-function replaceAt(str: string, index: number, ch: string) {
-  return str.slice(0, index) + ch + str.slice(index + 1)
+interface Replacement {
+  pos: number
+  ch: string
+}
+
+function addReplacement(replacements: Record<number, Replacement[]>, tokenIdx: number, pos: number, ch: string) {
+  if (!replacements[tokenIdx]) {
+    replacements[tokenIdx] = []
+  }
+  replacements[tokenIdx].push({ pos, ch })
+}
+
+function applyReplacements(str: string, replacements: Replacement[]) {
+  let result = ''
+  let lastPos = 0
+
+  replacements.sort((a, b) => a.pos - b.pos)
+
+  for (let i = 0; i < replacements.length; i++) {
+    const replacement = replacements[i]
+
+    result += str.slice(lastPos, replacement.pos) + replacement.ch
+    lastPos = replacement.pos + 1
+  }
+
+  return result + str.slice(lastPos)
 }
 
 function process_inlines(tokens: Token[], state: StateCore) {
   let j
 
   const stack = []
+
+  // token index -> list of replacements in the original token content
+  const replacements: Record<number, Replacement[]> = {}
 
   for (let i = 0; i < tokens.length; i++) {
     const token = tokens[i]
@@ -32,9 +59,9 @@ function process_inlines(tokens: Token[], state: StateCore) {
     if (token.type !== 'text')
       continue
 
-    let text = token.content
+    const text = token.content
     let pos = 0
-    let max = text.length
+    const max = text.length
 
     /* eslint no-labels:0,block-scoped-var:0 */
     OUTER:
@@ -87,8 +114,8 @@ function process_inlines(tokens: Token[], state: StateCore) {
         }
       }
 
-      const isLastPunctChar = isMdAsciiPunct(lastChar) || isPunctChar(String.fromCharCode(lastChar))
-      const isNextPunctChar = isMdAsciiPunct(nextChar) || isPunctChar(String.fromCharCode(nextChar))
+      const isLastPunctChar = isMdAsciiPunct(lastChar) || isPunctCharCode(lastChar)
+      const isNextPunctChar = isMdAsciiPunct(nextChar) || isPunctCharCode(nextChar)
 
       const isLastWhiteSpace = isWhiteSpace(lastChar)
       const isNextWhiteSpace = isWhiteSpace(nextChar)
@@ -131,7 +158,7 @@ function process_inlines(tokens: Token[], state: StateCore) {
       if (!canOpen && !canClose) {
         // middle of word
         if (isSingle) {
-          token.content = replaceAt(token.content, t.index, APOSTROPHE)
+          addReplacement(replacements, i, t.index, APOSTROPHE)
         }
         continue
       }
@@ -155,22 +182,8 @@ function process_inlines(tokens: Token[], state: StateCore) {
               closeQuote = state.md.options.quotes[1]
             }
 
-            // replace token.content *before* tokens[item.token].content,
-            // because, if they are pointing at the same token, replaceAt
-            // could mess up indices when quote length != 1
-            token.content = replaceAt(token.content, t.index, closeQuote)
-            tokens[item.token].content = replaceAt(
-              tokens[item.token].content,
-              item.pos,
-              openQuote,
-            )
-
-            pos += closeQuote.length - 1
-            if (item.token === i)
-              pos += openQuote.length - 1
-
-            text = token.content
-            max = text.length
+            addReplacement(replacements, i, t.index, closeQuote)
+            addReplacement(replacements, item.token, item.pos, openQuote)
 
             stack.length = j
             continue OUTER
@@ -186,10 +199,14 @@ function process_inlines(tokens: Token[], state: StateCore) {
           level: thisLevel,
         })
       } else if (canClose && isSingle) {
-        token.content = replaceAt(token.content, t.index, APOSTROPHE)
+        addReplacement(replacements, i, t.index, APOSTROPHE)
       }
     }
   }
+
+  (Object.keys(replacements) as unknown as number[]).forEach((tokenIdx) => {
+    tokens[tokenIdx].content = applyReplacements(tokens[tokenIdx].content, replacements[tokenIdx])
+  })
 }
 
 export default function smartquotes(state: StateCore) {

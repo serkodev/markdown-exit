@@ -8,7 +8,7 @@
 import type { MarkdownExit } from '..'
 import type { Nesting } from '../token'
 import type { MarkdownExitEnv } from '../types/shared'
-import { isMdAsciiPunct, isPunctChar, isWhiteSpace } from '../common/utils'
+import { isMdAsciiPunct, isPunctCharCode, isWhiteSpace } from '../common/utils'
 import { Token } from '../token'
 
 export interface Scanned {
@@ -137,8 +137,31 @@ export default class StateInline {
     const max = this.posMax
     const marker = this.src.charCodeAt(start)
 
+    // Astral characters below are combined manually, because .codePointAt()
+    // does not guarantee numeric type output. And we don't wish JIT cache issues.
+    // The broken surrogate pairs are evaluated as U+FFFD to prevent possible
+    // crashes.
+
+    let lastChar
+    if (start === 0) {
     // treat beginning of the line as a whitespace
-    const lastChar = start > 0 ? this.src.charCodeAt(start - 1) : 0x20
+      lastChar = 0x20
+    } else if (start === 1) {
+      lastChar = this.src.charCodeAt(0)
+      if ((lastChar & 0xF800) === 0xD800)
+        lastChar = 0xFFFD
+    } else {
+      lastChar = this.src.charCodeAt(start - 1)
+      if ((lastChar & 0xFC00) === 0xDC00) {
+      // low surrogate => add high one, replace broken pair with U+FFFD
+        const highSurr = this.src.charCodeAt(start - 2)
+        lastChar = (highSurr & 0xFC00) === 0xD800
+          ? 0x10000 + ((highSurr - 0xD800) << 10) + (lastChar - 0xDC00)
+          : 0xFFFD
+      } else if ((lastChar & 0xFC00) === 0xD800) {
+        lastChar = 0xFFFD
+      }
+    }
 
     let pos = start
     while (pos < max && this.src.charCodeAt(pos) === marker) {
@@ -148,10 +171,19 @@ export default class StateInline {
     const count = pos - start
 
     // treat end of the line as a whitespace
-    const nextChar = pos < max ? this.src.charCodeAt(pos) : 0x20
+    let nextChar = pos < max ? this.src.charCodeAt(pos) : 0x20
+    if ((nextChar & 0xFC00) === 0xD800) {
+    // high surrogate => add low one, replace broken pair with U+FFFD
+      const lowSurr = this.src.charCodeAt(pos + 1)
+      nextChar = (lowSurr & 0xFC00) === 0xDC00
+        ? 0x10000 + ((nextChar - 0xD800) << 10) + (lowSurr - 0xDC00)
+        : 0xFFFD
+    } else if ((nextChar & 0xFC00) === 0xDC00) {
+      nextChar = 0xFFFD
+    }
 
-    const isLastPunctChar = isMdAsciiPunct(lastChar) || isPunctChar(String.fromCharCode(lastChar))
-    const isNextPunctChar = isMdAsciiPunct(nextChar) || isPunctChar(String.fromCharCode(nextChar))
+    const isLastPunctChar = isMdAsciiPunct(lastChar) || isPunctCharCode(lastChar)
+    const isNextPunctChar = isMdAsciiPunct(nextChar) || isPunctCharCode(nextChar)
 
     const isLastWhiteSpace = isWhiteSpace(lastChar)
     const isNextWhiteSpace = isWhiteSpace(nextChar)

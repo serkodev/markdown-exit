@@ -1,3 +1,7 @@
+shellEmulator: true
+
+trustPolicy: no-downgrade
+
 packages:
   - packages/*
 
@@ -18,7 +22,7 @@ catalogs:
     marked: ^16.4.1
   integrations:
     entities: ^7.0.0
-    linkify-it: ^5.0.0
+    linkify-it: ^5.0.1
     mdurl: ^2.0.0
     punycode.js: ^2.3.1
     uc.micro: ^2.1.0

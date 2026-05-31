@@ -182,6 +182,10 @@ export function isPunctChar(ch: string): boolean {
   return ucmicro.P.test(ch) || ucmicro.S.test(ch)
 }
 
+export function isPunctCharCode(code: number): boolean {
+  return isPunctChar(fromCodePoint(code))
+}
+
 // Markdown ASCII punctuation characters.
 //
 // !, ", #, $, %, &, ', (, ), *, +, ,, -, ., /, :, ;, <, =, >, ?, @, [, \, ], ^, _, `, {, |, }, or ~
@@ -243,6 +247,7 @@ export function normalizeReference(str: string): string {
   // (remove this when node v10 is no longer supported).
   //
   if ('ẞ'.toLowerCase() === 'Ṿ') {
+    /* c8 ignore next 2 */
     str = str.replace(/ẞ/g, 'ß')
   }
 
@@ -279,6 +284,28 @@ export function normalizeReference(str: string): string {
   // most notably, `__proto__`)
   //
   return str.toLowerCase().toUpperCase()
+}
+
+function isAsciiTrimmable(c: number): boolean {
+  return c === 0x20 || c === 0x09 || c === 0x0A || c === 0x0D
+}
+
+// "Light" .trim() for blocks (headers, paragraphs), where unicode spaces
+// should be preserved.
+export function asciiTrim(str: string) {
+  let start = 0
+  for (; start < str.length; start++) {
+    if (!isAsciiTrimmable(str.charCodeAt(start))) {
+      break
+    }
+  }
+  let end = str.length - 1
+  for (; end >= start; end--) {
+    if (!isAsciiTrimmable(str.charCodeAt(end))) {
+      break
+    }
+  }
+  return str.slice(start, end + 1)
 }
 
 /**

@@ -1,6 +1,7 @@
 // lheading (---, ===)
 
 import type StateBlock from './state_block'
+import { asciiTrim } from '../common/utils'
 
 export default function lheading(state: StateBlock, startLine: number, endLine: number) {
   const terminatorRules = state.md.block.ruler.getRules('paragraph')
@@ -63,10 +64,11 @@ export default function lheading(state: StateBlock, startLine: number, endLine: 
 
   if (!level || marker === undefined) {
     // Didn't find valid underline
+    state.parentType = oldParentType
     return false
   }
 
-  const content = state.getLines(startLine, nextLine, state.blkIndent, false).trim()
+  const content = asciiTrim(state.getLines(startLine, nextLine, state.blkIndent, false))
 
   state.line = nextLine + 1
 
