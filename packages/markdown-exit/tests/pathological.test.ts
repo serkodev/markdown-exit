@@ -1,9 +1,9 @@
-import type { Options } from '../src/index'
+import type { MarkdownExitOptions } from '../src/index'
 import crypto from 'node:crypto'
 import { describe, expect, it } from 'vitest'
 import MarkdownExit from '../src/index'
 
-function test_pattern(str: string, options?: Options | undefined) {
+function test_pattern(str: string, options?: MarkdownExitOptions) {
   expect(MarkdownExit(options).render(str)).toBeTruthy()
 }
 
