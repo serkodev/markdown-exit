@@ -408,8 +408,17 @@ export class Renderer {
   /**
    * Async version of {@link Renderer.render}. Runs all render rules in parallel
    * (Promise.all) and preserves output order.
+   *
+   * If `render` has been overridden or monkey-patched on this instance — a
+   * common plugin pattern in the markdown-it ecosystem (e.g. @mdit-vue) — the
+   * wrapper is honored by falling back to the sync path, so patched logic is
+   * not silently bypassed. Async rules still throw there, as with `render()`.
    */
   async renderAsync(tokens: Token[], options: RenderOptions, env?: any): Promise<string> {
+    if (this.render !== Renderer.prototype.render) {
+      return this.render(tokens, options, env)
+    }
+
     const tasks: Array<Promise<string>> = []
     const rules = this.rules
 

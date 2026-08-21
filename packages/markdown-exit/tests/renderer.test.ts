@@ -79,6 +79,38 @@ describe('renderAsync', () => {
       highlight: asyncHighlight,
     })).toThrow()
   })
+
+  it('honors a monkey-patched render method', async () => {
+    const md = createMarkdownExit()
+    const original = md.renderer.render.bind(md.renderer)
+    md.renderer.render = (tokens, options, env) => {
+      env!.patched = 'yes'
+      return original(tokens, options, env)
+    }
+
+    const env: Record<string, unknown> = {}
+    const html = await md.renderAsync('# hi', env)
+    expect(env.patched).toBe('yes')
+    expect(html).toBe('<h1>hi</h1>\n')
+  })
+
+  it('runs the parallel path when render is not patched', async () => {
+    const md = createMarkdownExit()
+    const env: Record<string, unknown> = {}
+    const html = await md.renderAsync('# hi', env)
+    expect(html).toBe('<h1>hi</h1>\n')
+    expect(env.patched).toBeUndefined()
+  })
+
+  it('patched render with an async rule surfaces the async-rule error', async () => {
+    const md = createMarkdownExit({
+      highlight: async str => `<b>${str}</b>`,
+    })
+    const original = md.renderer.render.bind(md.renderer)
+    md.renderer.render = (tokens, options, env) => original(tokens, options, env)
+
+    await expect(md.renderAsync('```\nhl\n```')).rejects.toThrow(/async rule detected/)
+  })
 })
 
 /**
