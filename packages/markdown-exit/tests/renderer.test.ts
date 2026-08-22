@@ -95,21 +95,40 @@ describe('renderAsync', () => {
   })
 
   it('runs the parallel path when render is not patched', async () => {
-    const md = createMarkdownExit()
-    const env: Record<string, unknown> = {}
-    const html = await md.renderAsync('# hi', env)
-    expect(html).toBe('<h1>hi</h1>\n')
-    expect(env.patched).toBeUndefined()
+    const md = createMarkdownExit({ highlight: asyncHighlight })
+    const html = await md.renderAsync('```js\nconsole.log(1)\n```')
+    expect(html).toContain('<pre class="hl js">')
   })
 
-  it('patched render with an async rule surfaces the async-rule error', async () => {
-    const md = createMarkdownExit({
-      highlight: async str => `<b>${str}</b>`,
-    })
-    const original = md.renderer.render.bind(md.renderer)
-    md.renderer.render = (tokens, options, env) => original(tokens, options, env)
+  it('honors a monkey-patched renderInline method', async () => {
+    const md = createMarkdownExit()
+    const original = md.renderer.renderInline.bind(md.renderer)
+    md.renderer.renderInline = (tokens, options, env) => {
+      env!.marks = 'yes'
+      return original(tokens, options, env)
+    }
 
-    await expect(md.renderAsync('```\nhl\n```')).rejects.toThrow(/async rule detected/)
+    const env: Record<string, unknown> = {}
+    const html = await md.renderAsync('*hi*', env)
+    expect(env.marks).toBe('yes')
+    expect(html).toBe('<p><em>hi</em></p>\n')
+
+    const inlineEnv: Record<string, unknown> = {}
+    const inline = await md.renderInlineAsync('*hi*', inlineEnv)
+    expect(inlineEnv.marks).toBe('yes')
+    expect(inline).toBe('<em>hi</em>')
+  })
+
+  it('fallback supplies an empty env when none is given', async () => {
+    const md = createMarkdownExit()
+    const original = md.renderer.render.bind(md.renderer)
+    md.renderer.render = (tokens, options, env) => {
+      env!.patched = 'yes'
+      return original(tokens, options, env)
+    }
+
+    const html = await md.renderer.renderAsync(md.parse('# hi', {}), md.options, {})
+    expect(html).toBe('<h1>hi</h1>\n')
   })
 })
 

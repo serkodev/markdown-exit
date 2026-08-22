@@ -387,6 +387,11 @@ export class Renderer {
    * (Promise.all) and preserves output order.
    */
   async renderInlineAsync(tokens: Token[], options: RenderOptions, env?: any): Promise<string> {
+    const renderInline = this.renderInline
+    if (renderInline !== Renderer.prototype.renderInline) {
+      return renderInline.call(this, tokens, options, env)
+    }
+
     const tasks: Array<Promise<string>> = []
     const rules = this.rules
 
@@ -415,8 +420,9 @@ export class Renderer {
    * not silently bypassed. Async rules still throw there, as with `render()`.
    */
   async renderAsync(tokens: Token[], options: RenderOptions, env?: any): Promise<string> {
-    if (this.render !== Renderer.prototype.render) {
-      return this.render(tokens, options, env)
+    const render = this.render
+    if (render !== Renderer.prototype.render) {
+      return render.call(this, tokens, options, env)
     }
 
     const tasks: Array<Promise<string>> = []
