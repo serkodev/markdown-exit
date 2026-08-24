@@ -2,6 +2,8 @@ shellEmulator: true
 
 trustPolicy: no-downgrade
 
+publishBranch: legacy
+
 packages:
   - packages/*
 
