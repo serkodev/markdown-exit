@@ -19,13 +19,13 @@ A TypeScript rewrite of [markdown-it](https://github.com/markdown-it/markdown-it
 
 ### Install
 
-`v1+` (latest): All new features and may include breaking changes.
+latest: All new features and may include breaking changes.
 
 ```bash
 npm i markdown-exit
 ```
 
-`v0.x` (legacy): Full compatibility with markdown-it usage while adding TypeScript support, bug fixes and performance improvements. ([v0](https://github.com/serkodev/markdown-exit/tree/v0) branch)
+legacy: Full compatibility with markdown-it usage while adding TypeScript support, bug fixes and performance improvements. ([legacy](https://github.com/serkodev/markdown-exit/tree/legacy) branch)
 
 ```bash
 npm i markdown-exit@legacy
