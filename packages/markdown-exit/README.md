@@ -14,7 +14,7 @@ A TypeScript rewrite of [markdown-it](https://github.com/markdown-it/markdown-it
 - 🛡️ **Type Safety:** Ship robust types, improve DX, and enable type-safe development.
 - ⚡ **New features:** [Async rendering](https://markdown-exit.pages.dev/guide/rendering.html#async-rendering) for all rules includeing syntax highlighting and [more](https://github.com/serkodev/markdown-exit/issues?q=is:issue%20label:features).
 - 🔌 **Extensibility:** Extend the markdown syntax, custom rendering with [Plugins](https://markdown-exit.pages.dev/guide/plugins.html).
-- 🤝 **Compatibility:** Compatible with markdown-it `v14.2.0` and plugin API.
+- 🤝 **Compatibility:** Compatible with markdown-it `v14.3.0` and plugin API.
 
 ## Documentation
 

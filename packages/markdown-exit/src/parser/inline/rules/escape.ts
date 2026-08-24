@@ -44,6 +44,20 @@ export default function escape(state: StateInline, silent: boolean) {
     return true
   }
 
+  // '\' before a space is a literal backslash. Don't consume the space, so a
+  // trailing two-space hard line break is still detected by the newline rule.
+  if (ch1 === 0x20) {
+    if (!silent) {
+      const token = state.push('text_special', '', 0)
+      token.content = '\\'
+      token.markup = '\\'
+      token.info = 'escape'
+    }
+
+    state.pos = pos
+    return true
+  }
+
   let escapedStr = state.src[pos]
 
   if (ch1 >= 0xD800 && ch1 <= 0xDBFF && pos + 1 < max) {
