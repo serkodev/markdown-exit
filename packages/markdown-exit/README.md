@@ -10,7 +10,7 @@ A TypeScript rewrite of [markdown-it](https://github.com/markdown-it/markdown-it
 
 ## Compatibility & Differences
 
-- **API compatibility:** Compatible with markdown-it `v14.2.0` and plugin API.
+- **API compatibility:** Compatible with markdown-it `v14.3.0` and plugin API.
 - **TypeScript:** Ship robust types, improve DX, and enable type-safe development.
 - **Extensibility:** Provide a clean foundation for new features that are easier to prototype and maintain.
 - **New features:** Track via [features](https://github.com/serkodev/markdown-exit/issues?q=is:issue%20label:features) for details.
