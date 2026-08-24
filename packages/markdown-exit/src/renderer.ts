@@ -388,7 +388,13 @@ export class Renderer {
    */
   async renderInlineAsync(tokens: Token[], options: RenderOptions, env?: any): Promise<string> {
     const renderInline = this.renderInline
-    if (renderInline !== Renderer.prototype.renderInline) {
+    // Honor a patched sync `renderInline` only when `renderInlineAsync` isn't
+    // also patched. When a plugin wraps both, its async wrapper already ran, so
+    // the sync path is redundant and throws on async inline rules (#35).
+    if (
+      renderInline !== Renderer.prototype.renderInline
+      && this.renderInlineAsync === Renderer.prototype.renderInlineAsync
+    ) {
       return renderInline.call(this, tokens, options, env)
     }
 

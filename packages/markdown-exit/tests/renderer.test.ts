@@ -119,6 +119,35 @@ describe('renderAsync', () => {
     expect(inline).toBe('<em>hi</em>')
   })
 
+  it('renders async inline rules when a plugin wraps both renderInline and renderInlineAsync', async () => {
+    // Reproduces https://github.com/serkodev/markdown-exit/issues/35
+    // A plugin (e.g. @comark/markdown-it) wraps BOTH inline render methods,
+    // only preprocessing tokens then delegating. renderInlineAsync must not
+    // route the async render back through the patched sync renderInline, which
+    // would throw on async inline rules (Shiki, KaTeX, etc.).
+    const md = createMarkdownExit({ html: true })
+
+    const wrapped: string[] = []
+    const wrap = <T extends (...args: any[]) => any>(fn: T): T =>
+      (function (this: unknown, tokens: unknown, options: unknown, env: unknown) {
+        wrapped.push(fn.name || 'wrapped')
+        return fn.call(this, tokens, options, env)
+      }) as unknown as T
+
+    md.renderer.renderInline = wrap(md.renderer.renderInline)
+    md.renderer.renderInlineAsync = wrap(md.renderer.renderInlineAsync)
+
+    md.renderer.rules.code_inline = async (tokens, idx) => {
+      await Promise.resolve()
+      return `<code>${tokens[idx].content}</code>`
+    }
+
+    const html = await md.renderAsync('a `b` c\n')
+    expect(html).toBe('<p>a <code>b</code> c</p>\n')
+    // The async-aware wrapper still runs (its preprocessing is honored).
+    expect(wrapped.length).toBeGreaterThan(0)
+  })
+
   it('fallback supplies an empty env when none is given', async () => {
     const md = createMarkdownExit()
     const original = md.renderer.render.bind(md.renderer)
