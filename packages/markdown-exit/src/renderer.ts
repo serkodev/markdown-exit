@@ -424,10 +424,19 @@ export class Renderer {
    * common plugin pattern in the markdown-it ecosystem (e.g. @mdit-vue) — the
    * wrapper is honored by falling back to the sync path, so patched logic is
    * not silently bypassed. Async rules still throw there, as with `render()`.
+   * If `renderAsync` itself is patched too, that wrapper owns the async path:
+   * this base implementation then renders asynchronously right away and does
+   * not route back through the patched sync `render` (#35).
    */
   async renderAsync(tokens: Token[], options: RenderOptions, env?: any): Promise<string> {
     const render = this.render
-    if (render !== Renderer.prototype.render) {
+    // Honor a patched sync `render` only when `renderAsync` isn't also
+    // patched. When a plugin wraps both, its async wrapper already ran, so
+    // the sync path is redundant and throws on async rules (#35).
+    if (
+      render !== Renderer.prototype.render
+      && this.renderAsync === Renderer.prototype.renderAsync
+    ) {
       return render.call(this, tokens, options, env)
     }
 

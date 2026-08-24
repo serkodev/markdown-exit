@@ -148,6 +148,30 @@ describe('renderAsync', () => {
     expect(wrapped.length).toBeGreaterThan(0)
   })
 
+  it('renders async rules when a plugin wraps both render and renderAsync', async () => {
+    // Block-level analog of the test above (#35): a plugin wraps BOTH block
+    // render methods, only preprocessing then delegating. renderAsync must not
+    // route the async render back through the patched sync render, which
+    // would re-run the wrapper and throw on async rules.
+    const md = createMarkdownExit({ highlight: asyncHighlight })
+
+    const wrapped: string[] = []
+    const wrap = <T extends (...args: any[]) => any>(fn: T): T =>
+      (function (this: unknown, tokens: unknown, options: unknown, env: unknown) {
+        wrapped.push(fn.name || 'wrapped')
+        return fn.call(this, tokens, options, env)
+      }) as unknown as T
+
+    md.renderer.render = wrap(md.renderer.render)
+    md.renderer.renderAsync = wrap(md.renderer.renderAsync)
+
+    const html = await md.renderAsync('```js\nconsole.log(1)\n```')
+    expect(html).toContain('<pre class="hl js">')
+    // The async wrapper runs exactly once; the patched sync render must not
+    // be re-entered through the fallback.
+    expect(wrapped).toEqual(['renderAsync'])
+  })
+
   it('fallback supplies an empty env when none is given', async () => {
     const md = createMarkdownExit()
     const original = md.renderer.render.bind(md.renderer)
