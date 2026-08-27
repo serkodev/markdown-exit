@@ -5,6 +5,35 @@ import { decodeHTMLStrict } from 'entities'
 import * as mdurl from 'mdurl'
 import * as ucmicro from 'uc.micro'
 
+type ClassToWrap = new (...args: any[]) => object
+
+/**
+ * Wraps a class so it can be called with or without `new`.
+ */
+export function callable<T extends ClassToWrap>(
+  cls: T,
+): T & ((...args: ConstructorParameters<T>) => InstanceType<T>)
+export function callable<T extends ClassToWrap>(cls: T) {
+  const wrapper = function (...args: ConstructorParameters<T>) {
+    const newTarget =
+      new.target && new.target !== wrapper
+        ? new.target
+        : cls
+
+    return Reflect.construct(cls, args, newTarget)
+  }
+
+  Object.defineProperty(wrapper, 'name', { value: cls.name })
+
+  // bridge statics
+  Object.setPrototypeOf(wrapper, cls)
+
+  // share the same instance prototype
+  wrapper.prototype = cls.prototype
+
+  return wrapper
+}
+
 // Remove element from array and put another array at those position.
 // Useful for some operations with tokens
 export function arrayReplaceAt<T>(src: readonly T[], pos: number, newElements: readonly T[]): T[] {
