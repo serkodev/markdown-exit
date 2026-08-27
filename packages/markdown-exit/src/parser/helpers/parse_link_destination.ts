@@ -59,8 +59,12 @@ export default function parseLinkDestination(str: string, start: number, max: nu
       break
 
     if (code === 0x5C /* \ */ && pos + 1 < max) {
-      if (str.charCodeAt(pos + 1) === 0x20)
-        break
+      // '\' before a space is a literal backslash, and the space
+      // ends the destination (CommonMark 6.3)
+      if (str.charCodeAt(pos + 1) === 0x20) {
+        pos++
+        continue
+      }
       pos += 2
       continue
     }

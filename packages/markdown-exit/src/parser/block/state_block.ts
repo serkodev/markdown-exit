@@ -78,10 +78,6 @@ export default class StateBlock<T extends Parser = Parser> {
    */
   tight: boolean = false
   /**
-   * indent of the current dd block (-1 if there isn't any)
-   */
-  ddIndent: number = -1
-  /**
    * indent of the current list block (-1 if there isn't any)
    */
   listIndent: number = -1

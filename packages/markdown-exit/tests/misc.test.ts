@@ -294,6 +294,92 @@ describe('misc', () => {
     assert.strictEqual(md.render('\\\uD835x'), '<p>\\\uD835x</p>\n')
     assert.strictEqual(md.render('\\\uD835'), '<p>\\\uD835</p>\n')
   })
+
+  it('should store reference labels in token metadata', () => {
+    const md = MarkdownExit()
+    const tokens = md.parse('[text][foo bar]\n\n![alt][FOO   BAR]\n\n[Foo Bar]: /url')
+    const inlineTokens = tokens.filter(token => token.type === 'inline')
+
+    expect(inlineTokens[0].children![0].meta).toEqual({ label: 'FOO BAR' })
+    expect(inlineTokens[1].children![0].meta).toEqual({ label: 'FOO BAR' })
+  })
+
+  it('should strip reference definition tokens by default', () => {
+    const md = MarkdownExit()
+    const src = '[foo]: /url\n\ntext'
+
+    assert.deepEqual(md.parse(src).filter(t => t.type === 'reference_definition'), [])
+
+    md.core.ruler.disable('strip_references')
+    const tokens = md.parse(src).filter(t => t.type === 'reference_definition')
+
+    assert.strictEqual(tokens.length, 1)
+    assert.deepEqual(tokens[0].map, [0, 1])
+    assert.strictEqual(tokens[0].info, 'FOO')
+    expect(tokens[0].meta).toEqual({ label: 'FOO', title: '', href: '/url' })
+  })
+
+  it('should not affect line breaks with reference definition tokens', () => {
+    const md = MarkdownExit()
+    md.core.ruler.disable('strip_references')
+
+    assert.strictEqual(md.render('- [foo]: /url'), '<ul>\n<li></li>\n</ul>\n')
+    assert.strictEqual(md.render('> [foo]: /url'), '<blockquote></blockquote>\n')
+    assert.strictEqual(md.render('> [foo]: /url\n> bar'), '<blockquote>\n<p>bar</p>\n</blockquote>\n')
+    assert.strictEqual(
+      md.render('- [foo]: /url\n\n  > bar'),
+      '<ul>\n<li>\n<blockquote>\n<p>bar</p>\n</blockquote>\n</li>\n</ul>\n',
+    )
+  })
+
+  it('should join text tokens inside image alt', () => {
+    const md = MarkdownExit()
+
+    assert.strictEqual(md.render('![a \\* b](/u)'), '<p><img src="/u" alt="a * b"></p>\n')
+
+    assert.strictEqual(md.render('![a &amp; b](/u)'), '<p><img src="/u" alt="a &amp; b"></p>\n')
+
+    assert.strictEqual(md.render('![a &lt; b](/u)'), '<p><img src="/u" alt="a &lt; b"></p>\n')
+
+    assert.strictEqual(md.render('![a \\* *b* &amp; c](/u)'), '<p><img src="/u" alt="a * b &amp; c"></p>\n')
+  })
+})
+
+describe('linkify', () => {
+  it('should match links without protocol when enabled (and auto-add protocol)', () => {
+    const md = MarkdownExit({ linkify: true })
+
+    md.linkify.set({ fuzzyLink: true })
+
+    assert.strictEqual(
+      md.render('www.example.org'),
+      '<p><a href="http://www.example.org">www.example.org</a></p>\n',
+    )
+  })
+
+  it('should normalize IDN in fuzzy links', () => {
+    const md = MarkdownExit({ linkify: true })
+
+    md.linkify.set({ fuzzyLink: true })
+
+    assert.strictEqual(
+      md.render('test xn--n3h.net foo'),
+      '<p>test <a href="http://xn--n3h.net">\u2603.net</a> foo</p>\n',
+    )
+  })
+
+  it('regression test, invalid link', () => {
+    const md = MarkdownExit({ linkify: true })
+
+    md.linkify.set({ fuzzyLink: true })
+
+    // An invalid match could leave the inline parser at the same position
+    // and cause an infinite loop.
+    assert.strictEqual(
+      md.render('i.org[x[x][xx: htt://a.b://a'),
+      '<p><a href="http://i.org">i.org</a>[x[x][xx: htt://a.b://a</p>\n',
+    )
+  })
 })
 
 describe('url normalization', () => {
@@ -477,6 +563,7 @@ describe('token attributes', () => {
 
 describe('markdown-exit references', () => {
   const md = MarkdownExit()
+  md.core.ruler.disable('strip_references')
 
   it('reference as hidden info', () => {
     const fixture = `\`\`\`js
@@ -491,14 +578,16 @@ console.log(2)
 `
     const tokens = md.parse(fixture)
 
-    const firstRefIndex = tokens.findIndex(token => token.type === 'reference')
+    const firstRefIndex = tokens.findIndex(token => token.type === 'reference_definition')
     if (firstRefIndex === -1)
       throw new Error('No reference token found')
     const firstRef = tokens[firstRefIndex]
     expect(firstRef.info).toEqual('//')
     expect(tokens[firstRefIndex - 1].info).toEqual(firstRef.meta.href)
 
-    const secondRefIndex = tokens.findIndex(token => token.type === 'reference')
+    const secondRefIndex = tokens.findIndex(
+      (token, index) => index > firstRefIndex && token.type === 'reference_definition',
+    )
     if (secondRefIndex === -1)
       throw new Error('No reference token found')
     const secondRef = tokens[secondRefIndex]

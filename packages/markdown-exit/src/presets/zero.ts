@@ -48,6 +48,7 @@ const zeroPreset: Preset = {
       rules: [
         'normalize',
         'block',
+        'strip_references',
         'inline',
         'text_join',
       ],

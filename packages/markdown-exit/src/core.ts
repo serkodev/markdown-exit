@@ -6,10 +6,18 @@ import type { Preset } from './types/preset'
 import type { MarkdownExitEnv } from './types/shared'
 import * as utils from './common/utils'
 import { Parser } from './parser'
+import ParserBlock from './parser/block/parser_block'
+import StateBlock from './parser/block/state_block'
+import ParserCore from './parser/core/parser_core'
+import StateCore from './parser/core/state_core'
+import ParserInline from './parser/inline/parser_inline'
+import StateInline from './parser/inline/state_inline'
+import { Ruler } from './parser/ruler'
 import cfg_commonmark from './presets/commonmark'
 import cfg_default from './presets/default'
 import cfg_zero from './presets/zero'
 import { Renderer } from './renderer'
+import { Token } from './token'
 
 /**
  * MarkdownExit provides named presets as a convenience to quickly
@@ -105,7 +113,7 @@ export class MarkdownExit extends Parser {
    * config.
    */
   set(options: MarkdownExitOptions): this {
-    utils.assign(this.options, options)
+    Object.assign(this.options, options)
     return this
   }
 
@@ -131,7 +139,7 @@ export class MarkdownExit extends Parser {
       throw new Error('Wrong `markdown-exit` preset, can\'t be empty')
 
     if (presets.options)
-      this.set(presets.options)
+      this.options = { ...presets.options }
 
     if (presets.components) {
       for (const name of Object.keys(presets.components) as (keyof typeof presets.components)[]) {
@@ -278,6 +286,17 @@ export class MarkdownExit extends Parser {
   renderInlineAsync(src: string, env: MarkdownExitEnv = {}): Promise<string> {
     return this.renderer.renderAsync(this.parseInline(src, env), this.options, env)
   }
+
+  // Expose internal classes as statics for markdown-it compatibility
+  static Token = Token
+  static Ruler = Ruler
+  static Renderer = Renderer
+  static ParserCore = ParserCore
+  static StateCore = StateCore
+  static ParserBlock = ParserBlock
+  static StateBlock = StateBlock
+  static ParserInline = ParserInline
+  static StateInline = StateInline
 }
 
 export function createMarkdownExit(options?: MarkdownExitOptions): MarkdownExit

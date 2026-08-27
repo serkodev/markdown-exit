@@ -14,6 +14,7 @@ import r_linkify from './rules/linkify'
 import r_normalize from './rules/normalize'
 import r_replacements from './rules/replacements'
 import r_smartquotes from './rules/smartquotes'
+import r_strip_references from './rules/strip_references'
 import r_text_join from './rules/text_join'
 import StateCore from './state_core'
 
@@ -22,6 +23,7 @@ export type RuleCore = (state: StateCore) => void
 const _rules = [
   ['normalize', r_normalize],
   ['block', r_block],
+  ['strip_references', r_strip_references],
   ['inline', r_inline],
   ['linkify', r_linkify],
   ['replacements', r_replacements],

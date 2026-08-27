@@ -8,7 +8,7 @@
 
 import type { HTMLAttribute, Token } from './token'
 import type { MarkdownExitEnv } from './types/shared'
-import { assign, escapeHtml, isPromiseLike, unescapeAll } from './common/utils'
+import { escapeHtml, isPromiseLike, unescapeAll } from './common/utils'
 
 export interface RenderOptions {
   /**
@@ -167,11 +167,6 @@ default_rules.html_inline = function (tokens, idx /* , options, env */) {
   return tokens[idx].content
 }
 
-default_rules.reference = function (tokens, idx) {
-  // should be empty string
-  return tokens[idx].content
-}
-
 export class Renderer {
   /**
    * Contains render rules for tokens. Can be updated and extended.
@@ -187,7 +182,7 @@ export class Renderer {
    *
    * @see https://github.com/serkodev/markdown-exit/tree/main/packages/markdown-exit/src/renderer.ts
    */
-  rules: RenderRuleRecord = assign({}, default_rules)
+  rules: RenderRuleRecord = Object.assign({}, default_rules)
 
   /**
    * Creates new {@link Renderer} instance and fill {@link Renderer#rules} with defaults.
@@ -242,7 +237,18 @@ export class Renderer {
     //  - a
     //    >
     //
-    if (token.block && token.nesting !== -1 && idx && tokens[idx - 1].hidden) {
+    // Only closing hidden tokens count, to not break on other hidden ones.
+    //
+    // Hidden tokens without nesting (`reference_definition`) are skipped here
+    // and below, or they would break line feeds around neighbour blocks.
+    //
+    let prev = idx - 1
+    while (prev >= 0 && tokens[prev].hidden && tokens[prev].nesting === 0) {
+      prev--
+    }
+
+    if (token.block && token.nesting !== -1 && prev >= 0 &&
+      tokens[prev].hidden && tokens[prev].nesting === -1) {
       result += '\n'
     }
 
@@ -263,10 +269,15 @@ export class Renderer {
       needLf = true
 
       if (token.nesting === 1) {
-        if (idx + 1 < tokens.length) {
-          const nextToken = tokens[idx + 1]
+        let next = idx + 1
+        while (next < tokens.length && tokens[next].hidden && tokens[next].nesting === 0) {
+          next++
+        }
 
-          if (nextToken.type === 'inline' || nextToken.type === 'reference' || nextToken.hidden) {
+        if (next < tokens.length) {
+          const nextToken = tokens[next]
+
+          if (nextToken.type === 'inline' || nextToken.hidden) {
             // Block-level tag containing an inline tag.
             //
             needLf = false
@@ -328,6 +339,8 @@ export class Renderer {
       const token = tokens[i]
       switch (token.type) {
         case 'text':
+        case 'code_inline':
+          // code content is added as plain text, without backticks
           result += token.content
           break
         case 'image':

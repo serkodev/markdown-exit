@@ -57,6 +57,7 @@ const md = createMarkdownExit()
 | ---------------- | -------------------- | ------------------------------------------------------------------------------------- | ------------ | ------ |
 | `normalize`      | core                 | ✅                                                                                     | ✅            | ✅      |
 | `block`          | core                 | ✅                                                                                     | ✅            | ✅      |
+| `strip_references` | core               | ✅                                                                                     | ✅            | ✅      |
 | `inline`         | core                 | ✅                                                                                     | ✅            | ✅      |
 | `text_join`      | core                 | ✅                                                                                     | ✅            | ✅      |
 | `replacements`   | core                 | Opt-in [`typographer`](/reference/api/Interface.MarkdownExitOptions.html#typographer) |              |        |
