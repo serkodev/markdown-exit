@@ -1,11 +1,8 @@
 # Quick Start
 
-> [!WARNING]🚧 Beta Software
-> **markdown-exit** v1 is currently in **public beta** (`v1.0.0-beta.*`). Breaking changes may occur until a stable `v1.0.0` is released.
-
 ## Installation
 
-`v1+` (latest): All new features and may include breaking changes from [markdown-it](https://github.com/markdown-it/markdown-it).
+**markdown-exit** `v2.0+` (latest) supports markdown-it `v15.0+` and its plugins, and adds new capabilities such as [async rendering](/guide/rendering.html#async-rendering) along with performance improvements.
 
 ::: code-group
 
@@ -36,9 +33,23 @@ const html = md.render('# markdown-exit');
 
 :::
 
-**Legacy Version**
+## Version Compatibility
 
-`v0.x` (legacy): Full compatibility with markdown-it usage while adding TypeScript support, bug fixes and performance improvements. ([v0](https://github.com/serkodev/markdown-exit/tree/v0) branch)
+| markdown-exit | markdown-it | Status |
+| --- | --- | --- |
+| `v2.0+` (latest) | `v15.0+` | Actively maintained |
+| `v0.x` (legacy) | `v14.3.0` | No longer maintained |
+
+### Legacy Version (`v0.x`)
+
+> [!WARNING] No longer maintained
+> The [`legacy`](https://github.com/serkodev/markdown-exit/tree/legacy) branch (`v0.x`) is no longer maintained. Its final release is `v0.5.0`, which tracks markdown-it `v14.3.0`.
+
+`v0.x` was created to bring TypeScript typings to markdown-it. Since markdown-it has been rewritten in TypeScript as of `v15`, you can now use markdown-it directly if native typings are all you need.
+
+If you are looking for markdown-it `v15.0+` support together with async rendering, other new features and performance improvements, upgrade to **markdown-exit** `v2.0+` instead.
+
+The final legacy release is still available on npm:
 
 ::: code-group
 

@@ -4,6 +4,8 @@
 
 **markdown-exit** is designed to be a drop-in replacement for [markdown-it](https://github.com/markdown-it/markdown-it) with several [enhancements](/guide/introduction.html#differences-from-markdown-it).
 
+**markdown-exit** `v2.0+` tracks markdown-it `v15.0+` and its plugin API, so if you are already on markdown-it `v15`, the switch is just a change of import.
+
 After [installing](/guide/quick-start.html#installation) **markdown-exit**, simply update your imports and everything should work as expected.
 
 ```diff
