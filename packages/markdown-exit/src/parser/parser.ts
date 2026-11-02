@@ -1,10 +1,11 @@
+import type { LinkifyIt } from 'linkify-it'
 import type { Token } from '../token'
 import type { MarkdownExitEnv } from '../types/shared'
-import { LinkifyIt } from 'linkify-it'
 import ParserBlock from './block/parser_block'
 import ParserCore from './core/parser_core'
 import { helpers } from './helpers'
 import ParserInline from './inline/parser_inline'
+import { newLinkify } from './linkify-it'
 import { normalizeLink, normalizeLinkText, validateLink } from './utils/link'
 
 export interface ParserOptions {
@@ -84,9 +85,9 @@ export class Parser {
   /**
    * [linkify-it](https://github.com/markdown-it/linkify-it) instance.
    * Used by [linkify](https://github.com/serkodev/markdown-exit/blob/main/packages/markdown-exit/src/parser/core/rules/linkify.ts)
-   * rule.
+   * rule. Unset in `markdown-exit/core` until you assign one.
    */
-  linkify: LinkifyIt = new LinkifyIt()
+  linkify: LinkifyIt = newLinkify()
 
   /**
    * Link validation function. CommonMark allows too much in links. By default
