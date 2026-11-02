@@ -38,7 +38,7 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "decode-named-character-reference": "catalog:integrations",
+    "character-entities": "catalog:integrations",
     "linkify-it": "catalog:integrations",
     "mdurl": "catalog:integrations",
     "punycode.js": "catalog:integrations",

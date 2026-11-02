@@ -228,12 +228,12 @@ describe('misc', () => {
     assert.strictEqual(md.render('    codeblock\n'), '<pre><code>codeblock\n</code></pre>\n')
   })
 
-  it('should keep unknown entity names in link destinations and titles', () => {
+  it('should keep invalid entity references in link destinations and titles', () => {
     const md = MarkdownExit()
 
     assert.strictEqual(
-      md.render('[a](/x&ampfoo;y "t&notit;")'),
-      '<p><a href="/x&amp;ampfoo;y" title="t&amp;notit;">a</a></p>\n',
+      md.render('[a](/x&ampfoo;y&#000000065; "t&notit;")'),
+      '<p><a href="/x&amp;ampfoo;y&amp;#000000065;" title="t&amp;notit;">a</a></p>\n',
     )
   })
 

@@ -1,7 +1,7 @@
 // Process html entity - &#123;, &#xAF;, &quot;, ...
 
 import type StateInline from '../state_inline'
-import { decodeNamedCharacterReference } from 'decode-named-character-reference'
+import { decodeNamedEntity } from '../../../common/entities'
 import { fromCodePoint, isValidEntityCode } from '../../../common/utils'
 
 const DIGITAL_RE = /^&#(x[a-f0-9]{1,6}|\d{1,7});/i
@@ -36,8 +36,8 @@ export default function entity(state: StateInline, silent: boolean) {
   } else {
     const match = state.src.slice(pos).match(NAMED_RE)
     if (match) {
-      const decoded = decodeNamedCharacterReference(match[1])
-      if (decoded !== false) {
+      const decoded = decodeNamedEntity(match[1])
+      if (decoded !== undefined) {
         if (!silent) {
           const token = state.push('text_special', '', 0)
           token.content = decoded

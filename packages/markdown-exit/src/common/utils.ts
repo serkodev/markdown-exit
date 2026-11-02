@@ -1,9 +1,9 @@
 // Utilities
 //
 
-import { decodeNamedCharacterReference } from 'decode-named-character-reference'
 import * as mdurl from 'mdurl'
 import * as ucmicro from 'uc.micro'
+import { decodeNamedEntity } from './entities'
 
 type ClassToWrap = new (...args: any[]) => object
 
@@ -90,7 +90,7 @@ function replaceEntityPattern(match: string, name: string): string {
     return match
   }
 
-  return decodeNamedCharacterReference(name) || match
+  return decodeNamedEntity(name) ?? match
 }
 
 export function unescapeMd(str: string): string {
