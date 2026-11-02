@@ -228,6 +228,15 @@ describe('misc', () => {
     assert.strictEqual(md.render('    codeblock\n'), '<pre><code>codeblock\n</code></pre>\n')
   })
 
+  it('should keep unknown entity names in link destinations and titles', () => {
+    const md = MarkdownExit()
+
+    assert.strictEqual(
+      md.render('[a](/x&ampfoo;y "t&notit;")'),
+      '<p><a href="/x&amp;ampfoo;y" title="t&amp;notit;">a</a></p>\n',
+    )
+  })
+
   it('should quickly exit on empty string', () => {
     const md = MarkdownExit()
 

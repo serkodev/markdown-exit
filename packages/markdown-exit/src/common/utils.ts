@@ -1,7 +1,7 @@
 // Utilities
 //
 
-import { decodeHTMLStrict } from 'entities'
+import { decodeNamedCharacterReference } from 'decode-named-character-reference'
 import * as mdurl from 'mdurl'
 import * as ucmicro from 'uc.micro'
 
@@ -90,12 +90,7 @@ function replaceEntityPattern(match: string, name: string): string {
     return match
   }
 
-  const decoded = decodeHTMLStrict(match)
-  if (decoded !== match) {
-    return decoded
-  }
-
-  return match
+  return decodeNamedCharacterReference(name) || match
 }
 
 export function unescapeMd(str: string): string {
