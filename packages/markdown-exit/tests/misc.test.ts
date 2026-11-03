@@ -228,6 +228,33 @@ describe('misc', () => {
     assert.strictEqual(md.render('    codeblock\n'), '<pre><code>codeblock\n</code></pre>\n')
   })
 
+  it('should keep invalid entity references in link destinations and titles', () => {
+    const md = MarkdownExit()
+
+    assert.strictEqual(
+      md.render('[a](/x&ampfoo;y&#000000065; "t&notit;")'),
+      '<p><a href="/x&amp;ampfoo;y&amp;#000000065;" title="t&amp;notit;">a</a></p>\n',
+    )
+  })
+
+  it('should keep unknown entity names literal', () => {
+    const md = MarkdownExit()
+
+    assert.strictEqual(
+      md.render('&pm1; &acy1; [a](/x&pm1;y "t&acy1;")'),
+      '<p>&amp;pm1; &amp;acy1; <a href="/x&amp;pm1;y" title="t&amp;acy1;">a</a></p>\n',
+    )
+  })
+
+  it('should not decode Object.prototype keys as entities', () => {
+    const md = MarkdownExit()
+
+    assert.strictEqual(
+      md.render('&constructor; &toString; [a](/&hasOwnProperty; "&valueOf;")'),
+      '<p>&amp;constructor; &amp;toString; <a href="/&amp;hasOwnProperty;" title="&amp;valueOf;">a</a></p>\n',
+    )
+  })
+
   it('should quickly exit on empty string', () => {
     const md = MarkdownExit()
 

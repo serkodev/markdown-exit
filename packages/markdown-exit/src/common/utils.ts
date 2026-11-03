@@ -1,9 +1,9 @@
 // Utilities
 //
 
-import { decodeHTMLStrict } from 'entities'
 import * as mdurl from 'mdurl'
 import * as ucmicro from 'uc.micro'
+import { decodeNamedEntity } from './entities'
 
 type ClassToWrap = new (...args: any[]) => object
 
@@ -90,12 +90,7 @@ function replaceEntityPattern(match: string, name: string): string {
     return match
   }
 
-  const decoded = decodeHTMLStrict(match)
-  if (decoded !== match) {
-    return decoded
-  }
-
-  return match
+  return decodeNamedEntity(name) ?? match
 }
 
 export function unescapeMd(str: string): string {
