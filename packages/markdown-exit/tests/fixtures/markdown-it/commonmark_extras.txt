@@ -876,3 +876,50 @@ foo
 <p>foo</p>
 <!bar baz>
 .
+
+An unclosed link label must not suppress a later code span, #1201. Searching for
+the label's closing `]` runs the inline rules as a lookahead, which must not
+disturb code span scanning of the rest of the line.
+.
+[foo `bar` baz`
+.
+<p>[foo <code>bar</code> baz`</p>
+.
+
+The same holds for an unclosed image label, which uses the same lookahead.
+.
+![alt `code` x`
+.
+<p>![alt <code>code</code> x`</p>
+.
+
+A code span must not be assembled across the end of a link label. Here the only
+run after the opener is ``` `` ```, so the opener stays literal and the link is
+valid; measuring that run as a shorter one would swallow `](` into a code span.
+.
+[`](``)
+.
+<p><a href="%60%60">`</a></p>
+.
+
+Same, with the run left outside the link entirely.
+.
+[`a](/x)``b
+.
+<p><a href="/x">`a</a>``b</p>
+.
+
+Code spans still bind more tightly than links, so a code span closing outside
+the label cancels the link (CommonMark 0.31.2 6.1).
+.
+[foo `bar](/url)` baz
+.
+<p>[foo <code>bar](/url)</code> baz</p>
+.
+
+No stripping when a code span is all spaces (CommonMark 0.31.2 6.1).
+.
+`   `
+.
+<p><code>   </code></p>
+.

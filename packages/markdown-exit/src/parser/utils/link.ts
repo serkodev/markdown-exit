@@ -25,6 +25,7 @@ export function validateLink(url: string) {
 const RECODE_HOSTNAME_FOR = ['http:', 'https:', 'mailto:']
 
 export function normalizeLink(url: string) {
+  // Each url part should be encoded separately, with proper encoder
   const parsed = mdurl.parse(url, true)
 
   if (parsed.hostname) {
@@ -41,7 +42,18 @@ export function normalizeLink(url: string) {
     }
   }
 
-  return mdurl.encode(mdurl.format(parsed))
+  if (parsed.auth)
+    parsed.auth = mdurl.encode(parsed.auth)
+  if (parsed.hostname)
+    parsed.hostname = mdurl.encode(parsed.hostname)
+  if (parsed.pathname)
+    parsed.pathname = mdurl.encode(parsed.pathname)
+  if (parsed.search)
+    parsed.search = mdurl.encode(parsed.search)
+  if (parsed.hash)
+    parsed.hash = mdurl.encode(parsed.hash)
+
+  return mdurl.format(parsed)
 }
 
 export function normalizeLinkText(url: string) {

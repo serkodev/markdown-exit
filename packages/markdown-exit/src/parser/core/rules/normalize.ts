@@ -3,7 +3,7 @@
 import type StateCore from '../state_core'
 
 // https://spec.commonmark.org/0.29/#line-ending
-const NEWLINES_RE = /\r\n?|\n/g
+const UNNORMALIZED_NEWLINE_RE = /\r\n?/g
 const NULL_RE = /\0/g
 
 export default function normalize(state: StateCore) {
@@ -16,7 +16,7 @@ export default function normalize(state: StateCore) {
 
   // Normalize newlines
   if (hasCR) {
-    str = str.replace(NEWLINES_RE, '\n')
+    str = str.replace(UNNORMALIZED_NEWLINE_RE, '\n')
   }
 
   // Replace NULL characters

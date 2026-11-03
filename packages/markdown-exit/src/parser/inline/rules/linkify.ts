@@ -1,10 +1,20 @@
-// Process links like https://example.org/
+// Early process links like https://example.org/ to have priority
+// over emphasis, etc.
 
 import type StateInline from '../state_inline'
 import { requireLinkify } from '../../linkify-it'
 
 // RFC3986: scheme = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
-const SCHEME_RE = /(?:^|[^a-z0-9.+-])([a-z][a-z0-9.+-]*)$/i
+function isAsciiAlpha(code: number) {
+  return (code >= 0x41 && code <= 0x5A) || (code >= 0x61 && code <= 0x7A)
+}
+
+function isSchemeChar(code: number) {
+  return (code >= 0x41 && code <= 0x5A) ||
+    (code >= 0x61 && code <= 0x7A) ||
+    (code >= 0x30 && code <= 0x39) ||
+    code === 0x2B || code === 0x2D || code === 0x2E
+}
 
 export default function linkify(state: StateInline, silent: boolean) {
   if (!state.md.options.linkify)
@@ -24,13 +34,21 @@ export default function linkify(state: StateInline, silent: boolean) {
   if (state.src.charCodeAt(pos + 2) !== 0x2F/* / */)
     return false
 
-  const match = state.pending.match(SCHEME_RE)
-  if (!match)
+  // Search backwards for the scheme, but no more than 10 characters, the length
+  // of the pending string, or the length of the source prefix.
+  // Use state.src instead of state.pending because it is faster to access.
+  const protoMin = pos - Math.min(10, state.pending.length, pos)
+  let protoStart = pos
+  while (protoStart > protoMin && isSchemeChar(state.src.charCodeAt(protoStart - 1))) {
+    protoStart--
+  }
+
+  if (protoStart === pos || !isAsciiAlpha(state.src.charCodeAt(protoStart)))
     return false
 
-  const proto = match[1]
+  const protoLength = pos - protoStart
 
-  const link = requireLinkify(state.md.linkify).matchAtStart(state.src.slice(pos - proto.length))
+  const link = requireLinkify(state.md.linkify).matchAtStart(state.src.slice(protoStart))
   if (!link)
     return false
 
@@ -38,7 +56,7 @@ export default function linkify(state: StateInline, silent: boolean) {
 
   // invalid link, but still detected by linkify somehow;
   // need to check to prevent infinite loop below
-  if (url.length <= proto.length)
+  if (url.length <= protoLength)
     return false
 
   // disallow '*' at the end of the link (conflicts with emphasis)
@@ -56,7 +74,7 @@ export default function linkify(state: StateInline, silent: boolean) {
     return false
 
   if (!silent) {
-    state.pending = state.pending.slice(0, -proto.length)
+    state.pending = state.pending.slice(0, -protoLength)
 
     const token_o = state.push('link_open', 'a', 1)
     token_o.attrs = [['href', fullUrl]]
@@ -71,6 +89,6 @@ export default function linkify(state: StateInline, silent: boolean) {
     token_c.info = 'auto'
   }
 
-  state.pos += url.length - proto.length
+  state.pos += url.length - protoLength
   return true
 }

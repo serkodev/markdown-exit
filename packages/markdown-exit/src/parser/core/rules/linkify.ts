@@ -27,6 +27,7 @@ export default function linkify(state: StateCore) {
     }
 
     const tokens = blockTokens[j].children!
+    const replacements: Array<{ index: number, nodes: typeof tokens }> = []
 
     let htmlLinkLevel = 0
 
@@ -135,9 +136,37 @@ export default function linkify(state: StateCore) {
           nodes.push(token)
         }
 
-        // replace current node
-        tokens.splice(i, 1, ...nodes)
+        replacements.push({ index: i, nodes })
       }
+    }
+
+    if (replacements.length > 0) {
+      let newTokensLength = tokens.length
+      for (const replacement of replacements) {
+        newTokensLength += replacement.nodes.length - 1
+      }
+
+      /* perf */// eslint-disable-next-line unicorn/no-new-array
+      const newTokens = new Array<(typeof tokens)[number]>(newTokensLength)
+      let replacementIndex = 0
+      let newTokenIndex = 0
+
+      replacements.reverse()
+
+      for (let i = 0; i < tokens.length; i++) {
+        const replacement = replacements[replacementIndex]
+
+        if (replacement?.index === i) {
+          for (const node of replacement.nodes) {
+            newTokens[newTokenIndex++] = node
+          }
+          replacementIndex++
+        } else {
+          newTokens[newTokenIndex++] = tokens[i]
+        }
+      }
+
+      blockTokens[j].children = newTokens
     }
   }
 }

@@ -60,7 +60,7 @@ export default class StateInline<T extends Parser = Parser> {
   _prev_delimiters: Delimiter[][] = []
 
   /**
-   * backtick length => last seen position
+   * backtick run length => position of its last run, built lazily on first use
    */
   backticks: Record<string, number> = {}
   backticksScanned: boolean = false
