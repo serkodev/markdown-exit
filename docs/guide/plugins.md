@@ -64,6 +64,13 @@ export function pluginCustom(md: MarkdownExit) {
 
 Release read the `MarkdownExit` class [properties](/reference/api/Class.MarkdownExit.html#properties) type definition for more details about the available plugin APIs.
 
+### Supporting the Core Entry
+
+Apps may import from [`markdown-exit/core`](/guide/quick-start.html#core-entry) to leave out linkify-it. To keep your plugin compatible:
+
+- Use `import type` for types. If your plugin needs runtime values such as `Token`, import them from `markdown-exit/core`, which shares the same classes as `markdown-exit`. Importing `markdown-exit` at runtime adds linkify-it to the bundle of every app that uses your plugin.
+- `md.linkify` is `undefined` in the core entry until the app assigns a linkify-it instance. If your plugin accesses `md.linkify`, guard against that or document that the plugin requires linkify-it.
+
 ### Async Render Rules
 
 A nice feature of **markdown-exit** is its built-in support for [async rendering](/guide/rendering.html#async-rendering), allowing you to implement async render rules in your plugin.

@@ -118,3 +118,28 @@ const md = MarkdownExit()
 // OR with the `new` keyword
 const md = new MarkdownExit()
 ```
+
+## Core Entry
+
+`markdown-exit/core` exposes the same API as `markdown-exit`, but leaves out [linkify-it](https://github.com/markdown-it/linkify-it), the library behind the [`linkify`](/reference/api/Interface.MarkdownExitOptions.html#linkify) option. If you never enable `linkify`, import from `markdown-exit/core` to get a smaller bundle:
+
+```ts
+import { createMarkdownExit } from 'markdown-exit/core'
+
+const md = createMarkdownExit()
+md.render('https://example.com') // <p>https://example.com</p>
+```
+
+In the core entry, `md.linkify` is `undefined`. To enable `linkify`, install `linkify-it` and assign an instance yourself:
+
+```ts
+import { LinkifyIt } from 'linkify-it'
+import { createMarkdownExit } from 'markdown-exit/core'
+
+const md = createMarkdownExit({ linkify: true })
+md.linkify = new LinkifyIt()
+```
+
+> [!WARNING]
+> - Plugins that access `md.linkify` (e.g. `md.linkify.set(...)`) throw in the core entry unless you assign a linkify-it instance before calling `md.use()`.
+> - If any module in your app imports `markdown-exit` instead of `markdown-exit/core`, linkify-it is bundled anyway, and instances created from `markdown-exit/core` get a linkify-it instance too.
