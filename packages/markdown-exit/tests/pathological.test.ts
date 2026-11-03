@@ -146,4 +146,9 @@ describe('markdown-it', () => {
   it('a lot of smartquotes', async () => {
     await test_pattern('"'.repeat(160000), { typographer: true })
   })
+
+  it('smartquotes with mismatched opener and closer types', () => {
+    test_pattern('"a '.repeat(100000) + 'b\' '.repeat(100000), { typographer: true })
+    test_pattern('\'a '.repeat(100000) + 'b" '.repeat(100000), { typographer: true })
+  })
 })
