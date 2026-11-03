@@ -33,6 +33,7 @@ npm i markdown-exit
 | markdown-exit | markdown-it | Status |
 | --- | --- | --- |
 | `v2.0+` ([`@latest`](https://www.npmjs.com/package/markdown-exit/v/latest)) | `v15.0+` | Actively maintained |
+| `v1.x` | `v14.x` | Superseded — see [Migration to v2](https://markdown-exit.pages.dev/guide/migration-v2.html) |
 | `v0.x` ([`@legacy`](https://www.npmjs.com/package/markdown-exit/v/legacy)) | `v14.3.0` | No longer maintained |
 
 <details>
