@@ -742,6 +742,14 @@ Html in image description
 .
 
 
+Code in image description (#1142)
+.
+![foo *bar* `baz` bla](image.png)
+.
+<p><img src="image.png" alt="foo bar baz bla"></p>
+.
+
+
 https://github.com/commonmark/commonmark.js/pull/279
 
 .
@@ -843,4 +851,28 @@ b
 .
 <p>a\<br>
 b</p>
+.
+
+Backslash before a space inside a link destination (CommonMark 0.31.2 6.3) is a
+literal backslash, and the space ends the destination
+.
+[a](/url\ )
+.
+<p><a href="/url%5C">a</a></p>
+.
+
+Backslash before a space in a link destination, followed by a title
+.
+[a](/url\ "title")
+.
+<p><a href="/url%5C" title="title">a</a></p>
+.
+
+HTML block type 4 (declaration) starts with `<!` plus any ASCII letter, not only uppercase (CommonMark 4.6, start condition 4). A lowercase declaration must interrupt a paragraph.
+.
+foo
+<!bar baz>
+.
+<p>foo</p>
+<!bar baz>
 .

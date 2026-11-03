@@ -1,5 +1,5 @@
 import { describe, expect, expectTypeOf, it } from 'vitest'
-import MarkdownExit, { createMarkdownExit } from '../src'
+import MarkdownExit, { createMarkdownExit, MarkdownExit as MarkdownExitClass } from '../src'
 
 describe('callable and constructable', () => {
   it('is constructable', () => {
@@ -50,9 +50,28 @@ describe('callable and constructable', () => {
     expect(inst instanceof Parent).toBe(true)
   })
 
-  it('instance.constructor points back to MarkdownExit', () => {
+  it('instance.constructor points back to the MarkdownExit class', () => {
     const inst = MarkdownExit()
-    expect(inst.constructor).toBe(MarkdownExit)
+    expect(inst.constructor).toBe(MarkdownExitClass)
+  })
+
+  it('supports subclassing via the default export', () => {
+    class My extends MarkdownExit {
+      hello() {
+        return 'hi'
+      }
+    }
+
+    const m = new My()
+    expect(m).toBeInstanceOf(My)
+    expect(m).toBeInstanceOf(MarkdownExit)
+    expect(m.hello()).toBe('hi')
+    expect(m.render('# markdown-exit')).toBe('<h1>markdown-exit</h1>\n')
+  })
+
+  it('exposes callable via md.utils', () => {
+    const md = MarkdownExit()
+    expect(typeof md.utils.callable).toBe('function')
   })
 
   it('createMarkdownExit is not equal to MarkdownExit', () => {

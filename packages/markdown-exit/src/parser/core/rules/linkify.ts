@@ -21,7 +21,7 @@ export default function linkify(state: StateCore) {
 
   for (let j = 0, l = blockTokens.length; j < l; j++) {
     if (blockTokens[j].type !== 'inline' ||
-      !linkify.pretest(blockTokens[j].content)) {
+      !linkify.test(blockTokens[j].content)) {
       continue
     }
 
@@ -57,7 +57,7 @@ export default function linkify(state: StateCore) {
 
       if (currentToken.type === 'text') {
         const text = currentToken.content
-        if (!linkify.pretest(text))
+        if (!linkify.test(text))
           continue
 
         const links = linkify.match(text)

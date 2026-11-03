@@ -14,7 +14,7 @@ A TypeScript rewrite of [markdown-it](https://github.com/markdown-it/markdown-it
 - 🛡️ **Type Safety:** Ship robust types, improve DX, and enable type-safe development.
 - ⚡ **New features:** [Async rendering](https://markdown-exit.pages.dev/guide/rendering.html#async-rendering) for all rules includeing syntax highlighting and [more](https://github.com/serkodev/markdown-exit/issues?q=is:issue%20label:features).
 - 🔌 **Extensibility:** Extend the markdown syntax, custom rendering with [Plugins](https://markdown-exit.pages.dev/guide/plugins.html).
-- 🤝 **Compatibility:** Compatible with markdown-it `v14.3.0` and plugin API.
+- 🤝 **Compatibility:** Compatible with markdown-it `v15.0+` and its plugin API.
 
 ## Documentation
 
@@ -22,20 +22,26 @@ Read the [documentation](https://markdown-exit.pages.dev/) for more details.
 
 ## Installation
 
-v1+ [`@latest`](https://www.npmjs.com/package/markdown-exit/v/latest): All new features and may include breaking changes.
-
-> [!IMPORTANT]
-> 🚧 **markdown-exit** v1 is currently in **public beta** (`v1.0.0-beta.*`).  
-> Breaking changes may occur until a stable `v1.0.0` is released.
-
 ```bash
 npm i markdown-exit
 ```
 
-<details>
-<summary>v0.x <a href="https://www.npmjs.com/package/markdown-exit/v/legacy"><code>@legacy</code></a></summary>
+### Version Compatibility
 
-Full compatibility with markdown-it usage while adding TypeScript support, bug fixes and performance improvements. ([v0](https://github.com/serkodev/markdown-exit/tree/v0) branch)
+**markdown-exit** `v2.0+` ([`@latest`](https://www.npmjs.com/package/markdown-exit/v/latest)) supports markdown-it `v15.0+` and its plugins, and adds new capabilities such as [async rendering](https://markdown-exit.pages.dev/guide/rendering.html#async-rendering) along with performance improvements.
+
+| markdown-exit | markdown-it | Status |
+| --- | --- | --- |
+| `v2.0+` ([`@latest`](https://www.npmjs.com/package/markdown-exit/v/latest)) | `v15.0+` | Actively maintained |
+| `v1.x` | `v14.x` | Superseded — see [Migration to v2](https://markdown-exit.pages.dev/guide/migration-v2.html) |
+| `v0.x` ([`@legacy`](https://www.npmjs.com/package/markdown-exit/v/legacy)) | `v14.3.0` | No longer maintained |
+
+<details>
+<summary>v0.x <a href="https://www.npmjs.com/package/markdown-exit/v/legacy"><code>@legacy</code></a> — no longer maintained</summary>
+
+The [`legacy`](https://github.com/serkodev/markdown-exit/tree/legacy) branch (`v0.x`) is no longer maintained. Its final release is `v0.5.0`, which tracks markdown-it `v14.3.0`.
+
+`v0.x` existed to bring TypeScript typings to markdown-it. Since markdown-it has been rewritten in TypeScript as of `v15`, you can simply use markdown-it directly if native typings are all you need — or move to **markdown-exit** `v2.0+` for markdown-it `v15.0+` support plus async rendering and other enhancements.
 
 ```bash
 npm i markdown-exit@legacy

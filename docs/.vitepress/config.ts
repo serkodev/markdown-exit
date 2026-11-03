@@ -37,7 +37,10 @@ export default defineConfig({
       exit.core.ruler.at('text_join', textJoinRule as any)
       exit.renderer.rules.text = textRenderRule as any
 
-      Object.assign(md, exit)
+      // vitepress bundles markdown-it v14 era plugins (e.g. emoji) that still call
+      // `md.utils.assign` / `md.utils.has`, which are dropped since markdown-it v15,
+      // so keep the original utils as fallback
+      Object.assign(md, exit, { utils: { ...md.utils, ...exit.utils } })
     },
   },
   themeConfig: {
@@ -57,6 +60,7 @@ export default defineConfig({
           { text: 'Introduction', link: '/introduction.md' },
           { text: 'Quick Start', link: '/quick-start.md' },
           { text: 'Migrate from markdown-it', link: '/migrate-from-markdown-it.md' },
+          { text: 'Migration to v2', link: '/migration-v2.md' },
         ],
       },
 

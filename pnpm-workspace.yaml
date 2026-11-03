@@ -29,11 +29,11 @@ catalogs:
     vitepress: 2.0.0-alpha.12
     vue: ^3.5.26
   integrations:
-    entities: ^7.0.0
-    linkify-it: ^5.0.1
-    mdurl: ^2.0.0
+    entities: ^8.0.0
+    linkify-it: ^6.0.0
+    mdurl: ^2.1.0
     punycode.js: ^2.3.1
-    uc.micro: ^2.1.0
+    uc.micro: ^3.0.0
   tests:
     '@codspeed/vitest-plugin': ^5.0.1
     js-yaml: ^4.1.1
@@ -42,8 +42,6 @@ catalogs:
     vitest: ^3.2.4
   types:
     '@types/js-yaml': ^4.0.9
-    '@types/linkify-it': ^5.0.0
-    '@types/mdurl': ^2.0.0
     '@types/node': ^24.10.4
 
 onlyBuiltDependencies:

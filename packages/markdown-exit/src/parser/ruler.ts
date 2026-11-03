@@ -77,7 +77,7 @@ export class Ruler<T extends (...args: any[]) => any> {
       }
     }
 
-    this.__cache__ = {}
+    this.__cache__ = Object.create(null)
 
     for (const chain of chains) {
       const fns: T[] = []
@@ -90,7 +90,7 @@ export class Ruler<T extends (...args: any[]) => any> {
 
         fns.push(rule.fn)
       }
-      this.__cache__[chain] = fns
+      this.__cache__![chain] = fns
     }
   }
 

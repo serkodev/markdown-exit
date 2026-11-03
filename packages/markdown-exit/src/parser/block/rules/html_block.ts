@@ -11,7 +11,7 @@ const HTML_SEQUENCES: [RegExp, RegExp, boolean][] = [
   [/^<(script|pre|style|textarea)(?=(\s|>|$))/i, /<\/(script|pre|style|textarea)>/i, true],
   [/^<!--/, /-->/, true],
   [/^<\?/, /\?>/, true],
-  [/^<![A-Z]/, />/, true],
+  [/^<![a-z]/i, />/, true],
   [/^<!\[CDATA\[/, /\]\]>/, true],
   [new RegExp(`^</?(${block_names.join('|')})(?=(\\s|/?>|$))`, 'i'), /^$/, true],
   [new RegExp(`${HTML_OPEN_CLOSE_TAG_RE.source}\\s*$`), /^$/, false],

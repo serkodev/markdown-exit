@@ -221,10 +221,18 @@ export default function reference(state: StateBlock, startLine: number, endLine:
 
   state.line = nextLine
 
-  const token = state.push('reference', '', 0)
+  // Marks the place definition took in the source. Renders to nothing,
+  // href/title stay in `env.references`.
+  const token = state.push('reference_definition', '', 0)
   token.map = [startLine, state.line]
+  token.hidden = true
   token.info = label
-  token.meta = { title, href }
+
+  const meta: Record<string, unknown> = Object.create(null)
+  meta.label = label
+  meta.title = title
+  meta.href = href
+  token.meta = meta
 
   return true
 }

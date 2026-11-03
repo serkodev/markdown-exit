@@ -109,7 +109,8 @@ export default function image(state: StateInline, silent: boolean) {
       label = state.src.slice(labelStart, labelEnd)
     }
 
-    ref = state.env.references[normalizeReference(label)]
+    label = normalizeReference(label)
+    ref = state.env.references[label]
     if (!ref) {
       state.pos = oldPos
       return false
@@ -141,6 +142,11 @@ export default function image(state: StateInline, silent: boolean) {
 
     if (title) {
       attrs.push(['title', title])
+    }
+    if (label) {
+      const meta: Record<string, unknown> = Object.create(null)
+      meta.label = label
+      token.meta = meta
     }
   }
 

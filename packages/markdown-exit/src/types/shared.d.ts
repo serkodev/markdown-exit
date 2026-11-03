@@ -4,5 +4,5 @@ export interface MarkdownExitEnv {
     href: string
   }>
 
-  [key: string]: any
+  [key: string | symbol]: any
 }

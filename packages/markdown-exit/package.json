@@ -38,8 +38,6 @@
     "prepublishOnly": "pnpm build"
   },
   "dependencies": {
-    "@types/linkify-it": "catalog:types",
-    "@types/mdurl": "catalog:types",
     "entities": "catalog:integrations",
     "linkify-it": "catalog:integrations",
     "mdurl": "catalog:integrations",

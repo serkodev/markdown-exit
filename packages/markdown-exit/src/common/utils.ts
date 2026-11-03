@@ -1,43 +1,37 @@
 // Utilities
 //
 
-import { decodeHTML } from 'entities'
+import { decodeHTMLStrict } from 'entities'
 import * as mdurl from 'mdurl'
 import * as ucmicro from 'uc.micro'
 
-export function isString(obj: unknown): obj is string {
-  return typeof obj === 'string'
-}
-
-const _hasOwnProperty = Object.prototype.hasOwnProperty
-
-export function has(object: object, key: string | number | symbol): boolean {
-  return _hasOwnProperty.call(object, key)
-}
-
-// Utility: turn a union into an intersection (A | B) -> (A & B)
-type UnionToIntersection<U> =
-  (U extends unknown ? (x: U) => void : never) extends (x: infer R) => void ? R : never
+type ClassToWrap = new (...args: any[]) => object
 
 /**
- * Merge objects
+ * Wraps a class so it can be called with or without `new`.
  */
-export function assign<
-  T extends object,
-  S extends readonly (object | null | undefined)[],
->(target: T, ...sources: S): T & UnionToIntersection<NonNullable<S[number]>>
+export function callable<T extends ClassToWrap>(
+  cls: T,
+): T & ((...args: ConstructorParameters<T>) => InstanceType<T>)
+export function callable<T extends ClassToWrap>(cls: T) {
+  const wrapper = function (...args: ConstructorParameters<T>) {
+    const newTarget =
+      new.target && new.target !== wrapper
+        ? new.target
+        : cls
 
-// Implementation signature
-export function assign(target: object, ...sources: unknown[]): any {
-  for (const s of sources) {
-    if (!s)
-      continue
-    if (typeof s !== 'object') {
-      throw new TypeError('source must be object')
-    }
-    Object.assign(target, s as object)
+    return Reflect.construct(cls, args, newTarget)
   }
-  return target
+
+  Object.defineProperty(wrapper, 'name', { value: cls.name })
+
+  // bridge statics
+  Object.setPrototypeOf(wrapper, cls)
+
+  // share the same instance prototype
+  wrapper.prototype = cls.prototype
+
+  return wrapper
 }
 
 // Remove element from array and put another array at those position.
@@ -96,7 +90,7 @@ function replaceEntityPattern(match: string, name: string): string {
     return match
   }
 
-  const decoded = decodeHTML(match)
+  const decoded = decodeHTMLStrict(match)
   if (decoded !== match) {
     return decoded
   }
@@ -239,17 +233,6 @@ export function normalizeReference(str: string): string {
   // Trim and collapse whitespace
   //
   str = str.trim().replace(/\s+/g, ' ')
-
-  // In node v10 'ẞ'.toLowerCase() === 'Ṿ', which is presumed to be a bug
-  // fixed in v12 (couldn't find any details).
-  //
-  // So treat this one as a special case
-  // (remove this when node v10 is no longer supported).
-  //
-  if ('ẞ'.toLowerCase() === 'Ṿ') {
-    /* c8 ignore next 2 */
-    str = str.replace(/ẞ/g, 'ß')
-  }
 
   // .toLowerCase().toUpperCase() should get rid of all differences
   // between letter variants.

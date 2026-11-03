@@ -21,6 +21,26 @@ For instance, while the TypeScript rewriting, I discovered several issues in the
 
 Unfortunately, the author of markdown-it has [stated](https://github.com/markdown-it/markdown-it/issues/848#issuecomment-1039509242) that they do not use TypeScript and seems the repo is not actively maintained.
 
+## Versions
+
+**markdown-exit** `v2.0+` supports markdown-it `v15.0+` and its plugins, and adds new capabilities such as [async rendering](/guide/rendering.html#async-rendering) along with performance improvements.
+
+| markdown-exit | markdown-it | Status |
+| --- | --- | --- |
+| `v2.0+` (latest) | `v15.0+` | Actively maintained |
+| `v1.x` | `v14.x` | Superseded — see [Migration to v2](/guide/migration-v2.html) |
+| `v0.x` (legacy) | `v14.3.0` | No longer maintained |
+
+See the [Quick Start](/guide/quick-start.html#installation) for installation instructions.
+
+### Legacy `v0.x`
+
+The [`legacy`](https://github.com/serkodev/markdown-exit/tree/legacy) branch (`v0.x`) is no longer maintained. Its final release is `v0.5.0`, which tracks markdown-it `v14.3.0`.
+
+`v0.x` was originally created to provide TypeScript typings for markdown-it. Since markdown-it has been rewritten in TypeScript as of `v15`, native typings now come with markdown-it itself — if that is all you need, using markdown-it directly is a perfectly good choice.
+
+If you also want async rendering, the other [enhancements](#differences-from-markdown-it) and performance improvements on top of markdown-it `v15.0+`, **markdown-exit** `v2.0+` is the version to use.
+
 ## Plugin Ecosystem
 
 **markdown-exit** supports a plugin system that enables custom syntax and rendering. Create your own plugins or adopt community ones. It's compatible with [markdown-it](https://github.com/markdown-it/markdown-it) plugins and works out of the box, so migration stays simple.

@@ -1,6 +1,6 @@
 import type { Token } from '../token'
 import type { MarkdownExitEnv } from '../types/shared'
-import LinkifyIt from 'linkify-it'
+import { LinkifyIt } from 'linkify-it'
 import ParserBlock from './block/parser_block'
 import ParserCore from './core/parser_core'
 import { helpers } from './helpers'
@@ -100,18 +100,24 @@ export class Parser {
    * md.validateLink = () => true
    * ```
    */
-  validateLink: (url: string) => boolean = validateLink
+  validateLink(url: string): boolean {
+    return validateLink(url)
+  }
 
   /**
    * Function used to encode link url to a machine-readable format,
    * which includes url-encoding, punycode, etc.
    */
-  normalizeLink: (url: string) => string = normalizeLink
+  normalizeLink(url: string): string {
+    return normalizeLink(url)
+  }
 
   /**
    * Function used to decode link url to a human-readable format`
    */
-  normalizeLinkText: (url: string) => string = normalizeLinkText
+  normalizeLinkText(url: string): string {
+    return normalizeLinkText(url)
+  }
 
   /**
    * Link components parser functions, useful to write plugins. See details
