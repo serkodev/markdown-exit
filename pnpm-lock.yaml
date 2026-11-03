@@ -60,9 +60,9 @@ catalogs:
       specifier: ^3.5.26
       version: 3.5.26
   integrations:
-    entities:
-      specifier: ^8.0.0
-      version: 8.0.0
+    character-entities:
+      specifier: ^2.0.2
+      version: 2.0.2
     linkify-it:
       specifier: ^6.0.0
       version: 6.1.0
@@ -185,9 +185,9 @@ importers:
 
   packages/markdown-exit:
     dependencies:
-      entities:
+      character-entities:
         specifier: catalog:integrations
-        version: 8.0.0
+        version: 2.0.2
       linkify-it:
         specifier: catalog:integrations
         version: 6.1.0
@@ -1382,10 +1382,6 @@ packages:
   entities@7.0.0:
     resolution: {integrity: sha512-FDWG5cmEYf2Z00IkYRhbFrwIwvdFKH07uV8dvNy0omp/Qb1xcyCWp2UDtcwJF4QZZvk0sLudP6/hAu42TaqVhQ==}
     engines: {node: '>=0.12'}
-
-  entities@8.0.0:
-    resolution: {integrity: sha512-zwfzJecQ/Uej6tusMqwAqU/6KL2XaB2VZ2Jg54Je6ahNBGNH6Ek6g3jjNCF0fG9EWQKGZNddNjU5F1ZQn/sBnA==}
-    engines: {node: '>=20.19.0'}
 
   es-define-property@1.0.1:
     resolution: {integrity: sha512-e3nRfgfUZ4rNGL232gUgX06QNyyez04KdjFrF+LTRoOXmrOgFKDg4BCdsjW8EnT69eqdYGmRpJwiPVYNrCaW3g==}
@@ -3784,8 +3780,6 @@ snapshots:
   entities@4.5.0: {}
 
   entities@7.0.0: {}
-
-  entities@8.0.0: {}
 
   es-define-property@1.0.1: {}
 
