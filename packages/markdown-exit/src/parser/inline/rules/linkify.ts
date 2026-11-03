@@ -1,6 +1,7 @@
 // Process links like https://example.org/
 
 import type StateInline from '../state_inline'
+import { requireLinkify } from '../../linkify-it'
 
 // RFC3986: scheme = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
 const SCHEME_RE = /(?:^|[^a-z0-9.+-])([a-z][a-z0-9.+-]*)$/i
@@ -29,7 +30,7 @@ export default function linkify(state: StateInline, silent: boolean) {
 
   const proto = match[1]
 
-  const link = state.md.linkify.matchAtStart(state.src.slice(pos - proto.length))
+  const link = requireLinkify(state.md.linkify).matchAtStart(state.src.slice(pos - proto.length))
   if (!link)
     return false
 

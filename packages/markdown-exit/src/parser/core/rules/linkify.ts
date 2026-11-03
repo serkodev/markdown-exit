@@ -4,6 +4,7 @@
 //
 
 import type StateCore from '../state_core'
+import { requireLinkify } from '../../linkify-it'
 
 function isLinkOpen(str: string) {
   return /^<a[>\s]/i.test(str)
@@ -17,7 +18,7 @@ export default function linkify(state: StateCore) {
     return
 
   const blockTokens = state.tokens
-  const linkify = state.md.linkify
+  const linkify = requireLinkify(state.md.linkify)
 
   for (let j = 0, l = blockTokens.length; j < l; j++) {
     if (blockTokens[j].type !== 'inline' ||

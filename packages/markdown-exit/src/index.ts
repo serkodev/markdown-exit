@@ -1,17 +1,7 @@
-import type { createMarkdownExit } from './core'
-import { callable } from './common/utils'
-import { MarkdownExit } from './core'
+import { LinkifyIt } from 'linkify-it'
+import { setLinkifyFactory } from './parser/linkify-it'
 
-export * from './core'
-export * from './parser'
-export * from './renderer'
-export * from './token'
+setLinkifyFactory(() => new LinkifyIt())
 
-// type and default const variable name must be the same
-// for correct d.ts generation
-type MarkdownExitConstructor = InstanceType<typeof MarkdownExit>
-
-// eslint-disable-next-line ts/no-redeclare
-const MarkdownExitConstructor = callable(MarkdownExit) as unknown as (typeof createMarkdownExit & typeof MarkdownExit)
-
-export default MarkdownExitConstructor
+export * from './index.core'
+export { default } from './index.core'

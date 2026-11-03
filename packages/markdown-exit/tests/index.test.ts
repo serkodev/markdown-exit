@@ -1,3 +1,4 @@
+import { LinkifyIt } from 'linkify-it'
 import { describe, expect, expectTypeOf, it } from 'vitest'
 import MarkdownExit, { createMarkdownExit, MarkdownExit as MarkdownExitClass } from '../src'
 
@@ -94,5 +95,25 @@ describe('callable and constructable', () => {
 
     expectTypeOf(a).toHaveProperty('use')
     expectTypeOf(a.use).parameter(0).toBeFunction()
+  })
+})
+
+describe('linkify-it', () => {
+  it('creates a linkify-it instance for every instance', () => {
+    const a = MarkdownExit()
+    const b = new MarkdownExitClass()
+    const c = createMarkdownExit()
+
+    expect(a.linkify).toBeInstanceOf(LinkifyIt)
+    expect(b.linkify).toBeInstanceOf(LinkifyIt)
+    expect(c.linkify).toBeInstanceOf(LinkifyIt)
+    expect(a.linkify).not.toBe(b.linkify)
+  })
+
+  it('lets plugins configure md.linkify', () => {
+    const md = createMarkdownExit({ linkify: true })
+    md.use(m => m.linkify.set({ fuzzyLink: true }))
+
+    expect(md.render('example.com')).toBe('<p><a href="http://example.com">example.com</a></p>\n')
   })
 })
