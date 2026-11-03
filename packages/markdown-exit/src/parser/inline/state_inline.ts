@@ -66,6 +66,12 @@ export default class StateInline<T extends Parser = Parser> {
   backticksScanned: boolean = false
 
   /**
+   * Set when html comment / PI / declaration / CDATA has no terminator,
+   * to skip further scans of these constructs
+   */
+  skipHtmlSpecial: boolean = false
+
+  /**
    * Counter used to disable inline linkify-it execution
    * inside `<a>` and markdown links
    */

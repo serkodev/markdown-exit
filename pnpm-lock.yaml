@@ -64,7 +64,7 @@ catalogs:
       specifier: ^2.0.2
       version: 2.0.2
     linkify-it:
-      specifier: ^6.0.0
+      specifier: ^6.1.0
       version: 6.1.0
     mdurl:
       specifier: ^2.1.0

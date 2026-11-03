@@ -1,5 +1,6 @@
 import type { PluginWithOptions } from '../src'
 import type { Token } from '../src/token'
+import type { MarkdownExitEnv } from '../src/types/shared'
 import { assert, describe, expect, it } from 'vitest'
 import MarkdownExit from '../src'
 
@@ -356,6 +357,27 @@ describe('misc', () => {
     assert.strictEqual(
       md.render('- [foo]: /url\n\n  > bar'),
       '<ul>\n<li>\n<blockquote>\n<p>bar</p>\n</blockquote>\n</li>\n</ul>\n',
+    )
+  })
+
+  it('should limit reference label to 999 characters', () => {
+    const md = MarkdownExit()
+    const env: MarkdownExitEnv = {}
+
+    md.parse(`[${'a'.repeat(999)}]: /url\n\n[${'b'.repeat(1000)}]: /url`, env)
+    assert.deepEqual(Object.keys(env.references!), ['A'.repeat(999)])
+  })
+
+  it('should require whitespace before reference title continued on next line', () => {
+    const md = MarkdownExit()
+
+    assert.strictEqual(
+      md.render('- [ref]: <url>"open\n  close"'),
+      '<ul>\n<li>[ref]: &lt;url&gt;&quot;open\nclose&quot;</li>\n</ul>\n',
+    )
+    assert.strictEqual(
+      md.render('[ref]: <url> "open\nclose"\n\n[ref]'),
+      '<p><a href="url" title="open\nclose">ref</a></p>\n',
     )
   })
 

@@ -7,6 +7,13 @@ function test_pattern(str: string, options?: MarkdownExitOptions) {
   expect(MarkdownExit(options).render(str)).toBeTruthy()
 }
 
+// Raw HTML patterns are meaningless without `html: true`. Prepend a tag
+// to make sure HTML is really enabled.
+function test_html_pattern(str: string) {
+  const result = MarkdownExit({ html: true }).render(`<b>${str}`)
+  expect(result.startsWith('<p><b>'), 'HTML must be enabled').toBe(true)
+}
+
 /* eslint-disable prefer-template */
 describe('cmark', () => {
   it.runIf(process.env.TEST_CMARK_SOURCE)('verify original source crc (run if TEST_CMARK_SOURCE=1)', async () => {
@@ -93,8 +100,11 @@ describe('cmark', () => {
     test_pattern('[a](b'.repeat(30000))
   })
 
-  it('unclosed <!--', () => {
-    test_pattern('</' + '<!--'.repeat(100000))
+  it('unclosed <!--, <?, <!A, <![CDATA[', () => {
+    test_html_pattern('</' + '<!--'.repeat(150000))
+    test_html_pattern('<?x'.repeat(400000))
+    test_html_pattern('<!A'.repeat(250000))
+    test_html_pattern('<![CDATA['.repeat(100000))
   })
 
   it('empty lines in deeply nested lists', () => {
@@ -150,5 +160,15 @@ describe('markdown-it', () => {
   it('smartquotes with mismatched opener and closer types', () => {
     test_pattern('"a '.repeat(100000) + 'b\' '.repeat(100000), { typographer: true })
     test_pattern('\'a '.repeat(100000) + 'b" '.repeat(100000), { typographer: true })
+  })
+
+  it('reference with multiline title', () => {
+    test_pattern('[a]: /u "' + 'x\n'.repeat(300000))
+    // a valid definition renders to nothing
+    expect(MarkdownExit().render('[a]: /u "' + 'x\n'.repeat(300000) + '"')).toBe('')
+  })
+
+  it('reference with multiline label', () => {
+    test_pattern('[' + 'a\n'.repeat(300000))
   })
 })
