@@ -28,7 +28,7 @@ jobs:
       - run: pnpm run build
 
       - name: Run benchmarks with CodSpeed
-        uses: CodSpeedHQ/action@v4
+        uses: CodSpeedHQ/action@v5
         with:
           mode: simulation
           run: pnpm -F bench run bench --run
