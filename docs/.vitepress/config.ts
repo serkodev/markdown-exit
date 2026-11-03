@@ -60,6 +60,7 @@ export default defineConfig({
           { text: 'Introduction', link: '/introduction.md' },
           { text: 'Quick Start', link: '/quick-start.md' },
           { text: 'Migrate from markdown-it', link: '/migrate-from-markdown-it.md' },
+          { text: 'Migration to v2', link: '/migration-v2.md' },
         ],
       },
 
