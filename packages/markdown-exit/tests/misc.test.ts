@@ -237,6 +237,24 @@ describe('misc', () => {
     )
   })
 
+  it('should keep unknown entity names literal', () => {
+    const md = MarkdownExit()
+
+    assert.strictEqual(
+      md.render('&pm1; &acy1; [a](/x&pm1;y "t&acy1;")'),
+      '<p>&amp;pm1; &amp;acy1; <a href="/x&amp;pm1;y" title="t&amp;acy1;">a</a></p>\n',
+    )
+  })
+
+  it('should not decode Object.prototype keys as entities', () => {
+    const md = MarkdownExit()
+
+    assert.strictEqual(
+      md.render('&constructor; &toString; [a](/&hasOwnProperty; "&valueOf;")'),
+      '<p>&amp;constructor; &amp;toString; <a href="/&amp;hasOwnProperty;" title="&amp;valueOf;">a</a></p>\n',
+    )
+  })
+
   it('should quickly exit on empty string', () => {
     const md = MarkdownExit()
 
