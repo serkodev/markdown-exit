@@ -2,6 +2,8 @@ import type { createMarkdownExit } from './core'
 import { callable } from './common/utils'
 import { MarkdownExit } from './core'
 
+export { setNamedEntities } from './common/entities'
+
 export * from './core'
 export * from './parser'
 export * from './renderer'

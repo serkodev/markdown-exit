@@ -121,7 +121,7 @@ const md = new MarkdownExit()
 
 ## Core Entry
 
-`markdown-exit/core` exposes the same API as `markdown-exit`, but leaves out [linkify-it](https://github.com/markdown-it/linkify-it), the library behind the [`linkify`](/reference/api/Interface.MarkdownExitOptions.html#linkify) option. If you never enable `linkify`, import from `markdown-exit/core` to get a smaller bundle:
+`markdown-exit/core` exposes the same API as `markdown-exit`, but leaves out two things: [linkify-it](https://github.com/markdown-it/linkify-it), the library behind the [`linkify`](/reference/api/Interface.MarkdownExitOptions.html#linkify) option, and the table of named character references such as `&copy;`. Import from `markdown-exit/core` to get a smaller bundle:
 
 ```ts
 import { createMarkdownExit } from 'markdown-exit/core'
@@ -140,6 +140,22 @@ const md = createMarkdownExit({ linkify: true })
 md.linkify = new LinkifyIt()
 ```
 
+The core entry also has no table for named character references. Numeric ones such as `&#169;` always decode, but parsing a named one such as `&copy;` throws until you set the table from [`character-entities`](https://github.com/wooorm/character-entities). The table is about 12 KiB gzip, so you can load it only when a document contains `&` followed by a letter:
+
+```ts
+import { createMarkdownExit, setNamedEntities } from 'markdown-exit/core'
+
+const md = createMarkdownExit()
+
+async function render(src: string) {
+  if (/&[a-z]/i.test(src)) {
+    const { characterEntities } = await import('character-entities')
+    setNamedEntities(characterEntities)
+  }
+  return md.render(src)
+}
+```
+
 > [!WARNING]
 > - Plugins that access `md.linkify` (e.g. `md.linkify.set(...)`) throw in the core entry unless you assign a linkify-it instance before calling `md.use()`.
-> - If any module in your app imports `markdown-exit` instead of `markdown-exit/core`, linkify-it is bundled anyway, and instances created from `markdown-exit/core` get a linkify-it instance too.
+> - If any module in your app imports `markdown-exit` instead of `markdown-exit/core`, linkify-it and the named character reference table are bundled anyway, instances created from `markdown-exit/core` get a linkify-it instance too, and the table is set for every instance.
