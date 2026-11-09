@@ -23,6 +23,7 @@
   "exports": {
     ".": "./dist/index.js",
     "./core": "./dist/core.js",
+    "./parser": "./dist/parser.js",
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",

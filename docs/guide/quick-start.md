@@ -143,3 +143,17 @@ md.linkify = new LinkifyIt()
 > [!WARNING]
 > - Plugins that access `md.linkify` (e.g. `md.linkify.set(...)`) throw in the core entry unless you assign a linkify-it instance before calling `md.use()`.
 > - If any module in your app imports `markdown-exit` instead of `markdown-exit/core`, linkify-it is bundled anyway, and instances created from `markdown-exit/core` get a linkify-it instance too.
+
+## Parser Entry
+
+`markdown-exit/parser` exports `Parser` and `Token` without the renderer and presets, for apps that only need tokens. `Parser` parses with the same rules as the default preset and leaves out linkify-it like the core entry, but has no `use()`, `set()`, `configure()` or `render()`. Change its options and rules directly:
+
+```ts
+import { Parser } from 'markdown-exit/parser'
+
+const parser = new Parser()
+parser.options.html = true
+parser.block.ruler.disable('table')
+
+const tokens = parser.parse('# Hello')
+```
