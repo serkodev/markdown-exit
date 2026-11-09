@@ -143,3 +143,13 @@ md.linkify = new LinkifyIt()
 > [!WARNING]
 > - Plugins that access `md.linkify` (e.g. `md.linkify.set(...)`) throw in the core entry unless you assign a linkify-it instance before calling `md.use()`.
 > - If any module in your app imports `markdown-exit` instead of `markdown-exit/core`, linkify-it is bundled anyway, and instances created from `markdown-exit/core` get a linkify-it instance too.
+
+The core entry also leaves out [uc.micro](https://github.com/markdown-it/uc.micro), which markdown-exit only re-exports for plugins as `md.utils.lib.ucmicro`. Reading it throws in the core entry. If a plugin needs it, such as [markdown-it-abbr](https://github.com/markdown-it/markdown-it-abbr), install `uc.micro` and set it before calling `md.use()`:
+
+```ts
+import { createMarkdownExit } from 'markdown-exit/core'
+import * as ucmicro from 'uc.micro'
+
+const md = createMarkdownExit()
+md.utils.lib.ucmicro = ucmicro
+```

@@ -1,8 +1,8 @@
 // Utilities
 //
 
+import type * as UcMicro from 'uc.micro'
 import * as mdurl from 'mdurl'
-import * as ucmicro from 'uc.micro'
 import { decodeNamedEntity } from './entities'
 
 type ClassToWrap = new (...args: any[]) => object
@@ -166,9 +166,10 @@ export function isWhiteSpace(code: number): boolean {
   return false
 }
 
-// Currently without astral characters support.
+const PUNCT_RE = /[\p{P}\p{S}]/u
+
 export function isPunctChar(ch: string): boolean {
-  return ucmicro.P.test(ch) || ucmicro.S.test(ch)
+  return PUNCT_RE.test(ch)
 }
 
 export function isPunctCharCode(code: number): boolean {
@@ -295,4 +296,16 @@ export function isPromiseLike<T = unknown>(v: any): v is Promise<T> {
  * so plugins won't have to depend on them explicitly, which reduces their
  * bundled size (e.g. a browser build).
  */
-export const lib = { mdurl, ucmicro }
+let ucmicro: typeof UcMicro | undefined
+export const lib = {
+  mdurl,
+  // `markdown-exit` sets uc.micro on import. `markdown-exit/core` leaves it to the app.
+  get ucmicro(): typeof UcMicro {
+    if (!ucmicro)
+      throw new Error('markdown-exit/core does not include uc.micro. Set `md.utils.lib.ucmicro = ucmicro` with `import * as ucmicro from \'uc.micro\'` before using plugins that read it.')
+    return ucmicro
+  },
+  set ucmicro(module: typeof UcMicro) {
+    ucmicro = module
+  },
+}

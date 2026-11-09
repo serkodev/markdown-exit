@@ -1,6 +1,7 @@
 import type { Rollup } from 'vite'
 import { fileURLToPath } from 'node:url'
 import { LinkifyIt } from 'linkify-it'
+import * as ucmicro from 'uc.micro'
 import { build } from 'vite'
 import { assert, describe, it } from 'vitest'
 import MarkdownExit from '../src/index.core'
@@ -22,6 +23,20 @@ describe('markdown-exit/core', () => {
   it('does not bundle linkify-it', async () => {
     assert.include(await bundleImports('../src/index.ts'), 'linkify-it')
     assert.notInclude(await bundleImports('../src/index.core.ts'), 'linkify-it')
+  })
+
+  it('does not bundle uc.micro', async () => {
+    assert.include(await bundleImports('../src/index.ts'), 'uc.micro')
+    assert.notInclude(await bundleImports('../src/index.core.ts'), 'uc.micro')
+  })
+
+  it('needs uc.micro for `md.utils.lib.ucmicro`', () => {
+    const md = MarkdownExit()
+
+    assert.throws(() => md.utils.lib.ucmicro, /uc\.micro/)
+
+    md.utils.lib.ucmicro = ucmicro
+    assert.strictEqual(md.utils.lib.ucmicro.P, ucmicro.P)
   })
 
   it('renders without linkify-it', () => {

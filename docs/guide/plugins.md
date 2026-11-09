@@ -70,6 +70,7 @@ Apps may import from [`markdown-exit/core`](/guide/quick-start.html#core-entry) 
 
 - Use `import type` for types. If your plugin needs runtime values such as `Token`, import them from `markdown-exit/core`, which shares the same classes as `markdown-exit`. Importing `markdown-exit` at runtime adds linkify-it to the bundle of every app that uses your plugin.
 - `md.linkify` is `undefined` in the core entry until the app assigns a linkify-it instance. If your plugin accesses `md.linkify`, guard against that or document that the plugin requires linkify-it.
+- The same goes for `md.utils.lib.ucmicro`, which throws in the core entry until the app sets it. A plugin that needs uc.micro can import it directly.
 
 ### Async Render Rules
 
