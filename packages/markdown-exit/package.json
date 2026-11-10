@@ -23,6 +23,7 @@
   "exports": {
     ".": "./dist/index.js",
     "./core": "./dist/core.js",
+    "./linkify-gfm": "./dist/linkify-gfm.js",
     "./package.json": "./package.json"
   },
   "main": "./dist/index.js",

@@ -143,3 +143,18 @@ md.linkify = new LinkifyIt()
 > [!WARNING]
 > - Plugins that access `md.linkify` (e.g. `md.linkify.set(...)`) throw in the core entry unless you assign a linkify-it instance before calling `md.use()`.
 > - If any module in your app imports `markdown-exit` instead of `markdown-exit/core`, linkify-it is bundled anyway, and instances created from `markdown-exit/core` get a linkify-it instance too.
+
+### GitHub-style links
+
+`markdown-exit/linkify-gfm` is a plugin that links text the way GitHub does ([GFM autolinks](https://github.github.com/gfm/#autolinks-extension-)), without linkify-it. It links `www.` addresses, `http://` and `https://` URLs, and email addresses. It does not link bare domains such as `example.com`. markdown-exit still parses inline markdown first, so `www.example.com/a*b*c` links only `www.example.com/a`, where GitHub links the whole URL.
+
+```ts
+import { createMarkdownExit } from 'markdown-exit/core'
+import linkifyGfm from 'markdown-exit/linkify-gfm'
+
+const md = createMarkdownExit().use(linkifyGfm)
+md.render('Visit www.commonmark.org.')
+// <p>Visit <a href="http://www.commonmark.org">www.commonmark.org</a>.</p>
+```
+
+The plugin enables `linkify` and sets `md.linkify`. It has no TLD list and no custom schemas, so `md.linkify.tlds()` and `md.linkify.add()` throw. Pass `{ fuzzyLink: false }` to skip `www.` addresses, or `{ fuzzyEmail: false }` to skip emails without `mailto:`.
